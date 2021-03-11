@@ -16,18 +16,24 @@ using namespace std;
 class NewReader{
 public:
   //Contructor
-  NewReader(string);
-  //Destructor
-  virtual ~NewReader();
+  NewReader(string infile);
+  NewReader(vector<double>, vector<double>){};
+  NewReader(const NewReader& A);
 
+  double GetDataVector(int i){return DataVector[i];};
+  double GetTempo(int i){return Tempo[i];};
+  int GetNrInstantes(){return nlines;};
+  //Destructor
+  virtual ~NewReader()=default;
+  const NewReader operator=(const NewReader& A);
 
 
 protected:
-  int Nlines;
-  int ColNum;
-  string FileName;
+  string FILENAME;
   ifstream DataFile;
-  vector<double> DataVector;  //{time,number of spots}
+  int nlines;
+  vector<double> Tempo;
+  vector<double> DataVector;
 };
 
 #endif
