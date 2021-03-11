@@ -80,8 +80,14 @@ int main()  {
     cout<<"AAAAAAA"<<endl;
 
     LETintegral lIC(vIC);
+    LETintegral lIE(vIE);
+    LETintegral lAC(vAC);
+    LETintegral lAE(vAE);
 
-    cout<<lIC.integrate(3,1)<<endl;
+    double Wic=lIC.integrate(2,1);
+    double Wie=lIE.integrate(2,1);
+    double Wac=lAC.integrate(2,1);
+    double Wae=lAE.integrate(2,1);
 	
 	  {
     TGraph PVgraphIC;
@@ -111,7 +117,7 @@ int main()  {
       PVgraphAE.SetPoint(i,vAE[i][1],vAE[i][2]);
     }
 
-
+    TCanvas* c1 = new TCanvas();
     PVgraphIC.Draw();
     PVgraphIE.Draw("same");
     PVgraphAC.Draw("same");
