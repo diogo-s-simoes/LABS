@@ -118,7 +118,17 @@ int main()  {
     }
 
     TCanvas* c1 = new TCanvas();
-    PVgraphIC.Draw();
+	
+    auto lIdealGas = [](double *x,double *p=nullptr){
+      return p[0]/pow(x[0],p[1]);
+    };
+
+    TF1* fIdealGas= new TF1("L", f, 0.,15.,2);
+
+    PVgraphAC.Fit(fIdealGas);
+
+
+    PVgraphIC.Draw("AL");
     PVgraphIE.Draw("same");
     PVgraphAC.Draw("same");
     PVgraphAE.Draw("same");
