@@ -118,24 +118,74 @@ int main()  {
     }
 
     TCanvas* c1 = new TCanvas();
-	
+  
     auto lIdealGas = [](double *x,double *p=nullptr){
-      return p[0]/pow(x[0],p[1]);
+      return p[0]*pow(x[0],p[1]);//p[1] * pow(x[0],p[0]);
     };
 
-    TF1* fIdealGas= new TF1("L", f, 0.,15.,2);
+    TF1* fIdealGas= new TF1("L", lIdealGas, 1.,500.,2);
 
+    fIdealGas->SetParameter(0,10000);
+
+
+
+    TAxis *ax_t = PVgraphIC.GetXaxis();
+    TAxis *ay_t = PVgraphIC.GetYaxis();
+
+    ax_t->SetLimits(80,220);
+    ay_t->SetRangeUser(30,250);
+
+    ax_t->SetTitle("V(m^3)");
+    ay_t->SetTitle("P(Pa)");
+
+    PVgraphIC.SetTitle("Compressao Isotermica");
+    PVgraphIC.SetMarkerColor(kGreen-2);
+    PVgraphIC.SetLineColor(kGreen-2);
+    PVgraphIC.SetMarkerSize(.5);
+    PVgraphIC.SetMarkerStyle(8);
+
+    fIdealGas->SetLineColor(kGreen-2);
+    PVgraphIC.Fit(fIdealGas);
+    PVgraphIC.Draw("AP");
+
+
+    PVgraphIE.SetTitle("Expansao Isotermica");
+    PVgraphIE.SetMarkerColor(kRed-2);
+    PVgraphIE.SetLineColor(kRed-2);
+    PVgraphIE.SetMarkerSize(.5);
+    PVgraphIE.SetMarkerStyle(8);
+
+    fIdealGas->SetLineColor(kRed-2);
+    PVgraphIE.Fit(fIdealGas);
+    PVgraphIE.Draw("P same");
+    
+
+
+    PVgraphAC.SetTitle("Compressao Adiabatica");
+    PVgraphAC.SetMarkerColor(kBlue-2);
+    PVgraphAC.SetLineColor(kBlue-2);
+    PVgraphAC.SetMarkerSize(.5);
+    PVgraphAC.SetMarkerStyle(8);
+
+    fIdealGas->SetLineColor(kBlue-2);
     PVgraphAC.Fit(fIdealGas);
+    PVgraphAC.Draw("P same");
+    
 
 
-    PVgraphIC.Draw("AL");
-    PVgraphIE.Draw("same");
-    PVgraphAC.Draw("same");
-    PVgraphAE.Draw("same");
+    PVgraphAE.SetTitle("Expansao Adiabatica");
+    PVgraphAE.SetMarkerColor(94);
+    PVgraphAE.SetLineColor(94);
+    PVgraphAE.SetMarkerSize(.5);
+    PVgraphAE.SetMarkerStyle(8);
+
+    fIdealGas->SetLineColor(94);
+    PVgraphAE.Fit(fIdealGas);
+    PVgraphAE.Draw("P same");
+
+    c1->BuildLegend(.75,.75,.9,.9);
 
     c1->SaveAs("PVgraph.pdf");
-
-
   }
 
 	return 0;
