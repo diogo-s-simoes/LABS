@@ -2,6 +2,8 @@
 #include "TGraph.h"
 #include "TCanvas.h"
 #include "TApplication.h"
+#include "LETintegral.h"
+
 int main()  {
 
 	NewReader ICV("ICV.txt");
@@ -20,7 +22,14 @@ int main()  {
 		instante.push_back(ICT.GetDataVector(i));
 
 		todos.push_back(instante);
+        instante.clear();
 	}
+
+    cout<<"AAAAAAA"<<endl;
+
+    LETintegral lIC(todos);
+
+    cout<<lIC.integrate(3,1)<<endl;
 
 	return 0;
 }
