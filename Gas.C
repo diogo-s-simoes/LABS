@@ -1,4 +1,4 @@
-
+#include <cmath>
 #include "NewReader.h"
 #include "TGraph.h"
 #include "TCanvas.h"
@@ -7,75 +7,75 @@
 
 int main()  {
 
-	NewReader ICV("ICV.txt");
-	NewReader ICP("ICP.txt");
-	NewReader ICT("ICT.txt");
+  NewReader ICV("ICV.txt");
+  NewReader ICP("ICP.txt");
+  NewReader ICT("ICT.txt");
 
     NewReader IEV("IEV.txt");
-	NewReader IEP("IEP.txt");
-	NewReader IET("IET.txt");
+  NewReader IEP("IEP.txt");
+  NewReader IET("IET.txt");
 
     NewReader ACV("ACV.txt");
-	NewReader ACP("ACP.txt");
-	NewReader ACT("ACT.txt");
+  NewReader ACP("ACP.txt");
+  NewReader ACT("ACT.txt");
 
     NewReader AEV("AEV.txt");
-	NewReader AEP("AEP.txt");
-	NewReader AET("AET.txt");
+  NewReader AEP("AEP.txt");
+  NewReader AET("AET.txt");
 
-	vector<double> instante;
+  vector<double> instante;
 
-	vector <vector<double>> vIC;
-	int Nlines = ICV.GetNrInstantes();
+  vector <vector<double>> vIC;
+  int Nlines = ICV.GetNrInstantes();
 
-	for(int i=0; i<Nlines; i++){
-		instante.push_back(ICV.GetTempo(i));
-		instante.push_back(ICV.GetDataVector(i));
-		instante.push_back(ICP.GetDataVector(i));
-		instante.push_back(ICT.GetDataVector(i));
+  for(int i=0; i<Nlines; i++){
+    instante.push_back(ICV.GetTempo(i));
+    instante.push_back(ICV.GetDataVector(i));
+    instante.push_back(ICP.GetDataVector(i));
+    instante.push_back(ICT.GetDataVector(i));
 
-		vIC.push_back(instante);
+    vIC.push_back(instante);
         instante.clear();
-	}
+  }
 
     vector <vector<double>> vIE;
-	Nlines = ICV.GetNrInstantes();
+  Nlines = ICV.GetNrInstantes();
 
-	for(int i=0; i<Nlines; i++){
-		instante.push_back(IEV.GetTempo(i));
-		instante.push_back(IEV.GetDataVector(i));
-		instante.push_back(IEP.GetDataVector(i));
-		instante.push_back(IET.GetDataVector(i));
+  for(int i=0; i<Nlines; i++){
+    instante.push_back(IEV.GetTempo(i));
+    instante.push_back(IEV.GetDataVector(i));
+    instante.push_back(IEP.GetDataVector(i));
+    instante.push_back(IET.GetDataVector(i));
 
-		vIE.push_back(instante);
+    vIE.push_back(instante);
         instante.clear();
-	}
+  }
 
     vector <vector<double>> vAC;
-	Nlines = ICV.GetNrInstantes();
+  Nlines = ICV.GetNrInstantes();
 
-	for(int i=0; i<Nlines; i++){
-		instante.push_back(ACV.GetTempo(i));
-		instante.push_back(ACV.GetDataVector(i));
-		instante.push_back(ACP.GetDataVector(i));
-		instante.push_back(ACT.GetDataVector(i));
+  for(int i=0; i<Nlines; i++){
+    instante.push_back(ACV.GetTempo(i));
+    instante.push_back(ACV.GetDataVector(i));
+    instante.push_back(ACP.GetDataVector(i));
+    instante.push_back(ACT.GetDataVector(i));
 
-		vAC.push_back(instante);
+    vAC.push_back(instante);
         instante.clear();
-	}
+  }
 
     vector <vector<double>> vAE;
-	Nlines = ICV.GetNrInstantes();
+  Nlines = ICV.GetNrInstantes();
 
-	for(int i=0; i<Nlines; i++){
-		instante.push_back(AEV.GetTempo(i));
-		instante.push_back(AEV.GetDataVector(i));
-		instante.push_back(AEP.GetDataVector(i));
-		instante.push_back(AET.GetDataVector(i));
+  for(int i=0; i<Nlines; i++){
+    instante.push_back(AEV.GetTempo(i));
+    instante.push_back(AEV.GetDataVector(i));
+    instante.push_back(AEP.GetDataVector(i));
+    instante.push_back(AET.GetDataVector(i));
 
-		vAE.push_back(instante);
+    vAE.push_back(instante);
         instante.clear();
-	}
+  }
 
     cout<<"AAAAAAA"<<endl;
 
@@ -88,8 +88,9 @@ int main()  {
     double Wie=lIE.integrate(2,1);
     double Wac=lAC.integrate(2,1);
     double Wae=lAE.integrate(2,1);
-	
-	  {
+  
+
+  {
     TGraph PVgraphIC;
 
     for(int i=0;i<vIC.size();i++){
@@ -188,5 +189,112 @@ int main()  {
     c1->SaveAs("PVgraph.pdf");
   }
 
-	return 0;
+
+
+
+
+    {
+
+    TGraph WaalsPV;
+
+    for(int i=0;i<vAC.size();i++){
+      WaalsPV.SetPoint(i,vAC[i][1],vAC[i][2]);
+    }
+
+
+    TGraph WaalsTV;
+
+    for(int i=0;i<vAC.size();i++){
+      WaalsTV.SetPoint(i,vAC[i][1],x[0]/1.e6-0.0106495*1e-3*.0387,p[1])-0.0106495*0.0106495 * 1e11*1.37/x[0]/x[0]);
+    }
+
+
+
+
+
+
+    TCanvas* c1 = new TCanvas();
+  
+   
+
+    auto lWaalsGAMMA = [](double *x,double *p=nullptr){                         //1e5+3+3
+      return (p[0]*pow(x[0]/1.e6-0.0106495*1e-3*.0387,p[1])-0.0106495*0.0106495 * 1e11*1.37/x[0]/x[0])/1000.;    //n=.0106495    a=1e5*.0387    b=1e12*1.37
+    };
+
+    TF1* fWaalsGAMMA= new TF1("GAMMA", lWaalsGAMMA, 1.,500.,2);
+
+    fWaalsGAMMA->SetParameters(0,1000.);
+
+
+
+    auto lWaalsCv = [](double *x,double *p=nullptr){
+      return p[0]/pow(x[0]*1e-3  -  0.0106495 *.0387 , p[1]);///8.31446/p[1]);    //n=.0106495    b=1e-3*.0387    
+    };
+
+    TF1* fWaalsCv =  new TF1("cv", lWaalsCv, 1.,500.,2);
+
+    fWaalsCv->SetParameters(0,100);
+    fWaalsCv->SetParameters(1,1.);
+
+
+    WaalsPV.Fit(fWaalsGAMMA);
+    WaalsTV.Fit(fWaalsCv);
+
+
+    double Cv=!./fWaalsCv.GetParameters(1)*8.3145;
+
+    TGraph WaalsCpT;
+
+    for(int i=0;i<vAC.size();i++){
+      double Cp = Cv+vAC[i][3]
+      WaalsCpT.SetPoint(i,vAC[i][3],);
+    }
+
+
+//    c1->Clear();
+    
+    TAxis *ax_t = WaalsTV.GetXaxis();
+    TAxis *ay_t = WaalsTV.GetYaxis();
+
+    ax_t->SetLimits(80,220);
+    ay_t->SetRangeUser(0,600);
+
+    WaalsTV.Draw("AP");
+    fWaalsCv->Draw("same");
+
+    c1->SaveAs("PVgraph.pdf");
+
+
+
+
+
+/*
+
+    TAxis *ax_t = PVgraphIC.GetXaxis();
+    TAxis *ay_t = PVgraphIC.GetYaxis();
+
+    ax_t->SetLimits(80,220);
+    ay_t->SetRangeUser(30,250);
+
+    ax_t->SetTitle("V(m^3)");
+    ay_t->SetTitle("P(Pa)");
+
+    PVgraphIC.SetTitle("Compressao Isotermica");
+    PVgraphIC.SetMarkerColor(kGreen-2);
+    PVgraphIC.SetLineColor(kGreen-2);
+    PVgraphIC.SetMarkerSize(.5);
+    PVgraphIC.SetMarkerStyle(8);
+
+    fIdealGas->SetLineColor(kGreen-2);
+    PVgraphIC.Fit(fIdealGas);
+    PVgraphIC.Draw("AP");
+
+
+
+    c1->BuildLegend(.75,.75,.9,.9);
+
+    c1->SaveAs("PVgraph.pdf");*/
+  }
+
+  return 0;
 }
