@@ -5,21 +5,22 @@
 #include "TApplication.h"
 #include "LETintegral.h"
 
+//VETORES: TEMPO VOLUME PRESSAO TEMPERATURA
 int main()  {
 
   NewReader ICV("ICV.txt");
   NewReader ICP("ICP.txt");
   NewReader ICT("ICT.txt");
 
-    NewReader IEV("IEV.txt");
+  NewReader IEV("IEV.txt");
   NewReader IEP("IEP.txt");
   NewReader IET("IET.txt");
 
-    NewReader ACV("ACV.txt");
+  NewReader ACV("ACV.txt");
   NewReader ACP("ACP.txt");
   NewReader ACT("ACT.txt");
 
-    NewReader AEV("AEV.txt");
+  NewReader AEV("AEV.txt");
   NewReader AEP("AEP.txt");
   NewReader AET("AET.txt");
 
@@ -35,11 +36,11 @@ int main()  {
     instante.push_back(ICT.GetDataVector(i));
 
     vIC.push_back(instante);
-        instante.clear();
+    instante.clear();
   }
 
-    vector <vector<double>> vIE;
-  Nlines = ICV.GetNrInstantes();
+  vector <vector<double>> vIE;
+  Nlines = IEV.GetNrInstantes();
 
   for(int i=0; i<Nlines; i++){
     instante.push_back(IEV.GetTempo(i));
@@ -48,11 +49,11 @@ int main()  {
     instante.push_back(IET.GetDataVector(i));
 
     vIE.push_back(instante);
-        instante.clear();
+    instante.clear();
   }
 
-    vector <vector<double>> vAC;
-  Nlines = ICV.GetNrInstantes();
+  vector <vector<double>> vAC;
+  Nlines = ACV.GetNrInstantes();
 
   for(int i=0; i<Nlines; i++){
     instante.push_back(ACV.GetTempo(i));
@@ -61,11 +62,11 @@ int main()  {
     instante.push_back(ACT.GetDataVector(i));
 
     vAC.push_back(instante);
-        instante.clear();
+    instante.clear();
   }
 
-    vector <vector<double>> vAE;
-  Nlines = ICV.GetNrInstantes();
+  vector <vector<double>> vAE;
+  Nlines = AEV.GetNrInstantes();
 
   for(int i=0; i<Nlines; i++){
     instante.push_back(AEV.GetTempo(i));
@@ -74,10 +75,10 @@ int main()  {
     instante.push_back(AET.GetDataVector(i));
 
     vAE.push_back(instante);
-        instante.clear();
+    instante.clear();
   }
 
-    cout<<"AAAAAAA"<<endl;
+
 
     LETintegral lIC(vIC);
     LETintegral lIE(vIE);
@@ -90,30 +91,29 @@ int main()  {
     double Wae=lAE.integrate(2,1);
   
 
+
+
+
   {
     TGraph PVgraphIC;
-
     for(int i=0;i<vIC.size();i++){
       PVgraphIC.SetPoint(i,vIC[i][1],vIC[i][2]);
     }
 
 
     TGraph PVgraphIE;
-
     for(int i=0;i<vIE.size();i++){
       PVgraphIE.SetPoint(i,vIE[i][1],vIE[i][2]);
     }
 
 
     TGraph PVgraphAC;
-
     for(int i=0;i<vAC.size();i++){
       PVgraphAC.SetPoint(i,vAC[i][1],vAC[i][2]);
     }
 
 
     TGraph PVgraphAE;
-
     for(int i=0;i<vAE.size();i++){
       PVgraphAE.SetPoint(i,vAE[i][1],vAE[i][2]);
     }
@@ -136,13 +136,13 @@ int main()  {
     ax_t->SetLimits(80,220);
     ay_t->SetRangeUser(30,250);
 
-    ax_t->SetTitle("V(m^3)");
+    ax_t->SetTitle("V(m^{3})");
     ay_t->SetTitle("P(Pa)");
 
     PVgraphIC.SetTitle("Compressao Isotermica");
     PVgraphIC.SetMarkerColor(kGreen-2);
     PVgraphIC.SetLineColor(kGreen-2);
-    PVgraphIC.SetMarkerSize(.5);
+    PVgraphIC.SetMarkerSize(.4);
     PVgraphIC.SetMarkerStyle(8);
 
     fIdealGas->SetLineColor(kGreen-2);
@@ -153,9 +153,8 @@ int main()  {
     PVgraphIE.SetTitle("Expansao Isotermica");
     PVgraphIE.SetMarkerColor(kRed-2);
     PVgraphIE.SetLineColor(kRed-2);
-    PVgraphIE.SetMarkerSize(.5);
+    PVgraphIE.SetMarkerSize(.4);
     PVgraphIE.SetMarkerStyle(8);
-
     fIdealGas->SetLineColor(kRed-2);
     PVgraphIE.Fit(fIdealGas);
     PVgraphIE.Draw("P same");
@@ -165,9 +164,8 @@ int main()  {
     PVgraphAC.SetTitle("Compressao Adiabatica");
     PVgraphAC.SetMarkerColor(kBlue-2);
     PVgraphAC.SetLineColor(kBlue-2);
-    PVgraphAC.SetMarkerSize(.5);
+    PVgraphAC.SetMarkerSize(.4);
     PVgraphAC.SetMarkerStyle(8);
-
     fIdealGas->SetLineColor(kBlue-2);
     PVgraphAC.Fit(fIdealGas);
     PVgraphAC.Draw("P same");
@@ -177,16 +175,15 @@ int main()  {
     PVgraphAE.SetTitle("Expansao Adiabatica");
     PVgraphAE.SetMarkerColor(94);
     PVgraphAE.SetLineColor(94);
-    PVgraphAE.SetMarkerSize(.5);
+    PVgraphAE.SetMarkerSize(.4);
     PVgraphAE.SetMarkerStyle(8);
-
     fIdealGas->SetLineColor(94);
     PVgraphAE.Fit(fIdealGas);
     PVgraphAE.Draw("P same");
 
-    c1->BuildLegend(.75,.75,.9,.9);
+   // c1->BuildLegend(.7,.7,.9,.9);
 
-    c1->SaveAs("PVgraph.pdf");
+    c1->SaveAs("PVgraph.png");
   }
 
 
@@ -202,7 +199,7 @@ int main()  {
 
     TGraph WaalsTV;
 
-    for(int i=0;i<vAC.size();i++){
+    for(int i=0;i<vAC.size();i++){                  //n       //b
       WaalsTV.SetPoint(i,vAC[i][1],(vAC[i][1]/1.e6-0.0106495*1e-3*.0387)*(vAC[i][2]*1000+0.0106495*0.0106495 * 1e11*1.37/vAC[i][1]/vAC[i][1])/(8.3145*0.0106495));
 //      cout<<(vAC[i][1]/1.e6-0.0106495*1e-3*.0387)*(vAC[i][2]*1000+0.0106495*0.0106495 * 1e11*1.37/vAC[i][1]/vAC[i][1])/(8.3145*0.0106495)<<endl;
     }
@@ -210,14 +207,12 @@ int main()  {
 
 
     TGraph WaalsPV2;
-
     for(int i=0;i<vAE.size();i++){
       WaalsPV2.SetPoint(i,vAE[i][1],vAE[i][2]);
     }
 
 
     TGraph WaalsTV2;
-
     for(int i=0;i<vAC.size();i++){
       WaalsTV2.SetPoint(i,vAE[i][1],(vAE[i][1]/1.e6-0.00370615*1e-3*.0387)*(vAE[i][2]*1000+0.00370615*0.00370615 * 1e11*1.37/vAE[i][1]/vAE[i][1])/(8.3145*0.00370615));
 //      cout<<(vAE[i][1]/1.e6-0.0106495*1e-3*.0387)*(vAE[i][2]*1000+0.0106495*0.0106495 * 1e11*1.37/vAE[i][1]/vAE[i][1])/(8.3145*0.0106495)<<endl;
@@ -319,7 +314,7 @@ int main()  {
 
 
     ax_t->SetLimits(220,350);
-    ay_t->SetRangeUser(29.7,30);
+    ay_t->SetRangeUser(29.80,29.93);
 
 
     WaalsCpT.SetTitle("C_{p}(T)");
