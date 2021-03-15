@@ -191,9 +191,7 @@ int main()  {
 
 
 
-
-
-    {
+  {
 
     TGraph WaalsPV;
 
@@ -205,7 +203,8 @@ int main()  {
     TGraph WaalsTV;
 
     for(int i=0;i<vAC.size();i++){
-      WaalsTV.SetPoint(i,vAC[i][1],x[0]/1.e6-0.0106495*1e-3*.0387,p[1])-0.0106495*0.0106495 * 1e11*1.37/x[0]/x[0]);
+      WaalsTV.SetPoint(i,vAC[i][1],(vAC[i][1]/1.e6-0.0106495*1e-3*.0387)*(vAC[i][2]*1000+0.0106495*0.0106495 * 1e11*1.37/vAC[i][1]/vAC[i][1])/(8.3145*0.0106495));
+      cout<<(vAC[i][1]/1.e6-0.0106495*1e-3*.0387)*(vAC[i][2]*1000+0.0106495*0.0106495 * 1e11*1.37/vAC[i][1]/vAC[i][1])/(8.3145*0.0106495)<<endl;
     }
 
 
@@ -223,7 +222,8 @@ int main()  {
 
     TF1* fWaalsGAMMA= new TF1("GAMMA", lWaalsGAMMA, 1.,500.,2);
 
-    fWaalsGAMMA->SetParameters(0,1000.);
+    fWaalsGAMMA->SetParameters(0,10000.);
+    fWaalsGAMMA->SetParameters(1,.72);
 
 
 
@@ -241,59 +241,43 @@ int main()  {
     WaalsTV.Fit(fWaalsCv);
 
 
-    double Cv=!./fWaalsCv.GetParameters(1)*8.3145;
+    double Cv=1./fWaalsCv->GetParameter(1)*8.3145;
+
+    cout<<"Cv    "<<Cv<<endl;
 
     TGraph WaalsCpT;
 
     for(int i=0;i<vAC.size();i++){
-      double Cp = Cv+vAC[i][3]
-      WaalsCpT.SetPoint(i,vAC[i][3],);
+      double T=(vAC[i][1]/1.e6-0.0106495*1e-3*.0387)*(vAC[i][2]*1000+0.0106495*0.0106495 * 1e11*1.37/vAC[i][1]/vAC[i][1])/(8.3145*0.0106495);
+      double Cp = Cv+8.3145/(1.-0.0106495*1.e17*1.37/vAC[i][1]/vAC[i][1]/vAC[i][1]/8.3145/T*2.*(vAC[i][1]/1.e6-0.0106495*1e-3*.0387)*(vAC[i][1]/1.e6-0.0106495*1e-3*.0387));
+    //  cout<<T<<"   "<<Cp<<endl;
+
+      WaalsCpT.SetPoint(i,T,Cp);
     }
 
 
-//    c1->Clear();
     
-    TAxis *ax_t = WaalsTV.GetXaxis();
-    TAxis *ay_t = WaalsTV.GetYaxis();
+    TAxis *ax_t = WaalsCpT.GetXaxis();
+    TAxis *ay_t = WaalsCpT.GetYaxis();
 
-    ax_t->SetLimits(80,220);
-    ay_t->SetRangeUser(0,600);
-
-    WaalsTV.Draw("AP");
-    fWaalsCv->Draw("same");
-
-    c1->SaveAs("PVgraph.pdf");
+    ax_t->SetTitle("T(K)");
+    ay_t->SetTitle("C_{p}(J/(K.mol))");
 
 
+    ax_t->SetLimits(290,350);
+    ay_t->SetRangeUser(29.7,30);
 
 
+    WaalsCpT.SetTitle("C_{p}(T)");
+    WaalsCpT.SetMarkerColor(kCyan-2);
+    WaalsCpT.SetLineColor(kCyan-2);
+    WaalsCpT.SetMarkerSize(.5);
+    WaalsCpT.SetMarkerStyle(8);
 
-/*
+    WaalsCpT.Draw("AP");
+    //    fWaalsCv->Draw("AP");
 
-    TAxis *ax_t = PVgraphIC.GetXaxis();
-    TAxis *ay_t = PVgraphIC.GetYaxis();
-
-    ax_t->SetLimits(80,220);
-    ay_t->SetRangeUser(30,250);
-
-    ax_t->SetTitle("V(m^3)");
-    ay_t->SetTitle("P(Pa)");
-
-    PVgraphIC.SetTitle("Compressao Isotermica");
-    PVgraphIC.SetMarkerColor(kGreen-2);
-    PVgraphIC.SetLineColor(kGreen-2);
-    PVgraphIC.SetMarkerSize(.5);
-    PVgraphIC.SetMarkerStyle(8);
-
-    fIdealGas->SetLineColor(kGreen-2);
-    PVgraphIC.Fit(fIdealGas);
-    PVgraphIC.Draw("AP");
-
-
-
-    c1->BuildLegend(.75,.75,.9,.9);
-
-    c1->SaveAs("PVgraph.pdf");*/
+    c1->SaveAs("WaalsCpT.png");
   }
 
   return 0;
