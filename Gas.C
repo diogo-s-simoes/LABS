@@ -204,10 +204,24 @@ int main()  {
 
     for(int i=0;i<vAC.size();i++){
       WaalsTV.SetPoint(i,vAC[i][1],(vAC[i][1]/1.e6-0.0106495*1e-3*.0387)*(vAC[i][2]*1000+0.0106495*0.0106495 * 1e11*1.37/vAC[i][1]/vAC[i][1])/(8.3145*0.0106495));
-      cout<<(vAC[i][1]/1.e6-0.0106495*1e-3*.0387)*(vAC[i][2]*1000+0.0106495*0.0106495 * 1e11*1.37/vAC[i][1]/vAC[i][1])/(8.3145*0.0106495)<<endl;
+//      cout<<(vAC[i][1]/1.e6-0.0106495*1e-3*.0387)*(vAC[i][2]*1000+0.0106495*0.0106495 * 1e11*1.37/vAC[i][1]/vAC[i][1])/(8.3145*0.0106495)<<endl;
     }
 
 
+
+    TGraph WaalsPV2;
+
+    for(int i=0;i<vAE.size();i++){
+      WaalsPV2.SetPoint(i,vAE[i][1],vAE[i][2]);
+    }
+
+
+    TGraph WaalsTV2;
+
+    for(int i=0;i<vAC.size();i++){
+      WaalsTV2.SetPoint(i,vAE[i][1],(vAE[i][1]/1.e6-0.00370615*1e-3*.0387)*(vAE[i][2]*1000+0.00370615*0.00370615 * 1e11*1.37/vAE[i][1]/vAE[i][1])/(8.3145*0.00370615));
+//      cout<<(vAE[i][1]/1.e6-0.0106495*1e-3*.0387)*(vAE[i][2]*1000+0.0106495*0.0106495 * 1e11*1.37/vAE[i][1]/vAE[i][1])/(8.3145*0.0106495)<<endl;
+    }
 
 
 
@@ -240,10 +254,41 @@ int main()  {
     WaalsPV.Fit(fWaalsGAMMA);
     WaalsTV.Fit(fWaalsCv);
 
-
     double Cv=1./fWaalsCv->GetParameter(1)*8.3145;
 
     cout<<"Cv    "<<Cv<<endl;
+
+
+
+    auto lWaalsGAMMA2 = [](double *x,double *p=nullptr){                         //1e5+3+3
+      return (p[0]*pow(x[0]/1.e6-0.00370615*1e-3*.0387,p[1])-0.00370615*0.00370615 * 1e11*1.37/x[0]/x[0])/1000.;    //n=.0106495    a=1e5*.0387    b=1e12*1.37
+    };
+
+    TF1* fWaalsGAMMA2= new TF1("GAMMA2", lWaalsGAMMA2, 1.,500.,2);
+
+    fWaalsGAMMA2->SetParameters(0,10000.);
+    fWaalsGAMMA2->SetParameters(1,.72);
+
+
+
+    auto lWaalsCv2 = [](double *x,double *p=nullptr){
+      return p[0]/pow(x[0]*1e-3  -  0.00370615 *.0387 , p[1]);///8.31446/p[1]);    //n=.0106495    b=1e-3*.0387    
+    };
+
+    TF1* fWaalsCv2 =  new TF1("cv2", lWaalsCv2, 1.,500.,2);
+
+    fWaalsCv2->SetParameters(0,100);
+    fWaalsCv2->SetParameters(1,1.);
+
+
+    WaalsPV2.Fit(fWaalsGAMMA2);
+    WaalsTV2.Fit(fWaalsCv2);
+
+    double Cv2=1./fWaalsCv2->GetParameter(1)*8.3145;
+
+    cout<<"Cv2    "<<Cv2<<endl;
+
+
 
     TGraph WaalsCpT;
 
@@ -255,6 +300,15 @@ int main()  {
       WaalsCpT.SetPoint(i,T,Cp);
     }
 
+    TGraph WaalsCpT2;
+
+    for(int i=0;i<vAC.size();i++){    
+      double T=(vAE[i][1]/1.e6-0.00370615*1e-3*.0387)*(vAE[i][2]*1000+0.00370615*0.00370615 * 1e11*1.37/vAE[i][1]/vAE[i][1])/(8.3145*0.00370615);
+      double Cp = Cv+8.3145/(1.-0.00370615*1.e17*1.37/vAE[i][1]/vAE[i][1]/vAE[i][1]/8.3145/T*2.*(vAE[i][1]/1.e6-0.00370615*1e-3*.0387)*(vAE[i][1]/1.e6-0.00370615*1e-3*.0387));
+      cout<<T<<"   "<<Cp<<endl;
+
+      WaalsCpT2.SetPoint(i,T,Cp);
+    }
 
     
     TAxis *ax_t = WaalsCpT.GetXaxis();
@@ -264,7 +318,7 @@ int main()  {
     ay_t->SetTitle("C_{p}(J/(K.mol))");
 
 
-    ax_t->SetLimits(290,350);
+    ax_t->SetLimits(220,350);
     ay_t->SetRangeUser(29.7,30);
 
 
@@ -276,6 +330,14 @@ int main()  {
 
     WaalsCpT.Draw("AP");
     //    fWaalsCv->Draw("AP");
+
+    WaalsCpT2.SetTitle("C_{p}(T)");
+    WaalsCpT2.SetMarkerColor(kRed-5);
+    WaalsCpT2.SetLineColor(kRed-5);
+    WaalsCpT2.SetMarkerSize(.5);
+    WaalsCpT2.SetMarkerStyle(8);
+
+    WaalsCpT2.Draw("P same");
 
     c1->SaveAs("WaalsCpT.png");
   }
