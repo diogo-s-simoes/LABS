@@ -336,6 +336,181 @@ int main()  {
 
     c1->SaveAs("WaalsCpT.png");
   }
+  
+  
+    {
+    double n = 0.0106495, R=8.3145;
+    for(int i=0;i<vAC.size();i++){
+      double T = 1e-3*vAC[i][1]*vAC[i][2]/R/n;
+      vAC[i][3]=T;
+      double S = n*R*(2.5*log(T)+log(1.e-6*vAC[i][1]));
+      vAC.at(i).push_back(S);
+      cout<<T<<"    "<<S<<endl;
+    }
+
+    TGraph Ugraph,Hgraph,Fgraph,Ggraph;
+
+    double U=0.,H=0.,F=0.,G=0.;
+
+    for(int i=0;i<vAC.size()-1;i++){
+      //U = (vAC[i][3]*(vAC[i+1][4]-vAC[i][4]));
+
+      U += (vAC[i][3]*(vAC[i+1][4]-vAC[i][4])-vAC[i][2]*(vAC[i+1][1]-vAC[i][1])*1e-3);
+      Ugraph.SetPoint(i,vAC[i][0],U);
+
+      H += (vAC[i][3]*(vAC[i+1][4]-vAC[i][4])+vAC[i][1]*(vAC[i+1][2]-vAC[i][2])*1e-3);
+      Hgraph.SetPoint(i,vAC[i][0],H);
+
+      F += (-vAC[i][4]*(vAC[i+1][3]-vAC[i][3])-vAC[i][2]*(vAC[i+1][1]-vAC[i][1])*1e-3);
+      Fgraph.SetPoint(i,vAC[i][0],F);
+
+      G += (-vAC[i][4]*(vAC[i+1][3]-vAC[i][3])+vAC[i][1]*(vAC[i+1][2]-vAC[i][2])*1e-3);
+      Ggraph.SetPoint(i,vAC[i][0],G);
+
+
+
+      cout<<U<<"   "<<H<<"   "<<F<<"   "<<G<<"   "<<endl;
+
+    }
+
+
+    TCanvas* c1 = new TCanvas();
+    
+
+
+    TAxis *ax_t = Ugraph.GetXaxis();
+    TAxis *ay_t = Ugraph.GetYaxis();
+
+    ax_t->SetTitle("T(K)");
+    ay_t->SetTitle("C_{p}(J/(K.mol))");
+
+
+    ax_t->SetLimits(0,100);
+    ay_t->SetRangeUser(-20,20);
+
+
+    Ugraph.SetTitle("var U(t)");
+    Ugraph.SetMarkerColor(kBlue-2);
+    Ugraph.SetLineColor(kBlue-2);
+    Ugraph.SetMarkerSize(.3);
+    Ugraph.SetMarkerStyle(8);
+
+    Hgraph.SetTitle("var H(t)");
+    Hgraph.SetMarkerColor(kYellow-2);
+    Hgraph.SetLineColor(kYellow-2);
+    Hgraph.SetMarkerSize(.3);
+    Hgraph.SetMarkerStyle(8);
+
+    Fgraph.SetTitle("var F(t)");
+    Fgraph.SetMarkerColor(kGreen-2);
+    Fgraph.SetLineColor(kGreen-2);
+    Fgraph.SetMarkerSize(.3);
+    Fgraph.SetMarkerStyle(8);
+
+    Ggraph.SetTitle("var G(t)");
+    Ggraph.SetMarkerColor(kRed-2);
+    Ggraph.SetLineColor(kRed-2);
+    Ggraph.SetMarkerSize(.3);
+    Ggraph.SetMarkerStyle(8);
+
+    Ugraph.Draw("AP");
+    Hgraph.Draw("P same");
+    Fgraph.Draw("P same");
+    Ggraph.Draw("P same");
+
+
+    c1->SaveAs("MaxwellAC.png");
+  }
+
+
+
+
+
+
+  {
+    double n = 0.0038602, R=8.3145;
+    for(int i=0;i<vIE.size();i++){
+      double T = 1e-3*vIE[i][1]*vIE[i][2]/R/n;
+      vIE[i][3]=T;
+      double S = n*R*(2.5*log(T)+log(1.e-6*vIE[i][1]));
+      vIE.at(i).push_back(S);
+      cout<<T<<"    "<<S<<endl;
+    }
+
+    TGraph Ugraph,Hgraph,Fgraph,Ggraph;
+
+    double U=0.,H=0.,F=0.,G=0.;
+
+    for(int i=0;i<vIE.size()-1;i++){
+
+      U += (vIE[i][3]*(vIE[i+1][4]-vIE[i][4])-vIE[i][2]*(vIE[i+1][1]-vIE[i][1])*1e-3);
+      Ugraph.SetPoint(i,vIE[i][0],U);
+
+      H = (vIE[i][3]*(vIE[i+1][4]-vIE[i][4])+vIE[i][1]*(vIE[i+1][2]-vIE[i][2])*1e-3);
+      Hgraph.SetPoint(i,vIE[i][0],H);
+
+      F = (-vIE[i][4]*(vIE[i+1][3]-vIE[i][3])-vIE[i][2]*(vIE[i+1][1]-vIE[i][1])*1e-3);
+      Fgraph.SetPoint(i,vIE[i][0],F);
+
+      G = (-vIE[i][4]*(vIE[i+1][3]-vIE[i][3])+vIE[i][1]*(vIE[i+1][2]-vIE[i][2])*1e-3);
+      Ggraph.SetPoint(i,vIE[i][0],G);
+
+
+
+    //  cout<<U<<"   "<<H<<"   "<<F<<"   "<<G<<"   "<<endl;
+
+    }
+
+
+    TCanvas* c1 = new TCanvas();
+    
+
+
+    TAxis *ax_t = Ugraph.GetXaxis();
+    TAxis *ay_t = Ugraph.GetYaxis();
+
+    ax_t->SetTitle("t(ms)");
+    ay_t->SetTitle("E(J)");
+
+
+    ax_t->SetLimits(0,10000);
+    ay_t->SetRangeUser(-10,10);
+
+
+    Ugraph.SetTitle("var U(t)");
+    Ugraph.SetMarkerColor(kBlue-2);
+    Ugraph.SetLineColor(kBlue-2);
+    Ugraph.SetMarkerSize(.3);
+    Ugraph.SetMarkerStyle(8);
+
+    Hgraph.SetTitle("var H(t)");
+    Hgraph.SetMarkerColor(kYellow-2);
+    Hgraph.SetLineColor(kYellow-2);
+    Hgraph.SetMarkerSize(.3);
+    Hgraph.SetMarkerStyle(8);
+
+    Fgraph.SetTitle("var F(t)");
+    Fgraph.SetMarkerColor(kGreen-2);
+    Fgraph.SetLineColor(kGreen-2);
+    Fgraph.SetMarkerSize(.3);
+    Fgraph.SetMarkerStyle(8);
+
+    Ggraph.SetTitle("var G(t)");
+    Ggraph.SetMarkerColor(kRed-2);
+    Ggraph.SetLineColor(kRed-2);
+    Ggraph.SetMarkerSize(.3);
+    Ggraph.SetMarkerStyle(8);
+
+    Ugraph.Draw("AP");
+    Hgraph.Draw("P same");
+    Fgraph.Draw("P same");
+    Ggraph.Draw("P same");
+
+
+    c1->SaveAs("MaxwellIE.png");
+  }
+
+
 
   return 0;
 }
