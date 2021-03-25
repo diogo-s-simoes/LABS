@@ -7,13 +7,15 @@
 
 int main()  {
 
-    NewReader tS("data/S(t).txt");
-    NewReader tP("data/P(t).txt");
+    NewReader tS("data/S(t)_corrected.txt");
+    NewReader tP("data/P(t)_corrected.txt");
 
     vector<double> instante;
 
     vector <vector<double>> data;
     int Nlines = tS.GetNrInstantes();
+
+    TGraph G;
 
     for(int i=0; i<Nlines; i++){
         instante.push_back(tS.GetTempo(i));
@@ -21,6 +23,7 @@ int main()  {
         instante.push_back(tP.GetDataVector(i));
 
         data.push_back(instante);
+        G.SetPoint(i,instante[0],instante[1]);
         instante.clear();
     }
     
@@ -36,9 +39,17 @@ int main()  {
     //    cout<<itg.V[i][1]<<endl;
     //}
 
-    double Wg=itg.integrate(2,1);
+    const double dEmb=6.0;
+
+    double Wg=itg.integrate(2,1)*M_PI*dEmb*dEmb/(4*10000);
 
     cout<<Wg<<endl;
+
+    cout<<data.back()[0]-data[0][0]<<endl;
+
+    TCanvas* c1 = new TCanvas();
+    G.Draw("APL");
+    c1->SaveAs("S(t).png");
 
     return 0;
 }
