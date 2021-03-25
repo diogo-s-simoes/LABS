@@ -1,0 +1,29 @@
+Dados Bomba de Calor:
+(V1(V),I1(A),dm/dt(g/s))				3.632+-0.001	3.158+-0.001	0.559+-0.005																								
+(Tresis(C),Tentr(C),Tsaid(C))				287.9+-1.5	294.3+-0.5	301.2+-0.5
+(Area diagrama PV (hPa.cm),periodo rot.(s))		-870+-1		0.445+-0.001
+	
+Dados Maq. Term. ensaio #1 						
+(V1(V),I1(A),dm/dt(g/s))				14.32+-0.01	12.6+-0.1	0.595+-0.001							
+(Tresis(C),Tentr(C),Tsaid(C))				452+-2		21.8+-0.5	40.5+-0.3	
+(Area diagrama PV (hPa.cm),periodo rot.(s),Vdin(V))	902+-1		0.342+-0.002	0.0445+-0.0002
+
+Dados Maq. Term. ensaio #2 					
+(V1(V),I1(A),dm/dt(g/s))				16.00+-0.01	14.3+-0.1	0.626+-0.001
+(Tresis(C),Tentr(C),Tsaid(C))				542+-1		23.2+-0.2	40.0+-0.1
+(Area diagrama PV (hPa.cm),periodo rot.(s),Vdin(V))	1068+-1		0.313+-0.002	0.0965+-0.0002
+
+Dados Maq. Term. ensaio #3 									
+(V1(V),I1(A),dm/dt(g/s))				17.59+-0.01	15.6+-0.1	0.621+-0.001
+(Tresis(C),Tentr(C),Tsaid(C))				572+-1		25.0+-0.3	45.5+-0.1
+(Area diagrama PV (hPa.cm),periodo rot.(s),Vdin(V))	Nota 1		Nota 1		0.1252+-0.0002	
+
+Tabela de calibração do dinamómetro: 
+Digitalize ficheiro em anexo calib-Quinta11.jpg
+
+-Comprimento do braço do travão de Prony(m) :0.247+-0.002
+-Diametro do êmbolo (cm): 6.0
+
+Nota 1 -valores a  obter do ficheiro tsP-data-XXX11.dat
+
+Volumes mínimo  e máximo ocupado pelo gás durante o ciclo de Stirling: 140cm^3, 278cm^3
