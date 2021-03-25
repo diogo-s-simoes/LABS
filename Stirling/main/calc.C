@@ -59,6 +59,10 @@ int main()  {
     const double Tw3=0.271;
     const double Uf3=0.1252;
 
-    cout<<W0<<endl<<W1<<endl<<W2<<endl<<W3<<endl;
+    const double F1=0.00621358;
+    const double F2=0.00660207;
+    const double F3=0.00681649;
+
+    //cout<<W0<<endl<<W1<<endl<<W2<<endl<<W3<<endl;
     return 0;
 }
