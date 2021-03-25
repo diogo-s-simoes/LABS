@@ -7,13 +7,13 @@
 
 int main()  {
 
-    NewReader tS("data/S(t).dat");
-    NewReader tP("data/P(t).dat");
+    NewReader tS("data/S(t).txt");
+    NewReader tP("data/P(t).txt");
 
     vector<double> instante;
 
     vector <vector<double>> data;
-    int Nlines = tsP.GetNrInstantes();
+    int Nlines = tS.GetNrInstantes();
 
     for(int i=0; i<Nlines; i++){
         instante.push_back(tS.GetTempo(i));
@@ -23,10 +23,12 @@ int main()  {
         data.push_back(instante);
         instante.clear();
     }
-
+    
     LETintegral itg(data);
 
-    double Wg=lIC.integrate(2,1);
-    
+    double Wg=itg.integrate(2,1);
+
+    cout<<Wg<<endl;
+
     return 0;
 }
