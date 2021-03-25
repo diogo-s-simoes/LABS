@@ -6,6 +6,8 @@
 #include "LETintegral.h"
 
 int main()  {
+    const double cH2O=4200;
+
     const double Vmin=140e-6;
     const double Vmax=278e-6;
     const double lProny=0.247;
@@ -55,14 +57,35 @@ int main()  {
     const double Tw2=0.313;
     const double Uf2=0.0965;
 
-    const double W3=5.09983;		
+    const double W3=5.09983;	
     const double Tw3=0.271;
     const double Uf3=0.1252;
 
-    const double F1=0.00621358;
-    const double F2=0.00660207;
-    const double F3=0.00681649;
+    double F1=0.00621358;
+    double F2=0.00660207;
+    double F3=0.00681649;
 
-    //cout<<W0<<endl<<W1<<endl<<W2<<endl<<W3<<endl;
+    double Pff0=U0*I0;
+    double Pff1=U1*I1;
+    double Pff2=U2*I2;
+    double Pff3=U3*I3;
+
+    double Pfq0=cH2O*dM0*(Tf0-Ti0);
+    double Pfq1=cH2O*dM1*(Tf1-Ti1);
+    double Pfq2=cH2O*dM2*(Tf2-Ti2);
+    double Pfq3=cH2O*dM3*(Tf3-Ti3);
+
+    double Pwgas0=W0/Tw0;
+    double Pwgas1=W1/Tw1;
+    double Pwgas2=W2/Tw2;
+    double Pwgas3=W3/Tw3;
+
+    double Pmot0=0;//////////////////
+    double Pmot1=2*M_PI/Tw1*lProny*F1;
+    double Pmot2=2*M_PI/Tw2*lProny*F2;
+    double Pmot3=2*M_PI/Tw3*lProny*F3;
+
+    
+
     return 0;
 }

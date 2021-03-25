@@ -23,7 +23,7 @@ int main()  {
         instante.push_back(tP.GetDataVector(i));
 
         data.push_back(instante);
-        G.SetPoint(i,instante[0],instante[1]);
+        G.SetPoint(i,instante[0],instante[2]);
         instante.clear();
     }
     
@@ -49,7 +49,7 @@ int main()  {
 
     TCanvas* c1 = new TCanvas();
     G.Draw("APL");
-    c1->SaveAs("S(t).png");
+    c1->SaveAs("P(t).png");
 
     return 0;
 }
