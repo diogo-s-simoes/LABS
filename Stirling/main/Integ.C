@@ -15,18 +15,27 @@ int main()  {
     vector <vector<double>> data;
     int Nlines = tS.GetNrInstantes();
 
-    TGraph G;
+    TGraph GP;
+    TGraph GS;
 
     for(int i=0; i<Nlines; i++){
-        instante.push_back(tS.GetTempo(i));
-        instante.push_back(tS.GetDataVector(i));
-        instante.push_back(tP.GetDataVector(i));
+        if(i<2||i>=Nlines-2){
+            instante.push_back(tS.GetTempo(i));
+            instante.push_back(tS.GetDataVector(i));
+            instante.push_back(tP.GetDataVector(i));
+        }
+        else{
+            instante.push_back(tS.GetTempo(i));
+            instante.push_back((tS.GetDataVector(i-2)+tS.GetDataVector(i-1)+tS.GetDataVector(i)+tS.GetDataVector(i+1)+tS.GetDataVector(i+2))/5.);
+            instante.push_back((tP.GetDataVector(i-2)+tP.GetDataVector(i-1)+tP.GetDataVector(i)+tP.GetDataVector(i+1)+tP.GetDataVector(i+2))/5.);
+        }
 
         data.push_back(instante);
-        G.SetPoint(i,instante[0],instante[2]);
+        GP.SetPoint(i,instante[0],instante[2]);
+        GS.SetPoint(i,instante[0],instante[1]);
         instante.clear();
     }
-    
+
     //for(int i=0; i<Nlines; i++){
     //    cout<<data[i][0]<<endl;
     //}
@@ -48,7 +57,10 @@ int main()  {
     cout<<data.back()[0]-data[0][0]<<endl;
 
     TCanvas* c1 = new TCanvas();
-    G.Draw("APL");
+    GS.Draw("APL");
+    c1->SaveAs("S(t).png");
+    c1->Clear();
+    GP.Draw("APL");
     c1->SaveAs("P(t).png");
 
     return 0;
