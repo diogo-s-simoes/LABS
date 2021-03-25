@@ -9,7 +9,6 @@ class LETintegral{
 
 	public:
 		LETintegral(vector<vector<double>> fV);
-        ~LETintegral();
 
         void order(int var);
 		double integrate(int y, int x);

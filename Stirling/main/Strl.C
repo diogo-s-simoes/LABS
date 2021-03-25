@@ -24,17 +24,17 @@ int main()  {
         instante.clear();
     }
     
-    for(int i=0; i<Nlines; i++){
-        cout<<data[i][1]<<endl;
-    }
+    //for(int i=0; i<Nlines; i++){
+    //    cout<<data[i][0]<<endl;
+    //}
 
     LETintegral itg(data);
 
-    itg.order(0);
+    itg.order(1);
 
-    //for(int i=0; i<Nlines; i++){
-    //    cout<<itg.V[i][0]<<endl;
-    //}
+    for(int i=0; i<Nlines; i++){
+        cout<<itg.V[i][1]<<endl;
+    }
 
     //double Wg=itg.integrate(2,1);
 

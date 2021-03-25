@@ -5,10 +5,6 @@ LETintegral::LETintegral(vector<vector<double>> fV){
     V=fV;
 }
 
-LETintegral::~LETintegral(){
-    delete &V;
-}
-
 int cmpfunc0(const void* a, const void* b){ 
 	vector<double> *n1= (vector<double>*)a;
 	vector<double> *n2= (vector<double>*)b;
@@ -43,13 +39,13 @@ int cmpfunc3(const void* a, const void* b){
 
 void LETintegral::order(int var){
 	if(var==0)
-    qsort(&V[0],V.size(),sizeof(V[0].size()),cmpfunc0);
+    qsort(&V[0],V.size(),sizeof(vector<double>),cmpfunc0);
     if(var==1)
-    qsort(&V[0],V.size(),sizeof(V[0].size()),cmpfunc1);
+    qsort(&V[0],V.size(),sizeof(vector<double>),cmpfunc1);
     if(var==2)
-    qsort(&V[0],V.size(),sizeof(V[0].size()),cmpfunc2);
+    qsort(&V[0],V.size(),sizeof(vector<double>),cmpfunc2);
     if(var==3)
-    qsort(&V[0],V.size(),sizeof(V[0].size()),cmpfunc3);
+    qsort(&V[0],V.size(),sizeof(vector<double>),cmpfunc3);
 }
 
 double LETintegral::integrate(int y, int x){
