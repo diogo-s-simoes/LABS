@@ -30,15 +30,15 @@ int main()  {
 
     LETintegral itg(data);
 
-    itg.order(1);
+    //itg.order(1);
 
-    for(int i=0; i<Nlines; i++){
-        cout<<itg.V[i][1]<<endl;
-    }
+    //for(int i=0; i<Nlines; i++){
+    //    cout<<itg.V[i][1]<<endl;
+    //}
 
-    //double Wg=itg.integrate(2,1);
+    double Wg=itg.integrate(2,1);
 
-    //cout<<Wg<<endl;
+    cout<<Wg<<endl;
 
     return 0;
 }
