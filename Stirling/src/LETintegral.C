@@ -5,6 +5,10 @@ LETintegral::LETintegral(vector<vector<double>> fV){
     V=fV;
 }
 
+LETintegral::~LETintegral(){
+    delete &V;
+}
+
 int cmpfunc0(const void* a, const void* b){ 
 	vector<double> *n1= (vector<double>*)a;
 	vector<double> *n2= (vector<double>*)b;

@@ -24,11 +24,21 @@ int main()  {
         instante.clear();
     }
     
+    for(int i=0; i<Nlines; i++){
+        cout<<data[i][1]<<endl;
+    }
+
     LETintegral itg(data);
 
-    double Wg=itg.integrate(2,1);
+    itg.order(0);
 
-    cout<<Wg<<endl;
+    //for(int i=0; i<Nlines; i++){
+    //    cout<<itg.V[i][0]<<endl;
+    //}
+
+    //double Wg=itg.integrate(2,1);
+
+    //cout<<Wg<<endl;
 
     return 0;
 }
