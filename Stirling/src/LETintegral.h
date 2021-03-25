@@ -1,7 +1,7 @@
 #ifndef _letIntegrator_
 #define _letIntegrator_
 
-#include "Derivator.h"
+#include <vector>
 
 using namespace std;
 
