@@ -7,6 +7,12 @@
 
 int main()  {
     const double cH2O=4200;
+    const double Cv=718;
+    const double R=8.3145;
+
+    //???????????????????????????????????????????????????????????????????
+    double alpha=1.; //??????????????????????????????????????????????????
+    //???????????????????????????????????????????????????????????????????
 
     const double Vmin=140e-6;
     const double Vmax=278e-6;
@@ -66,26 +72,57 @@ int main()  {
     double F3=0.00681649;
 
     double Pff0=U0*I0;
-    double Pff1=U1*I1;
-    double Pff2=U2*I2;
-    double Pff3=U3*I3;
+    double Pfq1=U1*I1;
+    double Pfq2=U2*I2;
+    double Pfq3=U3*I3;
 
     double Pfq0=cH2O*dM0*(Tf0-Ti0);
-    double Pfq1=cH2O*dM1*(Tf1-Ti1);
-    double Pfq2=cH2O*dM2*(Tf2-Ti2);
-    double Pfq3=cH2O*dM3*(Tf3-Ti3);
+    double Pff1=cH2O*dM1*(Tf1-Ti1);
+    double Pff2=cH2O*dM2*(Tf2-Ti2);
+    double Pff3=cH2O*dM3*(Tf3-Ti3);
 
     double Pwgas0=W0/Tw0;
     double Pwgas1=W1/Tw1;
     double Pwgas2=W2/Tw2;
     double Pwgas3=W3/Tw3;
 
-    double Pmot0=0;//////////////////
+    double Pmot0=0;/////////how to calculate P_atrito?/////////
     double Pmot1=2*M_PI/Tw1*lProny*F1;
     double Pmot2=2*M_PI/Tw2*lProny*F2;
     double Pmot3=2*M_PI/Tw3*lProny*F3;
 
-    
+    double Pperdas0=Pff0+Pmot0-Pfq0;
+    double Pperdas1=Pfq1-Pff1-Pmot1;
+    double Pperdas2=Pfq2-Pff2-Pmot2;
+    double Pperdas3=Pfq3-Pff3-Pmot3;
+
+    double Patrito1=Pwgas1-Pmot1;
+    double Patrito2=Pwgas2-Pmot2;
+    double Patrito3=Pwgas3-Pmot3;
+
+    double e10=Pfq0/Pmot0;
+    double n11=Pmot1/Pfq1;
+    double n12=Pmot2/Pfq2;
+    double n13=Pmot3/Pfq3;
+
+    double e20=(Pfq0+Pperdas0)/(-Pwgas0);
+    double n21=Pmot1/(Pmot1+Pff1);
+    double n22=Pmot2/(Pmot2+Pff2);
+    double n23=Pmot3/(Pmot3+Pff3);
+
+    double n31=Pwgas1/(Pwgas1+Pff1);
+    double n32=Pwgas2/(Pwgas2+Pff2);
+    double n33=Pwgas3/(Pwgas3+Pff3);
+
+    double eca0=(Ti0+Tf0)/((Ti0+Tf0)-2*Tres0)-alpha*Cv/(R*log(Vmax/Vmin));
+    double nca1=(1-(Ti1+Tf1)/2*Tres1)/(1+alpha*Cv/(R*log(Vmax/Vmin))*(1-(Ti1+Tf1)/2*Tres1));
+    double nca2=(1-(Ti2+Tf2)/2*Tres2)/(1+alpha*Cv/(R*log(Vmax/Vmin))*(1-(Ti2+Tf2)/2*Tres2));
+    double nca3=(1-(Ti3+Tf3)/2*Tres3)/(1+alpha*Cv/(R*log(Vmax/Vmin))*(1-(Ti3+Tf3)/2*Tres3));
+
+    double ec0=(Ti0+Tf0)/((Ti0+Tf0)-2*Tres0);
+    double nc1=(1-(Ti1+Tf1)/2*Tres1);
+    double nc2=(1-(Ti2+Tf2)/2*Tres2);
+    double nc3=(1-(Ti3+Tf3)/2*Tres3);
 
     return 0;
 }
