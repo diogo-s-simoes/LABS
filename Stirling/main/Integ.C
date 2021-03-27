@@ -52,6 +52,7 @@ int main()  {
 
     double Wg=itg.integrate(2,1)*M_PI*dEmb*dEmb/(4*10000);
 
+    cout<<itg.integrate(2,1)<<endl;
     cout<<Wg<<endl;
 
     cout<<data.back()[0]-data[0][0]<<endl;

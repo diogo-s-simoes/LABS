@@ -10,10 +10,6 @@ int main()  {
     const double Cv=718;
     const double R=8.3145;
 
-    //???????????????????????????????????????????????????????????????????
-    double alpha=0.01;//??????????????????????????????????????????????????
-    //???????????????????????????????????????????????????????????????????
-
     const double Vmin=140e-6;
     const double Vmax=278e-6;
     const double lProny=0.247;
@@ -117,25 +113,25 @@ int main()  {
     double n32=Pwgas2/(Pwgas2+Pff2);
     double n33=Pwgas3/(Pwgas3+Pff3);
 
-    double eca0=((Ti0+Tf0)/2)/(((Ti0+Tf0)/2)-(Tres0))-alpha*Cv/(R*log(Vmax/Vmin));
-    double nca1=(1-(Ti1+Tf1)/(2*Tres1))/(1+alpha*Cv/(R*log(Vmax/Vmin))*(1-(Ti1+Tf1)/(2*Tres1)));
-    double nca2=(1-(Ti2+Tf2)/(2*Tres2))/(1+alpha*Cv/(R*log(Vmax/Vmin))*(1-(Ti2+Tf2)/(2*Tres2)));
-    double nca3=(1-(Ti3+Tf3)/(2*Tres3))/(1+alpha*Cv/(R*log(Vmax/Vmin))*(1-(Ti3+Tf3)/(2*Tres3)));
+    double a0=(((Ti0+Tf0)/2)/(((Ti0+Tf0)/2)-(Tres0))-e20)/(Cv/(R*log(Vmax/Vmin)));
+    double a1=((1-(Ti1+Tf1)/(2*Tres1))/n31-1)/(Cv/(R*log(Vmax/Vmin))*(1-(Ti1+Tf1)/(2*Tres1)));
+    double a2=((1-(Ti2+Tf2)/(2*Tres2))/n32-1)/(Cv/(R*log(Vmax/Vmin))*(1-(Ti2+Tf2)/(2*Tres2)));
+    double a3=((1-(Ti3+Tf3)/(2*Tres3))/n33-1)/(Cv/(R*log(Vmax/Vmin))*(1-(Ti3+Tf3)/(2*Tres3)));
+
+    double eca0=((Ti0+Tf0)/2)/(((Ti0+Tf0)/2)-(Tres0))-a0*Cv/(R*log(Vmax/Vmin));
+    double nca1=(1-(Ti1+Tf1)/(2*Tres1))/(1+a1*Cv/(R*log(Vmax/Vmin))*(1-(Ti1+Tf1)/(2*Tres1)));
+    double nca2=(1-(Ti2+Tf2)/(2*Tres2))/(1+a2*Cv/(R*log(Vmax/Vmin))*(1-(Ti2+Tf2)/(2*Tres2)));
+    double nca3=(1-(Ti3+Tf3)/(2*Tres3))/(1+a3*Cv/(R*log(Vmax/Vmin))*(1-(Ti3+Tf3)/(2*Tres3)));
 
     double ec0=((Ti0+Tf0)/2)/(((Ti0+Tf0)/2)-(Tres0));
     double nc1=(1-(Ti1+Tf1)/(2*Tres1));
     double nc2=(1-(Ti2+Tf2)/(2*Tres2));
     double nc3=(1-(Ti3+Tf3)/(2*Tres3));
 
-    cout<<Ti0<<"//"<<Tf0<<"//"<<Tres0<<endl;
-    cout<<Ti1<<"//"<<Tf1<<"//"<<Tres1<<endl;
-    cout<<Ti2<<"//"<<Tf2<<"//"<<Tres2<<endl;
-    cout<<Ti3<<"//"<<Tf3<<"//"<<Tres3<<endl;
-    cout<<endl<<endl;
-    cout<<e10<<"<"<<e20<<"<"<<eca0<<"<"<<ec0<<endl;
-    cout<<n11<<"<"<<n21<<"<"<<n31<<"<"<<nca1<<"<"<<nc1<<endl;
-    cout<<n12<<"<"<<n22<<"<"<<n32<<"<"<<nca2<<"<"<<nc2<<endl;
-    cout<<n13<<"<"<<n23<<"<"<<n33<<"<"<<nca3<<"<"<<nc3<<endl;
+    cout<<e10<<"<"<<e20<<"<"<<a0<<"<"<<ec0<<endl;
+    cout<<n11<<"<"<<n21<<"<"<<n31<<"<"<<a1<<"<"<<nc1<<endl;
+    cout<<n12<<"<"<<n22<<"<"<<n32<<"<"<<a2<<"<"<<nc2<<endl;
+    cout<<n13<<"<"<<n23<<"<"<<n33<<"<"<<a3<<"<"<<nc3<<endl;
 
     return 0;
 }
