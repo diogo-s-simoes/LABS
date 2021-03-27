@@ -11,7 +11,7 @@ int main()  {
     const double R=8.3145;
 
     //???????????????????????????????????????????????????????????????????
-    double alpha=1.;//??????????????????????????????????????????????????
+    double alpha=0.01;//??????????????????????????????????????????????????
     //???????????????????????????????????????????????????????????????????
 
     const double Vmin=140e-6;
@@ -34,7 +34,7 @@ int main()  {
 
     const double U3=17.59;
     const double I3=15.6;
-    const double dM3=0.621;
+    const double dM3=0.621e-3;
 
     const double Tres0=287.9;
     const double Ti0=294.3;
@@ -67,9 +67,9 @@ int main()  {
     const double Tw3=0.271;
     const double Uf3=0.1252;
 
-    double F1=0.00621358;
-    double F2=0.00660207;
-    double F3=0.00681649;
+    double F1=0.338338;
+    double F2=0.726827;
+    double F3=0.941244;
 
     double Pff0=U0*I0;
     double Pfq1=U1*I1;
@@ -85,11 +85,14 @@ int main()  {
     double Pwgas1=W1/Tw1;
     double Pwgas2=W2/Tw2;
     double Pwgas3=W3/Tw3;
+    //cout<<Pwgas0<<endl;
 
-    double Pmot0=0;/////////how to calculate P_atrito?/////////
+    double Pmot0=-Pwgas0;/////////how to calculate P_atrito?/////////
     double Pmot1=2*M_PI/Tw1*lProny*F1;
     double Pmot2=2*M_PI/Tw2*lProny*F2;
     double Pmot3=2*M_PI/Tw3*lProny*F3;
+
+    cout<<Pwgas1<<"//"<<Pmot1<<endl;
 
     double Pperdas0=Pff0+Pmot0-Pfq0;
     double Pperdas1=Pfq1-Pff1-Pmot1;
@@ -114,15 +117,25 @@ int main()  {
     double n32=Pwgas2/(Pwgas2+Pff2);
     double n33=Pwgas3/(Pwgas3+Pff3);
 
-    double eca0=(Ti0+Tf0)/((Ti0+Tf0)-2*Tres0)-alpha*Cv/(R*log(Vmax/Vmin));
-    double nca1=(1-(Ti1+Tf1)/2*Tres1)/(1+alpha*Cv/(R*log(Vmax/Vmin))*(1-(Ti1+Tf1)/2*Tres1));
-    double nca2=(1-(Ti2+Tf2)/2*Tres2)/(1+alpha*Cv/(R*log(Vmax/Vmin))*(1-(Ti2+Tf2)/2*Tres2));
-    double nca3=(1-(Ti3+Tf3)/2*Tres3)/(1+alpha*Cv/(R*log(Vmax/Vmin))*(1-(Ti3+Tf3)/2*Tres3));
+    double eca0=((Ti0+Tf0)/2)/(((Ti0+Tf0)/2)-(Tres0))-alpha*Cv/(R*log(Vmax/Vmin));
+    double nca1=(1-(Ti1+Tf1)/(2*Tres1))/(1+alpha*Cv/(R*log(Vmax/Vmin))*(1-(Ti1+Tf1)/(2*Tres1)));
+    double nca2=(1-(Ti2+Tf2)/(2*Tres2))/(1+alpha*Cv/(R*log(Vmax/Vmin))*(1-(Ti2+Tf2)/(2*Tres2)));
+    double nca3=(1-(Ti3+Tf3)/(2*Tres3))/(1+alpha*Cv/(R*log(Vmax/Vmin))*(1-(Ti3+Tf3)/(2*Tres3)));
 
-    double ec0=(Ti0+Tf0)/((Ti0+Tf0)-2*Tres0);
-    double nc1=(1-(Ti1+Tf1)/2*Tres1);
-    double nc2=(1-(Ti2+Tf2)/2*Tres2);
-    double nc3=(1-(Ti3+Tf3)/2*Tres3);
+    double ec0=((Ti0+Tf0)/2)/(((Ti0+Tf0)/2)-(Tres0));
+    double nc1=(1-(Ti1+Tf1)/(2*Tres1));
+    double nc2=(1-(Ti2+Tf2)/(2*Tres2));
+    double nc3=(1-(Ti3+Tf3)/(2*Tres3));
+
+    cout<<Ti0<<"//"<<Tf0<<"//"<<Tres0<<endl;
+    cout<<Ti1<<"//"<<Tf1<<"//"<<Tres1<<endl;
+    cout<<Ti2<<"//"<<Tf2<<"//"<<Tres2<<endl;
+    cout<<Ti3<<"//"<<Tf3<<"//"<<Tres3<<endl;
+    cout<<endl<<endl;
+    cout<<e10<<"<"<<e20<<"<"<<eca0<<"<"<<ec0<<endl;
+    cout<<n11<<"<"<<n21<<"<"<<n31<<"<"<<nca1<<"<"<<nc1<<endl;
+    cout<<n12<<"<"<<n22<<"<"<<n32<<"<"<<nca2<<"<"<<nc2<<endl;
+    cout<<n13<<"<"<<n23<<"<"<<n33<<"<"<<nca3<<"<"<<nc3<<endl;
 
     return 0;
 }

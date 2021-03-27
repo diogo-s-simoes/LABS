@@ -30,9 +30,9 @@ int main()  {
 
     G.Fit(fCal);
 
-    double Uf1=0.0445;
-    double Uf2=0.0965;
-    double Uf3=0.1252;
+    double Uf1=0.0445*1000;
+    double Uf2=0.0965*1000;
+    double Uf3=0.1252*1000;
 
     double F1=fCal->Eval(Uf1);
     double F2=fCal->Eval(Uf2);
