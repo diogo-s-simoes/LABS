@@ -14,7 +14,7 @@ int main(){
     double ac = 0.5*0.000138;
     double ae = 0.5*0.000138;
     double R=8.3145;
-    double h=0.001;
+    double h=0.0001;
     double Tck=(23.2+40.)/2+273.15;
     double The=542+273.15;
 
@@ -37,11 +37,11 @@ int main(){
 
     vector<double> v;
     v.push_back(101234);
-    v.push_back(0.000001);
-    v.push_back(0.000001);
-    v.push_back(0.000001);
-    v.push_back(0.000001);
-    v.push_back(0.000001);
+    v.push_back(0.002);
+    v.push_back(0.002);
+    v.push_back(0.002);
+    v.push_back(0.002);
+    v.push_back(0.002);
     v.push_back(300);
     v.push_back((23.2+40.)/2+273.15);
     v.push_back((((23.2+40.)/2+273.15)+(542+273.15))/2);
@@ -58,97 +58,97 @@ int main(){
         return A*ac*w*(cos(w*x[16])-cos(w*x[16]-M_PI/2));
     };
     TF1 FVC("FVC", fvc, 0, 1000, 0); // npar=0, ndim=1 (default)
-    FVC.SetNpx(3000);
+    FVC.SetNpx(300000);
 
     auto fve = [&](double* x, double* par) {
         return A*ae*w*cos(w*x[16]);
     };
     TF1 FVE("FVE", fve, 0, 1000, 0); // npar=0, ndim=1 (default)
-    FVE.SetNpx(3000);
+    FVE.SetNpx(300000);
 
     auto fp = [&](double* x, double* par) {
         return -g*x[0]*(A*ac*w*cos(w*x[16])/Tck+A*ae*w*cos(w*x[16]-M_PI/2)/The)/(x[15]/Tck+g*(x[12]/x[7]+x[13]/x[8]+x[14]/x[9])+x[15]/The);
     };
     TF1 FP("FP", fp, 0, 1000, 0); // npar=0, ndim=1 (default)
-    FP.SetNpx(3000);
+    FP.SetNpx(300000);
     
     auto fmc = [&](double* x, double* par) {
         return (x[0]*A*ac*w*cos(w*x[16])-g*x[0]*(A*ac*w*cos(w*x[16])/Tck+A*ae*w*cos(w*x[16]-M_PI/2)/The)/(x[15]/Tck+g*(x[12]/x[7]+x[13]/x[8]+x[14]/x[9])+x[15]/The)*x[11]/g)/(R*Tck);
     };
     TF1 FMC("FMC", fmc, 0, 1000, 0); // npar=0, ndim=1 (default)
-    FMC.SetNpx(3000);
+    FMC.SetNpx(300000);
 
     auto fmk = [&](double* x, double* par) {
         return x[2]*(-g)*x[0]*(A*ac*w*cos(w*x[16])/Tck+A*ae*w*cos(w*x[16]-M_PI/2)/The)/(x[15]/Tck+g*(x[12]/x[7]+x[13]/x[8]+x[14]/x[9])+x[15]/The)/x[0];
     };
     TF1 FMK("FMK", fmk, 0, 150, 0); // npar=0, ndim=1 (default)
-    FMK.SetNpx(3000);
+    FMK.SetNpx(300000);
 
     auto fmr = [&](double* x, double* par) {
         return x[3]*(-g)*x[0]*(A*ac*w*cos(w*x[16])/Tck+A*ae*w*cos(w*x[16]-M_PI/2)/The)/(x[15]/Tck+g*(x[12]/x[7]+x[13]/x[8]+x[14]/x[9])+x[15]/The)/x[0];
     };
     TF1 FMR("FMR", fmr, 0, 150, 0); // npar=0, ndim=1 (default)
-    FMR.SetNpx(3000);
+    FMR.SetNpx(300000);
 
     auto fmh = [&](double* x, double* par) {
         return x[4]*(-g)*x[0]*(A*ac*w*cos(w*x[16])/Tck+A*ae*w*cos(w*x[16]-M_PI/2)/The)/(x[15]/Tck+g*(x[12]/x[7]+x[13]/x[8]+x[14]/x[9])+x[15]/The)/x[0];
     };
     TF1 FMH("FMH", fmh, 0, 150, 0); // npar=0, ndim=1 (default)
-    FMH.SetNpx(3000);
+    FMH.SetNpx(300000);
 
     auto fme = [&](double* x, double* par) {
         return -(x[0]*A*ac*w*cos(w*x[16])-g*x[0]*(A*ac*w*cos(w*x[16])/Tck+A*ae*w*cos(w*x[16]-M_PI/2)/The)/(x[15]/Tck+g*(x[12]/x[7]+x[13]/x[8]+x[14]/x[9])+x[15]/The)*x[11]/g)/(R*Tck)+(x[2]+x[3]+x[4])*(g)*x[0]*(A*ac*w*cos(w*x[16])/Tck+A*ae*w*cos(w*x[16]-M_PI/2)/The)/(x[15]/Tck+g*(x[12]/x[7]+x[13]/x[8]+x[14]/x[9])+x[15]/The)/x[0];
     };
     TF1 FME("FME", fme, 0, 150, 0); // npar=0, ndim=1 (default)
-    FME.SetNpx(3000);
+    FME.SetNpx(300000);
 
     auto ftc = [&](double* x, double* par) {
         return (x[0]*x[11]/(R*x[1])-x[6])/h;
     };
     TF1 FTC("FTC", ftc, 0, 150, 0); // npar=0, ndim=1 (default)
-    FTC.SetNpx(3000);
+    FTC.SetNpx(300000);
 
     auto fte = [&](double* x, double* par) {
         return (x[0]*x[15]/(R*x[5])-x[10])/h;
     };
     TF1 FTE("FTE", fte, 0, 150, 0); // npar=0, ndim=1 (default)
-    FTE.SetNpx(3000);
+    FTE.SetNpx(300000);
 
     auto ftk = [&](double* x, double* par) {
         return 0*x[0];
     };
     TF1 FTK("FTK", ftk, 0, 150, 0); // npar=0, ndim=1 (default)
-    FTK.SetNpx(3000);
+    FTK.SetNpx(300000);
 
     auto ftr = [&](double* x, double* par) {
         return 0*x[0];
     };
     TF1 FTR("FTR", ftr, 0, 150, 0); // npar=0, ndim=1 (default)
-    FTR.SetNpx(3000);
+    FTR.SetNpx(300000);
 
     auto fth = [&](double* x, double* par) {
         return 0*x[0];
     };
     TF1 FTH("FTH", fth, 0, 150, 0); // npar=0, ndim=1 (default)
-    FTH.SetNpx(3000);
+    FTH.SetNpx(300000);
 
     auto fvk = [&](double* x, double* par) {
-        return R*x[2]*x[7]/x[0];
+        return (R*x[2]*x[7]/x[0]-x[12])/h;
     };
     TF1 FVK("FVK", fvk, 0, 150, 0); // npar=0, ndim=1 (default)
-    FVK.SetNpx(3000);
+    FVK.SetNpx(300000);
 
     auto fvr = [&](double* x, double* par) {
-        return R*x[3]*x[8]/x[0];
+        return (R*x[3]*x[8]/x[0]-x[13])/h;
     };
     TF1 FVR("FVR", fvr, 0, 150, 0); // npar=0, ndim=1 (default)
-    FVR.SetNpx(3000);
+    FVR.SetNpx(300000);
 
     auto fvh = [&](double* x, double* par) {
-        return R*x[4]*x[9]/x[0];
+        return (R*x[4]*x[9]/x[0]-x[14])/h;
     };
     TF1 FVH("FVH", fvh, 0, 150, 0); // npar=0, ndim=1 (default)
-    FVH.SetNpx(3000);
+    FVH.SetNpx(300000);
 
     vector<TF1> VF;
     VF.push_back(FP);
@@ -168,8 +168,33 @@ int main(){
     VF.push_back(FVH);
     VF.push_back(FVE);
     ODEsolver S(VF);
-    double tmax = 75;
+    double tmax = 0.313;
     vector<ODEpoint> P = S.RK4(P0, h, tmax);
 
+    TGraph Gr;
+    for(int i = 10; i<P.size(); ++i){
+        Gr.SetPoint(i-10,P[i][11]+P[i][12]+P[i][13]+P[i][14]+P[i][15],P[i][0]);
+    }
+
+    TCanvas* c1 = new TCanvas();
+    Gr.Draw("");
+    c1->SaveAs("ODE.png");
+
     return 0;
+    //p=x[0]
+    //mc=x[1]
+    //mk=x[2]
+    //mr=x[3]
+    //mh=x[4]
+    //me=x[5]
+    //Tc=x[6]
+    //Tk=x[7]
+    //Tr=x[8]
+    //Th=x[9]
+    //Te=x[10]
+    //Vc=x[11]
+    //Vk=x[12]
+    //Vr=x[13]
+    //Vh=x[14]
+    //Ve=x[15]
 }
