@@ -1,9 +1,13 @@
 #include <cmath>
-#include "NewReader.h"
 #include "TGraph.h"
 #include "TCanvas.h"
-#include "TF1.h"
 #include "TApplication.h"
+#include "TLegend.h"
+#include "TStyle.h"
+#include "TPad.h"
+
+#include "TF1.h"
+#include "NewReader.h"
 #include "LETintegral.h"
 
 int main()  {
@@ -40,9 +44,34 @@ int main()  {
 
     cout<<F1<<endl<<F2<<endl<<F3<<endl;
 
-    TCanvas* c1 = new TCanvas();
+    TCanvas* c1 = new TCanvas("cc", "cc", 900,450);
+    G.SetMarkerStyle(8);
+    
+    TAxis *ax_t = G.GetXaxis();
+    TAxis *ay_t = G.GetYaxis();
 
-    fCal->Draw("");
+    ax_t->SetTitle("U(V)");
+    ay_t->SetTitle("F(N)");
+    
+   /* auto l = new TLegend(0.65,0.7,0.89,0.89);
+   l->AddEntry(fCal,"Fit result", "L");
+   l->Draw("same");*/
+   
+  gStyle->SetOptFit(111);
+  gStyle -> SetStatBorderSize(5);
+  gStyle -> SetStatFontSize(1);
+  gStyle -> SetStatFont(62);
+  gStyle -> SetStatTextColor(1);
+  gStyle -> SetStatColor(3);
+  gStyle -> SetStatStyle(0);
+  gStyle -> SetStatX(0.55);
+  gStyle -> SetStatY(0.85);
+  gStyle -> SetStatW(0.2165);
+  
+  gPad->SetGrid(1, 1); gPad->Update();
+
+    G.Draw("AP");
+    fCal->Draw("same");
 
     c1->SaveAs("calib.png");
 
