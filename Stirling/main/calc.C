@@ -88,7 +88,7 @@ int main()  {
     double Pmot2=2*M_PI/Tw2*lProny*F2;
     double Pmot3=2*M_PI/Tw3*lProny*F3;
 
-    cout<<Pwgas1<<"//"<<Pmot1<<endl;
+    //cout<<Pwgas1<<"//"<<Pmot1<<endl;
 
     double Pperdas0=Pff0+Pmot0-Pfq0;
     double Pperdas1=Pfq1-Pff1-Pmot1;
@@ -128,10 +128,56 @@ int main()  {
     double nc2=(1-(Ti2+Tf2)/(2*Tres2));
     double nc3=(1-(Ti3+Tf3)/(2*Tres3));
 
-    cout<<e10<<"<"<<e20<<"<"<<a0<<"<"<<ec0<<endl;
-    cout<<n11<<"<"<<n21<<"<"<<n31<<"<"<<a1<<"<"<<nc1<<endl;
-    cout<<n12<<"<"<<n22<<"<"<<n32<<"<"<<a2<<"<"<<nc2<<endl;
-    cout<<n13<<"<"<<n23<<"<"<<n33<<"<"<<a3<<"<"<<nc3<<endl;
+    //cout<<e10<<"<"<<e20<<"<"<<a0<<"<"<<ec0<<endl;
+    //cout<<n11<<"<"<<n21<<"<"<<n31<<"<"<<a1<<"<"<<nc1<<endl;
+    //cout<<n12<<"<"<<n22<<"<"<<n32<<"<"<<a2<<"<"<<nc2<<endl;
+    //cout<<n13<<"<"<<n23<<"<"<<n33<<"<"<<a3<<"<"<<nc3<<endl;
+
+    /////////////////////////////////////////Erros de alpha/////////////////////////////////////
+
+    double cte=(Cv/(R*log(Vmax/Vmin)));
+    double num=(1-(Ti1+Tf1)/(2*Tres1))/n31-1;
+    double denom=(Cv/(R*log(Vmax/Vmin))*(1-(Ti1+Tf1)/(2*Tres1)));
+    double pf1=( ( 1/(-2*Tres1*n31)*(1/cte)*(1-(Ti1+Tf1)/(2*Tres1)))-(num/(-cte*2*Tres1)))/(denom*denom);
+    double pfT=( (Ti1+Tf1)*2*denom/(4*Tres1*Tres1*n31)-((num*(Ti1+Tf1))/(cte*2*Tres1*Tres1)))/(denom*denom);
+    double pfN=(-(1-(Ti1+Tf1)/(2*Tres1))/(n31*n31))/denom;
+    double deltaa=abs(pf1)*0.5/a1+abs(pf1)*0.3/a1+pfT*2/a1+0.0015*pfN/a1;
+    cout<<"Maquina termica ensaio 1"<<endl;
+    /*cout<<pf1<<"  "<<abs(pf1)*Ti1*0.5/a1<<"  "<<abs(pf1)*Tf1*0.5/a1<<endl;
+    cout<<pfT<<"  "<<pfT*Tres1*0.5/a1<<endl;
+    cout<<pfN<<"  "<<0.0015*abs(pfN)*n31/a1<<  endl;*/
+    cout<<a1<<" +/- "<<abs(deltaa)*a1<<endl;
+
+    num=(1-(Ti2+Tf2)/(2*Tres2))/n32-1;
+    denom=(Cv/(R*log(Vmax/Vmin))*(1-(Ti2+Tf2)/(2*Tres2)));
+    pf1=( ( 1/(-2*Tres2*n32)*(1/cte)*(1-(Ti2+Tf2)/(2*Tres2)))-(num/(-cte*2*Tres2)))/(denom*denom);
+    pfT=( (Ti2+Tf2)*2*denom/(4*Tres2*Tres2*n32)-((num*(Ti2+Tf2))/(cte*2*Tres2*Tres2)))/(denom*denom);
+    pfN=(-(1-(Ti2+Tf2)/(2*Tres2))/(n32*n32))/denom;
+    deltaa=abs(pf1)*0.2/a2+abs(pf1)*0.1/a2+pfT*1/a2+0.002*pfN/a2;
+
+
+    cout<<"Maquina termica ensaio 2"<<endl;
+    cout<<a2<<" +/- "<<abs(deltaa)*a2<<endl;
+
+
+    num=(1-(Ti3+Tf3)/(2*Tres3))/n33-1;
+    denom=(Cv/(R*log(Vmax/Vmin))*(1-(Ti3+Tf3)/(2*Tres3)));
+    pf1=( ( 1/(-2*Tres3*n33)*(1/cte)*(1-(Ti3+Tf3)/(2*Tres3)))-(num/(-cte*2*Tres3)))/(denom*denom);
+    pfT=( (Ti3+Tf3)*2*denom/(4*Tres3*Tres3*n33)-((num*(Ti3+Tf3))/(cte*2*Tres3*Tres3)))/(denom*denom);
+    pfN=(-(1-(Ti3+Tf3)/(2*Tres3))/(n33*n33))/denom;
+    deltaa=abs(pf1)*0.3/a3+abs(pf1)*0.1/a3+pfT*1/a3+0.00086*pfN/a3;
+
+
+    cout<<"Maquina termica ensaio 3"<<endl;
+    cout<<a3<<" +/- "<<abs(deltaa)*a3<<endl;
+
+    cout<<"Bomba de calor"<<endl;
+    //a0=(((Ti0+Tf0)/2)/(((Ti0+Tf0)/2)-(Tres0))-e20)/(Cv/(R*log(Vmax/Vmin)));
+    double xx=((Ti0+Tf0)/2)-(Tres0);
+    deltaa=0.5/a0*abs(  1/cte*-Tres0/(xx*xx) )+1.5/a0*abs( 1/cte*1/(xx*xx) )+0.062/a0*abs(-1/cte);
+
+    cout<<a0<<" +/- "<<abs(deltaa)*a0<<endl;
+    
 
     return 0;
 }
