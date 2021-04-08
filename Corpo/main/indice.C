@@ -56,7 +56,7 @@ double TETA = TETA_1 - TETA_2; //mais ou menos 47 graus
   int Nlines = ficheiro_1.GetNrInstantes();
 
 
-cout << endl<<Nlines<<endl;
+//cout << endl<<Nlines<<endl;
 //INSTANTE = (BETA, TENSÃO DETETOR)
 
   for(int i=0; i<Nlines; i++){
@@ -106,8 +106,49 @@ for(int i=0; i<Nlines; i++){
   delta_3 = EPSILON - data_3.at(i)[0];
   n_3 = pow(sin(TETA)*sin(TETA) + pow(sin(delta_3-TETA+ALPHA)+cos(ALPHA)*sin(TETA), 2)/(sin(ALPHA)*sin(ALPHA)), 0.5);
   indice_3.push_back(n_3);
-  //cout<<n_3<<endl; //ERRADO
+  cout<<n_3<<endl; //ERRADO
 }
+
+/////////////////
+
+//cout << endl<<Nn<<endl;
+
+  NewReader f_n_prisma("data/n_prisma.txt");
+  NewReader f__comp_onda("data/comp_onda.txt");
+
+  vector<double> n_prisma;
+  vector<double> comp_onda;
+TGraph G0;
+  //INSTANTE = (NPRISMA, COMPRIMENTO ONDA)
+  int Nn = ficheiro_1.GetNrInstantes();
+  for(int i=0; i<Nn; i++){
+    n_prisma.push_back(f_n_prisma.GetTempo(i));
+    comp_onda.push_back(f__comp_onda.GetTempo(i));
+    G0.SetPoint(i,n_prisma.at(i), comp_onda.at(i));
+  }
+
+cout << endl<<"OLA"<<endl;
+
+    auto lCal = [](double *x,double *p=nullptr){
+      return p[0]*x[0]+p[1];
+    };
+
+    TF1* fCal= new TF1("L", lCal, 1.,500.,2);
+
+    fCal->SetParameter(0,0.1);
+    fCal->SetParameter(1,0);
+
+    G0.Fit(fCal);
+
+
+
+
+
+
+
+cout << endl<<Nn<<endl;
+
+///////////////////////////7
 
 TGraph G1;
 TGraph G2;
@@ -142,9 +183,10 @@ TAxis *ax = G3.GetXaxis();
 TAxis *ay = G3.GetYaxis();
 ax->SetTitle("n");
 ay->SetTitle("I (mV)");
-G3.Draw("AL");
-G2.Draw("SAME");
-G1.Draw("SAME");
-c1->SaveAs("I(n).png");
+//G3.Draw("AL");
+//G2.Draw("SAME");
+//G1.Draw("SAME");
+G0.Draw("AL");
+c1->SaveAs("nco.png");
 
 }
