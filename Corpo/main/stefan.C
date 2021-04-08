@@ -104,7 +104,7 @@ int main()  {
     }
 
     ////////////////////////
-    
+
     NewReader Rdata("data/Rtable.txt");
     NewReader Tdata("data/Ttable.txt");
 
@@ -123,10 +123,23 @@ int main()  {
     ////////////////////////
 
     TGraph FT;
+    TGraph LOG;
 
     for(int i=0; i<10;++i){
         FT.SetPoint(i,sp3.Interpolate(V[i][0]/I[i][0]),D[i][0]);
+        LOG.SetPoint(i,log(sp3.Interpolate(V[i][0]/I[i][0])),log(D[i][0]));
     }
+
+    auto lCal = [](double *x,double *p=nullptr){
+      return p[0]*x[0]+p[1];
+    };
+
+    TF1* fCal= new TF1("L", lCal, 1.,500.,2);
+
+    fCal->SetParameter(0,1);
+    fCal->SetParameter(1,0);
+
+    LOG.Fit(fCal);
 
     TCanvas* c1 = new TCanvas();
     FT.SetMarkerSize(1);
@@ -134,12 +147,27 @@ int main()  {
     FT.SetMarkerColor(kBlue);
     FT.SetLineWidth(2);
     FT.SetLineColor(kRed);
-    TAxis *ax = FT.GetXaxis();
-    TAxis *ay = FT.GetYaxis();
-    ax->SetTitle("T (K)");
-    ay->SetTitle("Vd (mV)");
+    LOG.SetMarkerSize(1);
+    LOG.SetMarkerStyle(16);
+    LOG.SetMarkerColor(kBlue);
+    LOG.SetLineWidth(2);
+    LOG.SetLineColor(kRed);
+    TAxis *ax1 = FT.GetXaxis();
+    TAxis *ay1 = FT.GetYaxis();
+    TAxis *ax2 = LOG.GetXaxis();
+    TAxis *ay2 = LOG.GetYaxis();
+    ax1->SetTitle("T (K)");
+    ay1->SetTitle("Vd (mV)");
+    ax2->SetTitle("Log(T) (K)");
+    ay2->SetTitle("Log(Vd) (mV)");
     FT.Draw("APL");
     c1->SaveAs("F(T).png");
+    c1->Clear();
+    LOG.Draw("APL");
+    c1->SaveAs("Log(F).png");
+    c1->Clear();
+    sp3.Draw();
+    c1->SaveAs("T_R_interpolate.png");
 
     return 0;
 }
