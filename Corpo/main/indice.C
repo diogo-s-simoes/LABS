@@ -29,42 +29,122 @@ cn_02_xx  8.42  1.417
 cn_03_xx  4.997 1.091
 
 */
+double ALPHA = 60.0*M_PI/180;
+double TETA_1 = 286.983333*M_PI/180;
+double TETA_2 = 239.95*M_PI/180;
+double EPSILON = 274.3583333*M_PI/180;
+
+double TETA = TETA_1 - TETA_2; //mais ou menos 47 graus
 
 
-  NewReader ficheiro_1("data/cn_01_011.dat");
-  NewReader ficheiro_2("data/cn_02_011.dat");
-  NewReader ficheiro_3("data/cn_03_011.dat");
+
+
+
+  NewReader ficheiro_1("data/cn_01_011.txt");
+  NewReader ficheiro_2("data/cn_02_011.txt");
+  NewReader ficheiro_3("data/cn_03_011.txt");
 
 
   vector<double> instante_1;
   vector<double> instante_2;
   vector<double> instante_3;
 
-  vector <vector<double>> dados_1;
-  vector <vector<double>> dados_2;
-  vector <vector<double>> dados_3;
+  vector <vector<double>> data_1;
+  vector <vector<double>> data_2;
+  vector <vector<double>> data_3;
 
   int Nlines = ficheiro_1.GetNrInstantes();
 
 
-
+cout << endl<<Nlines<<endl;
 //INSTANTE = (BETA, TENSÃO DETETOR)
 
   for(int i=0; i<Nlines; i++){
-    instante_1.push_back(ficheiro_1.GetTempo(i));
+    instante_1.push_back(ficheiro_1.GetTempo(i)* M_PI/180);
     instante_1.push_back(ficheiro_1.GetDataVector(i));
-    data_1.push_back(instante);
+    data_1.push_back(instante_1);
     instante_1.clear();
 
-    instante_2.push_back(ficheiro_2.GetTempo(i));
+    instante_2.push_back(ficheiro_2.GetTempo(i)* M_PI/180);
     instante_2.push_back(ficheiro_2.GetDataVector(i));
-    data_2.push_back(instante);
+    data_2.push_back(instante_2);
     instante_2.clear();
 
-    instante_3.push_back(ficheiro_3.GetTempo(i));
+    instante_3.push_back(ficheiro_3.GetTempo(i)* M_PI/180);
     instante_3.push_back(ficheiro_3.GetDataVector(i));
-    data_3.push_back(instante);
+    data_3.push_back(instante_3);
     instante_3.clear();
-
-    cout<<instante_3(3)<<endl;
+    //cout << ficheiro_3.GetTempo(i) << ";   "<<ficheiro_3.GetDataVector(i)<<endl;
   }
+
+double delta_1;
+double delta_2;
+double delta_3;
+
+double n_1;
+double n_2;
+double n_3;
+
+vector<double> indice_1;
+vector<double> indice_2;
+vector<double> indice_3;
+
+for(int i=0; i<Nlines; i++){
+  delta_1 = EPSILON - data_1.at(i)[0]; //JÁ ESTÁ EM RAD
+  n_1 = pow(sin(TETA)*sin(TETA) + pow(sin(delta_1-TETA+ALPHA)+cos(ALPHA)*sin(TETA), 2)/(sin(ALPHA)*sin(ALPHA)), 0.5);
+  indice_1.push_back(n_1);
+
+  //cout<<data_1.at(i)[0]<<endl; //CERTO
+  //cout<<delta_1<<endl; //CERTO
+  //cout<<n_1<<endl; //ERRADO
+
+  delta_2 = EPSILON - data_2.at(i)[0];
+  n_2 = pow(sin(TETA)*sin(TETA) + pow(sin(delta_2-TETA+ALPHA)+cos(ALPHA)*sin(TETA), 2)/(sin(ALPHA)*sin(ALPHA)), 0.5);
+  indice_2.push_back(n_2);
+  //cout<<n_2<<endl; //ERRADO
+
+  delta_3 = EPSILON - data_3.at(i)[0];
+  n_3 = pow(sin(TETA)*sin(TETA) + pow(sin(delta_3-TETA+ALPHA)+cos(ALPHA)*sin(TETA), 2)/(sin(ALPHA)*sin(ALPHA)), 0.5);
+  indice_3.push_back(n_3);
+  //cout<<n_3<<endl; //ERRADO
+}
+
+TGraph G1;
+TGraph G2;
+TGraph G3;
+
+for(int i=0; i<Nlines; i++){
+    G1.SetPoint(i,indice_1[i],data_1[i][1]);
+    G2.SetPoint(i,indice_2[i],data_2[i][1]);
+    G3.SetPoint(i,indice_3[i],data_3[i][1]);
+}
+
+TCanvas* c1 = new TCanvas();
+G1.SetMarkerSize(0.5);
+G1.SetMarkerStyle(16);
+G1.SetMarkerColor(kBlue);
+G1.SetLineWidth(2);
+G1.SetLineColor(kRed);
+
+G2.SetMarkerSize(0.5);
+G2.SetMarkerStyle(16);
+G2.SetMarkerColor(kBlue);
+G2.SetLineWidth(2);
+G2.SetLineColor(kGreen);
+
+G3.SetMarkerSize(0.5);
+G3.SetMarkerStyle(16);
+G3.SetMarkerColor(kBlue);
+G3.SetLineWidth(2);
+G3.SetLineColor(kBlue);
+
+TAxis *ax = G3.GetXaxis();
+TAxis *ay = G3.GetYaxis();
+ax->SetTitle("n");
+ay->SetTitle("I (mV)");
+G3.Draw("AL");
+G2.Draw("SAME");
+G1.Draw("SAME");
+c1->SaveAs("I(n).png");
+
+}
