@@ -8,6 +8,7 @@
 #include "TF1.h"
 #include "NewReader.h"
 #include "LETintegral.h"
+#include "Spline3Interpolator.h"
 
 int main()  {
     double** V=new double* [10];
@@ -102,10 +103,29 @@ int main()  {
         V[i][0]=V[i][0]-R*I[i][0];
     }
 
+    ////////////////////////
+    
+    NewReader Rdata("data/Rtable.txt");
+    NewReader Tdata("data/Ttable.txt");
+
+    int Nlines = Rdata.GetNrInstantes();
+    
+    double* Rv=new double[Nlines];
+    double* Tv=new double[Nlines];
+
+    for(int i=0; i<Nlines; i++){
+        Rv[i]=Rdata.GetTempo(i)*0.4911;
+        Tv[i]=Tdata.GetTempo(i);
+    }
+
+    Spline3Interpolator sp3(Nlines,Rv,Tv);
+
+    ////////////////////////
+
     TGraph FT;
 
     for(int i=0; i<10;++i){
-        FT.SetPoint(i,V[i][0]*I[i][0],D[i][0]);
+        FT.SetPoint(i,sp3.Interpolate(V[i][0]/I[i][0]),D[i][0]);
     }
 
     TCanvas* c1 = new TCanvas();
@@ -116,7 +136,7 @@ int main()  {
     FT.SetLineColor(kRed);
     TAxis *ax = FT.GetXaxis();
     TAxis *ay = FT.GetYaxis();
-    ax->SetTitle("P (W)");
+    ax->SetTitle("T (K)");
     ay->SetTitle("Vd (mV)");
     FT.Draw("APL");
     c1->SaveAs("F(T).png");

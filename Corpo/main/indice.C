@@ -8,6 +8,7 @@
 #include "TLegend.h"
 #include "TApplication.h"
 #include "TPaveText.h"
+#include "Spline3Interpolator.h"
 
 int main(){
 
@@ -109,55 +110,33 @@ for(int i=0; i<Nlines; i++){
   cout<<n_3<<endl; //ERRADO
 }
 
-/////////////////
+//////////////////////
 
-//cout << endl<<Nn<<endl;
+    NewReader ndata("data/Rtable.txt");
+    NewReader Ldata("data/Ttable.txt");
 
-  NewReader f_n_prisma("data/n_prisma.txt");
-  NewReader f__comp_onda("data/comp_onda.txt");
+    int Nlines2 = ndata.GetNrInstantes();
+    
+    double* nv=new double[Nlines2];
+    double* Lv=new double[Nlines2];
 
-  vector<double> n_prisma;
-  vector<double> comp_onda;
-TGraph G0;
-  //INSTANTE = (NPRISMA, COMPRIMENTO ONDA)
-  int Nn = ficheiro_1.GetNrInstantes();
-  for(int i=0; i<Nn; i++){
-    n_prisma.push_back(f_n_prisma.GetTempo(i));
-    comp_onda.push_back(f__comp_onda.GetTempo(i));
-    G0.SetPoint(i,n_prisma.at(i), comp_onda.at(i));
-  }
+    for(int i=0; i<Nlines2; i++){
+        nv[i]=ndata.GetTempo(i);
+        Lv[i]=Ldata.GetTempo(i);
+    }
 
-cout << endl<<"OLA"<<endl;
+    Spline3Interpolator sp3(Nlines2,nv,Lv);
 
-    auto lCal = [](double *x,double *p=nullptr){
-      return p[0]*x[0]+p[1];
-    };
-
-    TF1* fCal= new TF1("L", lCal, 1.,500.,2);
-
-    fCal->SetParameter(0,0.1);
-    fCal->SetParameter(1,0);
-
-    G0.Fit(fCal);
-
-
-
-
-
-
-
-cout << endl<<Nn<<endl;
-
-///////////////////////////7
+///////////////////////////
 
 TGraph G1;
 TGraph G2;
 TGraph G3;
 
 for(int i=0; i<Nlines; i++){
-    G1.SetPoint(i,indice_1[i],data_1[i][1]);
-    G2.SetPoint(i,indice_2[i],data_2[i][1]);
-    G3.SetPoint(i,indice_3[i],data_3[i][1]);
+    G1.SetPoint(i,sp3.Interpolate(indice_1[i]),data_1[i][1]);
+    G2.SetPoint(i,sp3.Interpolate(indice_2[i]),data_2[i][1]);
+    G3.SetPoint(i,sp3.Interpolate(indice_3[i]),data_3[i][1]);
 }
 
 TCanvas* c1 = new TCanvas();
@@ -183,10 +162,9 @@ TAxis *ax = G3.GetXaxis();
 TAxis *ay = G3.GetYaxis();
 ax->SetTitle("n");
 ay->SetTitle("I (mV)");
-//G3.Draw("AL");
-//G2.Draw("SAME");
-//G1.Draw("SAME");
-G0.Draw("AL");
+G3.Draw("AL");
+G2.Draw("SAME");
+G1.Draw("SAME");
 c1->SaveAs("nco.png");
 
 }
