@@ -1,0 +1,36 @@
+
+Informações complementares sobre a 1ª parte da esperiência (lei de Planck):
+
+Angulo alfa do prisma= 60.00 graus
+
+Posição angular do prisma quando a face de incidência está perpendicular ao feixe de luz incidente = 286 59`
+Posição angular do prisma na posição usada durante as medições= 239 57`
+Posição angular do braço do detetor quando está colinear com o braço da fonte de luz =274 21` 30``
+
+Dados contidos nos ficheiro cn01_xx...cn03_xx: 
+-coluna 1-posição angular do braço do detetor em graus, coluna 2-tensão fornecida pelo detetor (0.01 mv)
+
+condições de aquisição dos ficheiros, V-tensão na lâmpada, I-corrente na lâmpada
+ficheiro	V(V)	I(A)
+cn_01_xx	12.42	1.734
+cn_02_xx	8.42	1.417
+cn_03_xx	4.997	1.091
+
+Informações complementares sobre a 2ª parte da esperiência (Lei de Stefan):
+Os dados relativos a esta parte serão recolhidos por cada grupo remotamente de acordo com as instruções dadas
+pelos docentes.
+
+Informações complementares sobre a 3ª parte da esperiência (Cubo de Leslie):
+Medições realizadas nas 4 faces do cubo pelo detetor de radição (termopilha), pelo termómetro ótico e pelo
+termómetro de termopar
+
+Face do cubo	termopilha	termómetro ótico		temperatura das faces do cubo medida por
+em análise			emissividade-temperatura lida	termómetro de termopar
+Preta		25.95 mV 	0.93		134.3 C		134 C
+Cinzenta	7.51 mV 	0.25		133.4 C		134 C
+Branca		24.42 mV	0.96		134.3 C		134 C
+Espelhada	1.55 mV		0.1		103.4 C		134 C
+Espelhada	1.55 mV		1.0		40.8 C		134 C
+Espelhada	1.55 mV		0.5		50.5 C		134 C
+Espelhada	1.55 mV		0.3		62.8 C		134 C
+
