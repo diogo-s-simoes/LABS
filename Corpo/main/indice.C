@@ -9,6 +9,7 @@
 #include "TApplication.h"
 #include "TPaveText.h"
 #include "Spline3Interpolator.h"
+#include "NewtonInterpolator.h"
 
 int main(){
 
@@ -82,6 +83,14 @@ double delta_1;
 double delta_2;
 double delta_3;
 
+double V1=12.42;
+double I1=1.734;
+double V2=8.42;
+double I2=1.417;
+double V3=4.997;
+double I3=1.091;
+
+
 double n_1;
 double n_2;
 double n_3;
@@ -112,8 +121,8 @@ for(int i=0; i<Nlines; i++){
 
 //////////////////////
 
-    NewReader ndata("data/Rtable.txt");
-    NewReader Ldata("data/Ttable.txt");
+    NewReader ndata("data/ntable.txt");
+    NewReader Ldata("data/Ltable.txt");
 
     int Nlines2 = ndata.GetNrInstantes();
     
@@ -121,23 +130,92 @@ for(int i=0; i<Nlines; i++){
     double* Lv=new double[Nlines2];
 
     for(int i=0; i<Nlines2; i++){
-        nv[i]=ndata.GetTempo(i);
-        Lv[i]=Ldata.GetTempo(i);
+        nv[Nlines2-1-i]=ndata.GetTempo(i);
+        Lv[Nlines2-1-i]=Ldata.GetTempo(i);
     }
 
-    Spline3Interpolator sp3(Nlines2,nv,Lv);
+    Spline3Interpolator spn(Nlines2,nv,Lv);
 
 ///////////////////////////
+///////////////////////////
+
+    NewReader Rdata("data/Rtable.txt");
+    NewReader Tdata("data/Ttable.txt");
+
+    int Nlines3 = Rdata.GetNrInstantes();
+    
+    double* Rv=new double[Nlines3];
+    double* Tv=new double[Nlines3];
+
+    for(int i=0; i<Nlines3; i++){
+        Rv[i]=Rdata.GetTempo(i)*0.4911;
+        Tv[i]=Tdata.GetTempo(i);
+    }
+
+    Spline3Interpolator spt(Nlines3,Rv,Tv);
+
+////////////////////////
 
 TGraph G1;
 TGraph G2;
 TGraph G3;
 
 for(int i=0; i<Nlines; i++){
-    G1.SetPoint(i,sp3.Interpolate(indice_1[i]),data_1[i][1]);
-    G2.SetPoint(i,sp3.Interpolate(indice_2[i]),data_2[i][1]);
-    G3.SetPoint(i,sp3.Interpolate(indice_3[i]),data_3[i][1]);
+    G1.SetPoint(i,spn.Interpolate(indice_1[i]),data_1[i][1]);
+    G2.SetPoint(i,spn.Interpolate(indice_2[i]),data_2[i][1]);
+    G3.SetPoint(i,spn.Interpolate(indice_3[i]),data_3[i][1]);
 }
+
+double T1= spt.Interpolate(V1/I1);
+double T2= spt.Interpolate(V2/I2);
+double T3= spt.Interpolate(V3/I3);
+
+cout<<"T1= "<<T1<<endl<<"T2= "<<T2<<endl<<"T3= "<<T3<<endl;
+
+
+double Lmax1=0; double Lmax2=0; double Lmax3=0;
+double imax1=0; double imax2=0; double imax3=0;
+double Dmax1=0; double Dmax2=0; double Dmax3=0;
+for (int i=0; i<Nlines; i++){
+    if(data_1[i][1]>Dmax1){
+        Dmax1=data_1[i][1];
+        imax1=i;
+        Lmax1=G1.GetX()[i];
+    }
+    if(data_2[i][1]>Dmax2){
+        Dmax2=data_2[i][1];
+        imax2=i;
+        Lmax2=G2.GetX()[i];
+    }
+    if(data_3[i][1]>Dmax3){
+        Dmax3=data_3[i][1];
+        imax3=i;
+        Lmax3=G3.GetX()[i];
+    }
+}
+
+double h=6.62607015e-34;
+double c=299792458;
+double k=1.380649e-23;
+
+auto lPlank = [&](double *x,double *p=nullptr){
+    return (2*M_PI*h*c*c/pow(x[0]*1e-9,5)/(exp(h*c/(k*x[0]*1e-9*p[0]))-1))/p[1];
+};
+
+double omega=2.8977729e-3;
+
+TF1* fPlank = new TF1("plank", lPlank, 0.,10000,2);
+fPlank->SetLineColor(kOrange);
+fPlank->SetParameter(1,1.);
+fPlank->SetParameter(0,T1);
+double Lwien1=omega/T1;
+double Lwien2=omega/T2;
+double Lwien3=omega/T3;
+double Pmax1=fPlank->Eval(omega/T1*1e9);
+fPlank->SetParameter(0,T2);
+double Pmax2=fPlank->Eval(omega/T2*1e9);
+fPlank->SetParameter(0,T3);
+double Pmax3=fPlank->Eval(omega/T3*1e9);
 
 TCanvas* c1 = new TCanvas();
 G1.SetMarkerSize(0.5);
@@ -166,5 +244,50 @@ G3.Draw("AL");
 G2.Draw("SAME");
 G1.Draw("SAME");
 c1->SaveAs("nco.png");
+c1->Clear();
+spn.Draw();
+c1->SaveAs("n_L_interpolate.png");
+c1->Clear();
 
+
+for(int i=0; i<Nlines; i++){
+    G1.SetPoint(i,spn.Interpolate(indice_1[i]),data_1[i][1]/Dmax1);
+    G2.SetPoint(i,spn.Interpolate(indice_2[i]),data_2[i][1]/Dmax2);
+    G3.SetPoint(i,spn.Interpolate(indice_3[i]),data_3[i][1]/Dmax3);
+}
+
+fPlank->SetParameter(0,T1);
+fPlank->SetParameter(1,Pmax1);
+fPlank->Draw("");
+G1.Draw("SAME");
+c1->SaveAs("Plank1.png");
+c1->Clear();
+
+fPlank->SetParameter(0,T2);
+fPlank->SetParameter(1,Pmax2);
+fPlank->Draw("");
+G2.Draw("SAME");
+c1->SaveAs("Plank2.png");
+c1->Clear();
+
+fPlank->SetParameter(0,T3);
+fPlank->SetParameter(1,Pmax3);
+fPlank->Draw("");
+G3.Draw("SAME");
+c1->SaveAs("Plank3.png");
+c1->Clear();
+
+TGraph GWien;
+GWien.SetPoint(0,T1,Lmax1*1e-9);
+GWien.SetPoint(1,T2,Lmax2*1e-9);
+GWien.SetPoint(2,T3,Lmax3*1e-9);
+
+auto lFit = [&](double *x,double *p=nullptr){
+    return p[0]/x[0];
+};
+TF1* fFit = new TF1("FIT", lFit, -10000,10000,1);
+
+GWien.Fit(fFit);
+
+cout<<Lwien1<<"  "<<Lmax1*1e-9<<endl;
 }
