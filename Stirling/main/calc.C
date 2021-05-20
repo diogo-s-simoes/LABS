@@ -104,6 +104,8 @@ int main()  {
     double n12=Pmot2/Pfq2;
     double n13=Pmot3/Pfq3;
 
+    cout<<Tf0-Ti0<<endl;
+
     double e20=(Pfq0+Pperdas0)/(-Pwgas0);
     double n21=Pmot1/(Pmot1+Pff1);
     double n22=Pmot2/(Pmot2+Pff2);

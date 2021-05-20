@@ -10,6 +10,9 @@
 #include "TPaveText.h"
 #include "Spline3Interpolator.h"
 #include "NewtonInterpolator.h"
+#include "TLegend.h"
+#include "TLatex.h"
+#include "TGraphErrors.h"
 
 int main(){
 
@@ -156,14 +159,23 @@ for(int i=0; i<Nlines; i++){
 
 ////////////////////////
 
-TGraph G1;
-TGraph G2;
-TGraph G3;
+TGraphErrors G1;
+TGraphErrors G2;
+TGraphErrors G3;
+
+indice_1[0]=indice_1[2];
+indice_1[1]=indice_1[2];
+indice_2[0]=indice_1[3];
+indice_2[1]=indice_1[3];
+indice_2[2]=indice_1[3];
 
 for(int i=0; i<Nlines; i++){
     G1.SetPoint(i,spn.Interpolate(indice_1[i]),data_1[i][1]);
     G2.SetPoint(i,spn.Interpolate(indice_2[i]),data_2[i][1]);
     G3.SetPoint(i,spn.Interpolate(indice_3[i]),data_3[i][1]);
+    G1.SetPointError(i,0,0);
+    G2.SetPointError(i,0,0);
+    G3.SetPointError(i,0,0);
 }
 
 double T1= spt.Interpolate(V1/I1);
@@ -171,7 +183,6 @@ double T2= spt.Interpolate(V2/I2);
 double T3= spt.Interpolate(V3/I3);
 
 cout<<"T1= "<<T1<<endl<<"T2= "<<T2<<endl<<"T3= "<<T3<<endl;
-
 
 double Lmax1=0; double Lmax2=0; double Lmax3=0;
 double imax1=0; double imax2=0; double imax3=0;
@@ -198,35 +209,35 @@ double h=6.62607015e-34;
 double c=299792458;
 double k=1.380649e-23;
 
-auto lPlank = [&](double *x,double *p=nullptr){
+auto lPlanck = [&](double *x,double *p=nullptr){
     return (2*M_PI*h*c*c/pow(x[0]*1e-9,5)/(exp(h*c/(k*x[0]*1e-9*p[0]))-1))/p[1];
 };
 
 double omega=2.8977729e-3;
 
-TF1* fPlank = new TF1("plank", lPlank, 0.,10000,2);
-fPlank->SetLineColor(kOrange);
-fPlank->SetParameter(1,1.);
-fPlank->SetParameter(0,T1);
+TF1* fPlanck = new TF1("Lei de Planck", lPlanck, 0.,10000,2);
+fPlanck->SetLineColor(kOrange);
+fPlanck->SetParameter(1,1.);
+fPlanck->SetParameter(0,T1);
 double Lwien1=omega/T1;
 double Lwien2=omega/T2;
 double Lwien3=omega/T3;
-double Pmax1=fPlank->Eval(omega/T1*1e9);
-fPlank->SetParameter(0,T2);
-double Pmax2=fPlank->Eval(omega/T2*1e9);
-fPlank->SetParameter(0,T3);
-double Pmax3=fPlank->Eval(omega/T3*1e9);
+double Pmax1=fPlanck->Eval(omega/T1*1e9);
+fPlanck->SetParameter(0,T2);
+double Pmax2=fPlanck->Eval(omega/T2*1e9);
+fPlanck->SetParameter(0,T3);
+double Pmax3=fPlanck->Eval(omega/T3*1e9);
 
 TCanvas* c1 = new TCanvas();
 G1.SetMarkerSize(0.5);
 G1.SetMarkerStyle(16);
-G1.SetMarkerColor(kBlue);
+G1.SetMarkerColor(kRed);
 G1.SetLineWidth(2);
 G1.SetLineColor(kRed);
 
 G2.SetMarkerSize(0.5);
 G2.SetMarkerStyle(16);
-G2.SetMarkerColor(kBlue);
+G2.SetMarkerColor(kGreen);
 G2.SetLineWidth(2);
 G2.SetLineColor(kGreen);
 
@@ -236,13 +247,29 @@ G3.SetMarkerColor(kBlue);
 G3.SetLineWidth(2);
 G3.SetLineColor(kBlue);
 
-TAxis *ax = G3.GetXaxis();
-TAxis *ay = G3.GetYaxis();
-ax->SetTitle("n");
-ay->SetTitle("I (mV)");
-G3.Draw("AL");
+TAxis *g3ax = G3.GetXaxis();
+TAxis *g3ay = G3.GetYaxis();
+g3ax->SetTitle("#lambda (nm)");
+g3ay->SetTitle("I (mV)");
+TAxis *g2ax = G2.GetXaxis();
+TAxis *g2ay = G2.GetYaxis();
+g2ax->SetTitle("#lambda (nm)");
+g2ay->SetTitle("I (mV)");
+TAxis *g1ax = G1.GetXaxis();
+TAxis *g1ay = G1.GetYaxis();
+g1ax->SetTitle("#lambda (nm)");
+g1ay->SetTitle("I (mV)");
+G1.Draw("AL");
 G2.Draw("SAME");
-G1.Draw("SAME");
+G3.Draw("SAME");
+
+auto legend1 = new TLegend(0.45,0.73,0.9,0.9);
+    legend1->SetTextFont(62);
+    legend1->SetTextSize(0.05);
+    legend1->AddEntry(&G1,"Ensaio 1 (T=2416.76K)","l");
+    legend1->AddEntry(&G2,"Ensaio 2 (T=2104.32K)","l");
+    legend1->AddEntry(&G3,"Ensaio 3 (T=1724.58K)","l");
+    legend1->Draw("same");
 c1->SaveAs("nco.png");
 c1->Clear();
 spn.Draw();
@@ -256,38 +283,94 @@ for(int i=0; i<Nlines; i++){
     G3.SetPoint(i,spn.Interpolate(indice_3[i]),data_3[i][1]/Dmax3);
 }
 
-fPlank->SetParameter(0,T1);
-fPlank->SetParameter(1,Pmax1);
-fPlank->Draw("");
-G1.Draw("SAME");
-c1->SaveAs("Plank1.png");
+TAxis *pax = fPlanck->GetXaxis();
+TAxis *pay = fPlanck->GetYaxis();
+pax->SetTitle("#lambda (nm)");
+pay->SetTitle("I (normalizado)");
+
+fPlanck->SetParameter(0,T1);
+fPlanck->SetParameter(1,Pmax1);
+fPlanck->Draw("");
+fPlanck->GetHistogram()->GetYaxis()->SetTitle("I (normalizado)");
+fPlanck->GetHistogram()->GetXaxis()->SetTitle("#lambda (nm)");
+G1.Draw("SAMEL");
+c1->Modified();
+auto legend2 = new TLegend(0.45,0.7,0.9,0.9);
+    legend2->SetTextFont(62);
+    legend2->SetTextSize(0.06);
+    legend2->AddEntry(&G1,"Ensaio 1","l");
+    legend2->AddEntry(fPlanck,"Lei de Planck","l");
+    legend2->AddEntry("temp","T=2416.76K","");
+    legend2->Draw("same");
+c1->SaveAs("Planck1.png");
 c1->Clear();
 
-fPlank->SetParameter(0,T2);
-fPlank->SetParameter(1,Pmax2);
-fPlank->Draw("");
-G2.Draw("SAME");
-c1->SaveAs("Plank2.png");
+fPlanck->SetParameter(0,T2);
+fPlanck->SetParameter(1,Pmax2);
+fPlanck->Draw("");
+fPlanck->GetHistogram()->GetYaxis()->SetTitle("I (normalizado)");
+fPlanck->GetHistogram()->GetXaxis()->SetTitle("#lambda (nm)");
+G2.Draw("SAMEL");
+c1->Modified();
+auto legend3 = new TLegend(0.45,0.7,0.9,0.9);
+    legend3->SetTextFont(62);
+    legend3->SetTextSize(0.06);
+    legend3->AddEntry(&G2,"Ensaio 2","l");
+    legend3->AddEntry(fPlanck,"Lei de Planck","l");
+    legend3->AddEntry("temp","T=2104.32K","");
+    legend3->Draw("same");
+c1->SaveAs("Planck2.png");
 c1->Clear();
 
-fPlank->SetParameter(0,T3);
-fPlank->SetParameter(1,Pmax3);
-fPlank->Draw("");
-G3.Draw("SAME");
-c1->SaveAs("Plank3.png");
+fPlanck->SetParameter(0,T3);
+fPlanck->SetParameter(1,Pmax3);
+fPlanck->Draw("");
+fPlanck->GetHistogram()->GetYaxis()->SetTitle("I (normalizado)");
+fPlanck->GetHistogram()->GetXaxis()->SetTitle("#lambda (nm)");
+G3.Draw("SAMEL");
+c1->Modified();
+auto legend4 = new TLegend(0.45,0.7,0.9,0.9);
+    legend4->SetTextFont(62);
+    legend4->SetTextSize(0.06);
+    legend4->AddEntry(&G3,"Ensaio 3","l");
+    legend4->AddEntry(fPlanck,"Lei de Planck","l");
+    legend4->AddEntry("temp","T=1724.58K","");
+    legend4->Draw("same");
+c1->SaveAs("Planck3.png");
 c1->Clear();
 
-TGraph GWien;
+TGraphErrors GWien;
 GWien.SetPoint(0,T1,Lmax1*1e-9);
 GWien.SetPoint(1,T2,Lmax2*1e-9);
 GWien.SetPoint(2,T3,Lmax3*1e-9);
+GWien.SetPointError(0,1,1e-9*0.5*(spn.Interpolate(indice_1[imax1+1])-spn.Interpolate(indice_1[imax1-1])));
+GWien.SetPointError(1,1,1e-9*0.5*(spn.Interpolate(indice_2[imax2+1])-spn.Interpolate(indice_2[imax2-1])));
+GWien.SetPointError(2,1,1e-9*0.5*(spn.Interpolate(indice_3[imax3+1])-spn.Interpolate(indice_3[imax3-1])));
 
 auto lFit = [&](double *x,double *p=nullptr){
-    return p[0]/x[0];
+    return p[0]/x[0]+p[1];
 };
 TF1* fFit = new TF1("FIT", lFit, -10000,10000,1);
 
+fFit->SetParameter(0,0);
+//fFit->SetParameter(1,-100000);
+
 GWien.Fit(fFit);
 
-cout<<Lwien1<<"  "<<Lmax1*1e-9<<endl;
+TAxis *wax = GWien.GetXaxis();
+TAxis *way = GWien.GetYaxis();
+wax->SetTitle("T (K)");
+way->SetTitle("#lambda (m)");
+GWien.SetMarkerColor(kBlue);
+GWien.SetMarkerStyle(16);
+GWien.Draw("AP");
+fFit->Draw("SAME");
+auto legend5 = new TLegend(0.55,0.7,0.9,0.9);
+    legend5->SetTextFont(62);
+    legend5->SetTextSize(0.06);
+    legend5->AddEntry(fFit,"#lambda_{max} = #omega/T","l");
+    legend5->AddEntry("temp","#omega=2.493","");
+    legend5->Draw("same");
+c1->SaveAs("Wien.png");
+c1->Clear();
 }

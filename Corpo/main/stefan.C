@@ -9,6 +9,7 @@
 #include "NewReader.h"
 #include "LETintegral.h"
 #include "Spline3Interpolator.h"
+#include "TGraphErrors.h"
 
 int main()  {
     double** V=new double* [10];
@@ -122,12 +123,14 @@ int main()  {
 
     ////////////////////////
 
-    TGraph FT;
-    TGraph LOG;
+    TGraphErrors FT;
+    TGraphErrors LOG;
 
     for(int i=0; i<10;++i){
         FT.SetPoint(i,sp3.Interpolate(V[i][0]/I[i][0]),D[i][0]);
+        FT.SetPointError(i,sp3.Interpolate((V[i][0]+V[i][1])/(I[i][0]-I[i][1]))-sp3.Interpolate((V[i][0]-V[i][1])/(I[i][0]+I[i][1])),D[i][1]);
         LOG.SetPoint(i,log(sp3.Interpolate(V[i][0]/I[i][0])),log(D[i][0]));
+        LOG.SetPointError(i,20*(sp3.Interpolate((V[i][0]+V[i][1])/(I[i][0]-I[i][1]))-sp3.Interpolate((V[i][0]-V[i][1])/(I[i][0]+I[i][1])))/sp3.Interpolate(V[i][0]/I[i][0]),20*D[i][1]/D[i][0]);
     }
 
     auto lCal = [](double *x,double *p=nullptr){
@@ -163,11 +166,19 @@ int main()  {
     FT.Draw("APL");
     c1->SaveAs("F(T).png");
     c1->Clear();
-    LOG.Draw("APL");
+    LOG.Draw("AP");
+    fCal->Draw("same");
     c1->SaveAs("Log(F).png");
     c1->Clear();
     sp3.Draw();
     c1->SaveAs("T_R_interpolate.png");
+
+    for(int i =0; i<10; ++i){
+    cout<<"$"<<V[i][0]<<"$&$"<<I[i][0]<<"$&$"<<D[i][0]<<"$ \\\\"<<endl;
+    }
+    for (int i = 0; i<10;++i){
+        cout<<V[i][1]<<" / "<<I[i][1]<<" / "<<D[i][1]<<endl;
+    }
 
     return 0;
 }
