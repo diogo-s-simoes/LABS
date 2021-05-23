@@ -45,29 +45,21 @@ DataReader:: DataReader(string filename){
     int d=0;
     while(getline(file, line)){
         stringstream ss(line);
-        //int colIdx = 0;
 
-        /*while(ss>>val){
-            vec.push_back(val);
-            //result.at(colIdx).second.push_back(val);
-            //cout<<val<<endl; // this works mas o val é uma linha toda?
-            if(ss.peek() == ',') ss.ignore();
-            colIdx++;
-        }*/
         while(ss>>val){
             vec.push_back(val);
         }
         while(getline(ss, val, ',')){
             vec.push_back(val);
-             //cout<<" "<<val<< "  "<<endl; 
         }
         matrix.push_back(vec);
+        count=vec.size();
         //d=colIdx;
         vec.clear();
     }
     mcols=count;
     mlines=matrix.size();
-    cout<<mcols<<" "<<mlines<<" "<<endl;
+    //cout<<mcols<<" "<<mlines<<" "<<endl;
     
     file.close();
 }
