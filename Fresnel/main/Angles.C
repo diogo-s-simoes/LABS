@@ -104,14 +104,14 @@ int main(){
         if(data4[i][5]==0) tra4.push_back(0); else tra4.push_back(((data4[i][3]+data4[i][4])/2.)/data4[i][5]);
     }
 
-    TGraph G_tra1;
-    TGraph G_tra2;
-    TGraph G_tra3;
-    TGraph G_tra4;
-    TGraph G_ref1;
-    TGraph G_ref2;
-    TGraph G_ref3;
-    TGraph G_ref4;
+    TGraph G_tra1; G_tra1.SetTitle("Transmitido, Polarizacao S, Face Plana"); 
+    TGraph G_tra2; G_tra2.SetTitle("Transmitido, Polarizacao S, Face Curva");
+    TGraph G_tra3; G_tra3.SetTitle("Transmitido, Polarizacao P, Face Plana");
+    TGraph G_tra4; G_tra4.SetTitle("Transmitido, Polarizacao P, Face Curva");
+    TGraph G_ref1; G_ref1.SetTitle("Refletido, Polarizacao S, Face Plana");
+    TGraph G_ref2; G_ref2.SetTitle("Refletido, Polarizacao S, Face Curva");
+    TGraph G_ref3; G_ref3.SetTitle("Refletido, Polarizacao P, Face Plana");
+    TGraph G_ref4; G_ref4.SetTitle("Refletido, Polarizacao P, Face Curva");
     for(int i=0; i<N;++i){
         G_tra1.SetPoint(i,ang1[i],tra1[i]);
         G_tra2.SetPoint(i,ang2[i],tra2[i]);
@@ -147,6 +147,118 @@ int main(){
     c1->Clear();
     G_ref4.Draw("AL");
     c1->SaveAs("ref4.png");
+    c1->Clear();
+
+    double thCs=(angconv(4,43,0)+angconv(3,45,0)+angconv(4,55,0)+angconv(3,50,0)+angconv(4,39,9)+angconv(3,40,0))/6.+40*(M_PI/180.);
+    double thCp=70*(M_PI/180.)-(angconv(27,23,30)+angconv(27,50,0)+angconv(27,36,30)+angconv(28,0,0)+angconv(27,19,30)+angconv(28,2,30))/6.;
+
+    double thB_c=70*(M_PI/180.)-angconv(36,7,30);
+    double thB_f=70*(M_PI/180.)-angconv(13,28,30);
+
+    double ns=1/sin(thCs);
+    double np=1/sin(thCp);
+    double nc=1/tan(thB_c);
+    double nf=tan(thB_f);
+    double nt=(nc+np+nf+ns)/4.;
+    cout<<"ns: "<<ns<<endl;
+    cout<<"np: "<<np<<endl;
+    cout<<"nf: "<<nf<<endl;
+    cout<<"nc: "<<nc<<endl;
+    cout<<"indice de refracao= "<<nt<<endl;
+
+    double Itp=((0.211+0.210)/2.)/0.0515;
+    double Its=((0.179+0.183)/2.)/0.0235;
+    cout<<"Ip= "<<Itp<<endl<<"Is= "<<Its<<endl;
+
+    auto lItp = [&](double *x,double *p=nullptr){
+    return Itp;
+    };
+    TF1 *fItp = new TF1("Itp", lItp, -10000,10000,0);
+    auto lIts = [&](double *x,double *p=nullptr){
+    return Its;
+    };
+    TF1 *fIts = new TF1("Its", lIts, -10000,10000,0);
+
+    TGraph G_It1; G_It1.SetTitle("Intensidade total, polarizacao S, face P");
+    TGraph G_It2; G_It2.SetTitle("Intensidade total, polarizacao S, face C");
+    TGraph G_It3; G_It3.SetTitle("Intensidade total, polarizacao P, face P");
+    TGraph G_It4; G_It4.SetTitle("Intensidade total, polarizacao S, face C");
+    for(int i=0; i<N;++i){
+        G_It1.SetPoint(i,ang1[i],tra1[i]+ref1[i]);
+        G_It2.SetPoint(i,ang2[i],tra1[i]+ref2[i]);
+        G_It3.SetPoint(i,ang3[i],tra1[i]+ref3[i]);
+        G_It4.SetPoint(i,ang4[i],tra1[i]+ref4[i]);
+    }
+
+    G_It1.Draw("AL");
+    fIts->Draw("SAME");
+    c1->SaveAs("It1.png");
+    c1->Clear();
+    G_It2.Draw("AL");
+    fIts->Draw("SAME");
+    c1->SaveAs("It2.png");
+    c1->Clear();
+    G_It3.Draw("AL");
+    fItp->Draw("SAME");
+    c1->SaveAs("It3.png");
+    c1->Clear();
+    G_It4.Draw("AL");
+    fItp->Draw("SAME");
+    c1->SaveAs("It4.png");
+    c1->Clear();
+
+    vector<double> glassA;
+    vector<double> glassB;
+    glassA.push_back(000*(M_PI/180.));
+    glassA.push_back(45*(M_PI/180.));
+    glassA.push_back(90*(M_PI/180.));
+    glassA.push_back(135*(M_PI/180.));
+    glassA.push_back(180*(M_PI/180.));
+    
+    glassA.push_back(-90*(M_PI/180.));
+    glassA.push_back(-45*(M_PI/180.));
+    glassA.push_back(000*(M_PI/180.));
+    glassA.push_back(45*(M_PI/180.));
+    glassA.push_back(90*(M_PI/180.));
+
+    glassB.push_back(((0.048+0.048)/2.)/0.0233);
+    glassB.push_back(((0.032+0.033)/2.)/0.0231); 
+    glassB.push_back(((0.0007+0.0008)/2.)/0.0231);
+    glassB.push_back(((0.016+0.015)/2.)/0.0232);
+    glassB.push_back(((0.049+0.048)/2.)/0.0233); 
+
+    glassB.push_back(((0.0004+0.004)/2.)/0.0544);
+    glassB.push_back(((0.020+0.019)/2.)/0.0544);
+    glassB.push_back(((0.061+0.062)/2.)/0.0547);
+    glassB.push_back(((0.028+0.028)/2.)/0.0537);
+    glassB.push_back(((0.0004+0.0004)/2.)/0.0536);
+
+    TGraph G_glass_S;
+    TGraph G_glass_P;
+    G_glass_S.SetMarkerColor(kBlue);
+    G_glass_S.SetMarkerStyle(16);
+    G_glass_P.SetMarkerColor(kBlue);
+    G_glass_P.SetMarkerStyle(16);
+
+    for(int i=0; i<5; ++i){
+        G_glass_S.SetPoint(i,glassA[i],glassB[i]);
+        G_glass_P.SetPoint(i,glassA[i+5],glassB[i+5]);
+    }
+
+    auto lFit = [&](double *x,double *p=nullptr){
+    return p[0]+p[1]*fabs(cos(x[0]));
+    };
+    TF1 *fFit = new TF1("FIT", lFit, -10000,10000,2);
+
+    G_glass_S.Fit(fFit);
+    G_glass_S.Draw("APL");
+    c1->SaveAs("Glass_s.png");
+    fFit->Draw("SAME");
+    c1->Clear();
+    G_glass_P.Fit(fFit);
+    G_glass_P.Draw("APL");
+    fFit->Draw("SAME");
+    c1->SaveAs("Glass_p.png");
     c1->Clear();
 
     return 0;
