@@ -51,7 +51,7 @@ int main(){
         temp4.clear();
     }
 
-    /*vector<double> ang1;
+    vector<double> ang1;
     vector<double> ang2;
     vector<double> ang3;
     vector<double> ang4;
@@ -147,7 +147,7 @@ int main(){
     c1->Clear();
     G_ref4.Draw("AL");
     c1->SaveAs("ref4.png");
-    c1->Clear();*/
+    c1->Clear();
 
     return 0;
 }
