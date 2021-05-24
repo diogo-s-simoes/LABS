@@ -104,14 +104,14 @@ int main(){
         if(data4[i][5]==0) tra4.push_back(0); else tra4.push_back(((data4[i][3]+data4[i][4])/2.)/data4[i][5]);
     }
 
-    TGraph G_tra1; G_tra1.SetTitle("Transmitido, Polarizacao S, Face Plana"); 
-    TGraph G_tra2; G_tra2.SetTitle("Transmitido, Polarizacao S, Face Curva");
-    TGraph G_tra3; G_tra3.SetTitle("Transmitido, Polarizacao P, Face Plana");
-    TGraph G_tra4; G_tra4.SetTitle("Transmitido, Polarizacao P, Face Curva");
-    TGraph G_ref1; G_ref1.SetTitle("Refletido, Polarizacao S, Face Plana");
-    TGraph G_ref2; G_ref2.SetTitle("Refletido, Polarizacao S, Face Curva");
-    TGraph G_ref3; G_ref3.SetTitle("Refletido, Polarizacao P, Face Plana");
-    TGraph G_ref4; G_ref4.SetTitle("Refletido, Polarizacao P, Face Curva");
+    TGraph G_tra1; G_tra1.SetTitle("Transmitido, Polarizacao S, Face Plana"); G_tra1.SetLineColor(kBlue);
+    TGraph G_tra2; G_tra2.SetTitle("Transmitido, Polarizacao S, Face Curva"); G_tra2.SetLineColor(kBlue);
+    TGraph G_tra3; G_tra3.SetTitle("Transmitido, Polarizacao P, Face Plana"); G_tra3.SetLineColor(kBlue);
+    TGraph G_tra4; G_tra4.SetTitle("Transmitido, Polarizacao P, Face Curva"); G_tra4.SetLineColor(kBlue);
+    TGraph G_ref1; G_ref1.SetTitle("Refletido, Polarizacao S, Face Plana");   G_ref1.SetLineColor(kGreen);
+    TGraph G_ref2; G_ref2.SetTitle("Refletido, Polarizacao S, Face Curva");   G_ref2.SetLineColor(kGreen);
+    TGraph G_ref3; G_ref3.SetTitle("Refletido, Polarizacao P, Face Plana");   G_ref3.SetLineColor(kGreen);
+    TGraph G_ref4; G_ref4.SetTitle("Refletido, Polarizacao P, Face Curva");   G_ref4.SetLineColor(kGreen);
     for(int i=0; i<N;++i){
         G_tra1.SetPoint(i,ang1[i],tra1[i]);
         G_tra2.SetPoint(i,ang2[i],tra2[i]);
@@ -170,40 +170,54 @@ int main(){
     double Its=((0.179+0.183)/2.)/0.0235;
     cout<<"Ip= "<<Itp<<endl<<"Is= "<<Its<<endl;
 
-    auto lItp = [&](double *x,double *p=nullptr){
-    return Itp;
-    };
-    TF1 *fItp = new TF1("Itp", lItp, -10000,10000,0);
-    auto lIts = [&](double *x,double *p=nullptr){
-    return Its;
-    };
-    TF1 *fIts = new TF1("Its", lIts, -10000,10000,0);
+    TGraph G_Itp; G_Itp.SetLineColor(kRed);
+    TGraph G_Its; G_Its.SetLineColor(kRed);
 
-    TGraph G_It1; G_It1.SetTitle("Intensidade total, polarizacao S, face P");
-    TGraph G_It2; G_It2.SetTitle("Intensidade total, polarizacao S, face C");
-    TGraph G_It3; G_It3.SetTitle("Intensidade total, polarizacao P, face P");
-    TGraph G_It4; G_It4.SetTitle("Intensidade total, polarizacao S, face C");
+    TGraph G_It1;
+    TGraph G_It2;
+    TGraph G_It3;
+    TGraph G_It4;
     for(int i=0; i<N;++i){
         G_It1.SetPoint(i,ang1[i],tra1[i]+ref1[i]);
-        G_It2.SetPoint(i,ang2[i],tra1[i]+ref2[i]);
-        G_It3.SetPoint(i,ang3[i],tra1[i]+ref3[i]);
-        G_It4.SetPoint(i,ang4[i],tra1[i]+ref4[i]);
+        G_It2.SetPoint(i,ang2[i],tra2[i]+ref2[i]);
+        G_It3.SetPoint(i,ang3[i],tra3[i]+ref3[i]);
+        G_It4.SetPoint(i,ang4[i],tra4[i]+ref4[i]);
+        G_Its.SetPoint(i,ang1[i],Its);
+        G_Itp.SetPoint(i,ang3[i],Itp);
     }
 
-    G_It1.Draw("AL");
-    fIts->Draw("SAME");
+    TMultiGraph* mult1= new TMultiGraph(); mult1->SetTitle("Intensidade total, polarizacao S, face P");
+    TMultiGraph* mult2= new TMultiGraph(); mult2->SetTitle("Intensidade total, polarizacao S, face C");
+    TMultiGraph* mult3= new TMultiGraph(); mult3->SetTitle("Intensidade total, polarizacao P, face P");
+    TMultiGraph* mult4= new TMultiGraph(); mult4->SetTitle("Intensidade total, polarizacao P, face C");
+
+    mult1->Add(&G_It1);
+    mult1->Add(&G_tra1);
+    mult1->Add(&G_ref1);
+    mult1->Add(&G_Its);
+    mult2->Add(&G_It2);
+    mult2->Add(&G_tra2);
+    mult2->Add(&G_ref2);
+    mult2->Add(&G_Its);
+    mult3->Add(&G_It3);
+    mult3->Add(&G_tra3);
+    mult3->Add(&G_ref3);
+    mult3->Add(&G_Itp);
+    mult4->Add(&G_It4);
+    mult4->Add(&G_tra4);
+    mult4->Add(&G_ref4);
+    mult4->Add(&G_Itp);
+
+    mult1->Draw("AL");
     c1->SaveAs("It1.png");
     c1->Clear();
-    G_It2.Draw("AL");
-    fIts->Draw("SAME");
+    mult2->Draw("AL");
     c1->SaveAs("It2.png");
     c1->Clear();
-    G_It3.Draw("AL");
-    fItp->Draw("SAME");
+    mult3->Draw("AL");
     c1->SaveAs("It3.png");
     c1->Clear();
-    G_It4.Draw("AL");
-    fItp->Draw("SAME");
+    mult4->Draw("AL");
     c1->SaveAs("It4.png");
     c1->Clear();
 
