@@ -66,10 +66,12 @@ int main(){
         ang1[i]=ang1[i]-320*(M_PI/180.);
         else
         ang1[i]=(ang1[i]+360*(M_PI/180.))-320*(M_PI/180.);
+
         if(ang2[i]>300*(M_PI/180.))
         ang2[i]=ang2[i]-320*(M_PI/180.);
         else
         ang2[i]=(ang2[i]+360*(M_PI/180.))-320*(M_PI/180.);
+    
         if(ang3[i]>75*(M_PI/180.))
         ang3[i]=70*(M_PI/180.)-(ang3[i]-360*(M_PI/180.));
         else
@@ -113,53 +115,30 @@ int main(){
     TGraph G_ref3;
     TGraph G_ref4;
     for(int i=0; i<N;++i){
-        if(tra1[i]!=0)
+        //if(tra1[i]!=0)
             G_tra1.SetPoint(i,ang1[i],tra1[i]);
-        if(tra2[i]!=0)
+        //if(tra2[i]!=0)
             G_tra2.SetPoint(i,ang2[i],tra2[i]);
-        if(tra3[i]!=0)
+        //if(tra3[i]!=0)
             G_tra3.SetPoint(i,ang3[i],tra3[i]);
-        if(tra4[i]!=0)
+        //if(tra4[i]!=0)
             G_tra4.SetPoint(i,ang4[i],tra4[i]);
-        if(ref1[i]!=0)
+        //if(ref1[i]!=0)
             G_ref1.SetPoint(i,ang1[i],ref1[i]);
-        if(ref2[i]!=0)
+        //if(ref2[i]!=0)
             G_ref2.SetPoint(i,ang2[i],ref2[i]);
-        if(ref3[i]!=0)
+        //if(ref3[i]!=0)
             G_ref3.SetPoint(i,ang3[i],ref3[i]);
-        if(ref4[i]!=0&&ang4[i]<.8)
+        //if(ref4[i]!=0)
             G_ref4.SetPoint(i,ang4[i],ref4[i]);
     }
 
     TCanvas* c1 = new TCanvas();
-    G_tra1.Draw("AL");
-    c1->SaveAs("tra1.png");
-    c1->Clear();
-    G_tra2.Draw("AL");
-    c1->SaveAs("tra2.png");
-    c1->Clear();
-    G_tra3.Draw("AL");
-    c1->SaveAs("tra3.png");
-    c1->Clear();
-    G_tra4.Draw("AL");
-    c1->SaveAs("tra4.png");
-    c1->Clear();
-    G_ref1.Draw("AL");
-    c1->SaveAs("ref1.png");
-    c1->Clear();
-    G_ref2.Draw("AL");
-    c1->SaveAs("ref2.png");
-    c1->Clear();
- 
-    G_ref4.Draw("AL");
-    c1->SaveAs("ref4.png");
-    c1->Clear();
-
 
 
 
     auto lRefS = [](double *x,double *p=nullptr){
-        return 0.181/0.0245*pow((p[0]*cos(x[0])-p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))/(p[0]*cos(x[0])+p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))),2.);
+        return 0.181/0.0235*pow((p[0]*cos(x[0])-p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))/(p[0]*cos(x[0])+p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))),2.);
     };
 
     TF1* fRefS= new TF1("L", lRefS, 0.,1.6,2);
@@ -174,28 +153,34 @@ int main(){
 
 
     auto lTransS = [](double *x,double *p=nullptr){
-        return 0.181/0.0245*p[1]/p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))/cos(x[0])*pow(1+(p[0]*cos(x[0])-p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))/(p[0]*cos(x[0])+p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))),2);
+        return 4*p[0]*p[1]/(p[0]+p[1])/(p[0]+p[1])*
+        0.181/0.0235*
+        p[1]/p[0]*
+        sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))/cos(x[0])*
+        pow(1+(p[0]*cos(x[0])-p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))/(p[0]*cos(x[0])+p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))),2);
     };
 
     TF1* fTransS= new TF1("L", lTransS, 0.,1.6,2);
 
 
     auto lTransP = [](double *x,double *p=nullptr){
-        return .2105/0.0515*p[1]/p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))/cos(x[0])*pow(p[0]/p[1]*(1+(p[1]*cos(x[0])-p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))/(p[1]*cos(x[0])+p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))),2);
+        return 4*p[0]*p[1]/(p[0]+p[1])/(p[0]+p[1])*.2105/0.0515*p[1]/p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))/cos(x[0])*pow(p[0]/p[1]*(1+(p[1]*cos(x[0])-p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))/(p[1]*cos(x[0])+p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))),2);
     };
 
     TF1* fTransP= new TF1("L", lTransP, 0.,1.6,2);
 
 
     fTransS->SetParameters(0,1);
-    fTransS->SetParameters(1,1.5);    
+    fTransS->SetParameters(1,1.45);    
     fTransP->SetParameters(0,1);
-    fTransP->SetParameters(1,1.5);    
+    fTransP->SetParameters(1,1.45);    
     fRefP->SetParameters(0,1);
-    fRefP->SetParameters(1,1.5);
+    fRefP->SetParameters(1,1.45);
     fRefS->SetParameters(0,1);
-    fRefS->SetParameters(1,1.5);
+    fRefS->SetParameters(1,1.45);
 
+
+    /*
     G_tra1.Fit(fTransS);
     G_tra1.Draw("AL");
     c1->SaveAs("tra1.png");
@@ -212,8 +197,24 @@ int main(){
     G_ref3.Draw("AL");
     c1->SaveAs("ref3.png");
     c1->Clear();
+*/
 
-
+    G_tra1.Draw("AL");
+    fTransS->Draw("same");
+    c1->SaveAs("tra1.png");
+    c1->Clear();
+    G_tra3.Draw("AL");
+    fTransP->Draw("same");
+    c1->SaveAs("tra3.png");
+    c1->Clear();
+    G_ref1.Draw("AL");
+    fRefS->Draw("same");
+    c1->SaveAs("ref1.png");
+    c1->Clear();
+    G_ref3.Draw("AL");
+    fRefP->Draw("same");
+    c1->SaveAs("ref3.png");
+    c1->Clear();
 
 
 
@@ -221,56 +222,62 @@ int main(){
 
 
     auto lRefS1 = [](double *x,double *p=nullptr){
-        return p[2]*0.181/0.0245*pow((p[0]*cos(x[0])-p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))/(p[0]*cos(x[0])+p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))),2.);
+        return 4*p[0]*p[1]/(p[0]+p[1])/(p[0]+p[1])*4*p[0]*p[1]/(p[0]+p[1])/(p[0]+p[1])*0.181/0.0235*pow((p[0]*cos(x[0])-p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))/(p[0]*cos(x[0])+p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))),2.);
     };
-
-    TF1* fRefS1= new TF1("L", lRefS1, 0.,1.6,3);
+    TF1* fRefS1= new TF1("L", lRefS1, 0.,1.6,2);
 
 
     auto lRefP1 = [](double *x,double *p=nullptr){
-        return p[2]*.2105/0.0515*pow((p[1]*cos(x[0])-p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))/(p[1]*cos(x[0])+p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))),2);
+        return 4*p[0]*p[1]/(p[0]+p[1])/(p[0]+p[1])*4*p[0]*p[1]/(p[0]+p[1])/(p[0]+p[1])*.2105/0.0515*pow((p[1]*cos(x[0])-p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))/(p[1]*cos(x[0])+p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))),2);
     };
-
-    TF1* fRefP1= new TF1("L", lRefP1, 0.,1.6,3);
+    TF1* fRefP1= new TF1("L", lRefP1, 0.,1.6,2);
 
 
 
     auto lTransS1 = [](double *x,double *p=nullptr){
-        return p[2]*0.181/0.0245*p[1]/p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))/cos(x[0])*pow(1+(p[0]*cos(x[0])-p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))/(p[0]*cos(x[0])+p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))),2);
+        return 4*p[0]*p[1]/(p[0]+p[1])/(p[0]+p[1])*
+        0.181/0.0235*
+        p[1]/p[0]*
+        sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))/cos(x[0])*
+        pow(1+(p[0]*cos(x[0])-p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))/(p[0]*cos(x[0])+p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))),2);
     };
-
-    TF1* fTransS1= new TF1("L", lTransS1, 0.,1.6,3);
+    TF1* fTransS1= new TF1("L", lTransS1, 0.,1.6,2);
 
 
     auto lTransP1 = [](double *x,double *p=nullptr){
-        return p[2]*.2105/0.0515*p[1]/p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))/cos(x[0])*pow(p[0]/p[1]*(1+(p[1]*cos(x[0])-p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))/(p[1]*cos(x[0])+p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))),2);
+        return 4*p[0]*p[1]/(p[0]+p[1])/(p[0]+p[1])*.2105/0.0515*p[1]/p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))/cos(x[0])*pow(p[0]/p[1]*(1+(p[1]*cos(x[0])-p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))/(p[1]*cos(x[0])+p[0]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))),2);
     };
-
-    TF1* fTransP1= new TF1("L", lTransP1, 0.,1.6,3);
-
+    TF1* fTransP1= new TF1("L", lTransP1, 0.,1.6,2);
 
 
 
-
-    fTransS1->SetParameters(0,1);
-    fTransS1->SetParameters(1,1.5);
-    fTransP1->SetParameters(1,1);
-    fTransP1->SetParameters(0,1.5);    
-    fRefP1->SetParameters(1,1);
-    fRefP1->SetParameters(0,1.5);
-    fRefS->SetParameters(1,1);
-    fRefS->SetParameters(0,1.5);
-
+    fTransS1->SetParameters(0,1.45);
+    fTransS1->SetParameters(1,1.);
+    fTransP1->SetParameters(0,1.45);
+    fTransP1->SetParameters(1,1.);    
+    fRefP1->SetParameters(0,1.45);
+    fRefP1->SetParameters(1,1.);
+    fRefS1->SetParameters(0,1.45);
+    fRefS1->SetParameters(1,1);
 
 
 
+/*
     TAxis *ax_t = G_tra2.GetXaxis();
     TAxis *ay_t = G_tra2.GetYaxis();
 
     ax_t->SetLimits(0,1.6);
     ay_t->SetRangeUser(0,10);
 
-    G_tra2.Fit(fTransS1);
+
+    TAxis *ax_t1 = G_ref4.GetXaxis();
+    TAxis *ay_t1 = G_ref4.GetYaxis();
+
+    ax_t1->SetLimits(0,1.6);
+    ay_t1->SetRangeUser(0,10);
+
+
+    //G_tra2.Fit(fTransS1);
     G_tra2.Draw("AL");
     fTransS->Draw("same");
     c1->SaveAs("tra2.png");
@@ -283,17 +290,28 @@ int main(){
     G_ref2.Draw("AL");
     c1->SaveAs("ref2.png");
     c1->Clear();
-
-
-
-    TAxis *ax_t1 = G_ref4.GetXaxis();
-    TAxis *ay_t1 = G_ref4.GetYaxis();
-
-    ax_t1->SetLimits(0,1.6);
-    ay_t1->SetRangeUser(0,10);
-
-    G_ref4.Fit(fRefP);
+    G_ref4.Fit(fRefP1);
     G_ref4.Draw("AL");
+    fRefP1->Draw("same");
+    c1->SaveAs("ref4.png");
+    c1->Clear();*/
+
+
+
+    G_tra2.Draw("AL");
+    fTransS1->Draw("same");
+    c1->SaveAs("tra2.png");
+    c1->Clear();
+    G_tra4.Draw("AL");
+    fTransP1->Draw("same");
+    c1->SaveAs("tra4.png");
+    c1->Clear();
+    G_ref2.Draw("AL");
+    fRefS1->Draw("same");
+    c1->SaveAs("ref2.png");
+    c1->Clear();
+    G_ref4.Draw("AL");
+    fRefP1->Draw("same");
     c1->SaveAs("ref4.png");
     c1->Clear();
 
