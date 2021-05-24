@@ -170,7 +170,7 @@ int main(){
     TF1* fTransP= new TF1("L", lTransP, 0.,1.6,2);
 
 
-<<<<<<< HEAD
+
     fTransS->SetParameter(0,1);
     fTransS->SetParameter(1,1.48);    
     fTransP->SetParameter(0,1);
@@ -179,16 +179,6 @@ int main(){
     fRefP->SetParameter(1,1.48);
     fRefS->SetParameter(0,1);
     fRefS->SetParameter(1,1.48);
-=======
-    fTransS->SetParameter(0,1);   
-    fTransS->SetParameter(1,1.45);    
-    fTransP->SetParameter(0,1);   
-    fTransP->SetParameter(1,1.45);    
-    fRefP->SetParameter(0,1);     
-    fRefP->SetParameter(1,1.45);  
-    fRefS->SetParameter(0,1);     
-    fRefS->SetParameter(1,1.45);  
->>>>>>> ecf379b8cb6c654f018e08fa4e1dcaea35e543ee
 
 
     /*
@@ -327,42 +317,112 @@ int main(){
 
 
 
-    TAxis *ax_t = G_ref2.GetXaxis();
-    TAxis *ay_t = G_ref2.GetYaxis();
-
-    ax_t->SetLimits(0,1.6);
-    ay_t->SetRangeUser(0,10);
-
-    TAxis *ax_t1 = G_ref4.GetXaxis();
-    TAxis *ay_t1 = G_ref4.GetYaxis();
-
-    ax_t1->SetLimits(0,1.6);
-    ay_t1->SetRangeUser(0,10);
 
 
 
 
-    G_tra2.Draw("AL");
+
+
+
+
+
+
+
+
+
+
+    TMultiGraph* mult3= new TMultiGraph(); mult3->SetTitle("Polarizacao S, Face C");
+    TMultiGraph* mult4= new TMultiGraph(); mult4->SetTitle("Polarizacao P, Face C");
+
+
+
+  gStyle->SetOptFit(111);
+  gStyle -> SetStatBorderSize(5);
+  gStyle -> SetStatFontSize(1);
+  gStyle -> SetStatFont(62);
+  gStyle -> SetStatTextColor(1);
+  gStyle -> SetStatColor(3);
+  gStyle -> SetStatStyle(0);
+  gStyle -> SetStatX(0.55);
+  gStyle -> SetStatY(0.85);
+  gStyle -> SetStatW(0.2165);
+  gPad->SetGrid(1, 1); gPad->Update();
+
+
+
+    TGraph LinhaS1;
+    LinhaS1.SetPoint(0,0.74,7.17);
+    LinhaS1.SetPoint(1,1.6,7.17);
+    LinhaS1.SetLineColor(kRed); 
+    LinhaS1.SetLineWidth(3);
+
+
+    gRefS1.SetLineColor(kRed); 
+    gRefS1.SetLineWidth(3);
+
+    G_ref2.SetMarkerSize(1.5); 
+    G_ref2.SetMarkerStyle(33);
+    G_ref2.SetMarkerColor(kRed);
+    c1->SaveAs("tra4.png");
+    c1->Clear();
+    G_ref2.Draw("AP");
+    gRefS1.Draw("same");
+
+
+    gTransS1.SetLineColor(kGreen); 
+    gTransS1.SetLineWidth(3);
+
+    G_tra2.SetMarkerSize(1.5); 
+    G_tra2.SetMarkerStyle(33);
+    G_tra2.SetMarkerColor(kGreen);
+
+
+
+
+    G_tra2.Draw("APL");
     gTransS1.Draw("same");
     //fTransS1->Draw("same");
     c1->SaveAs("tra2.png");
     c1->Clear();
-    G_tra4.Draw("AL");
+
+    G_tra4.Draw("APL");
     gTransP1.Draw("same");
     //fTransP1->Draw("same");
-    c1->SaveAs("tra4.png");
-    c1->Clear();
-    G_ref2.Draw("AL");
-    gRefS1.Draw("same");
+
+
     //fRefS1->Draw("same");
     c1->SaveAs("ref2.png");
     c1->Clear();
-    G_ref4.Draw("AL");
+    G_ref4.Draw("APL");
     gRefP1.Draw("same");
     //fRefP1->Draw("same");
     c1->SaveAs("ref4.png");
     c1->Clear();
 
+
+
+
+
+    mult3->Add(&G_ref2);
+    mult3->Add(&gRefS1);
+    mult3->Add(&G_tra2);
+    mult3->Add(&gTransS1);
+    mult3->Add(&LinhaS1);
+    TAxis *ax1 = mult3->GetXaxis();
+    TAxis *ay1 = mult3->GetYaxis();
+    ax1->SetTitle("#theta (rad)");
+    ay1->SetTitle("Potencia Recebida");
+    ax1->SetLimits(0,1.6);
+    ay1->SetRangeUser(0,10);
+    mult3->Draw("APL");
+    auto legend3 = new TLegend(0.5,0.8,0.9,0.9);
+    legend3->SetTextFont(62);
+    legend3->SetTextSize(0.03);
+    legend3->AddEntry(&gRefS1,"P_{r}-Potencia refletida","l");
+    legend3->AddEntry(&gTransS1,"P_{t}-Potencia transmitida","l");
+    legend3->Draw("same");
+    c1->SaveAs("PolS_FaceC.png");
+    c1->Clear();
 
 
     return 0;
