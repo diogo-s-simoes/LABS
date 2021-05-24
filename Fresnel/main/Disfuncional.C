@@ -170,14 +170,14 @@ int main(){
     TF1* fTransP= new TF1("L", lTransP, 0.,1.6,2);
 
 
-    fTransS->SetParameters(0,1);
-    fTransS->SetParameters(1,1.45);    
-    fTransP->SetParameters(0,1);
-    fTransP->SetParameters(1,1.45);    
-    fRefP->SetParameters(0,1);
-    fRefP->SetParameters(1,1.45);
-    fRefS->SetParameters(0,1);
-    fRefS->SetParameters(1,1.45);
+    fTransS->SetParameter(0,1);
+    fTransS->SetParameter(1,1.48);    
+    fTransP->SetParameter(0,1);
+    fTransP->SetParameter(1,1.48);    
+    fRefP->SetParameter(0,1);
+    fRefP->SetParameter(1,1.48);
+    fRefS->SetParameter(0,1);
+    fRefS->SetParameter(1,1.48);
 
 
     /*
@@ -223,6 +223,7 @@ int main(){
 
     auto lRefS1 = [](double *x,double *p=nullptr){
         return 4*p[0]*p[1]/(p[0]+p[1])/(p[0]+p[1])*4*p[0]*p[1]/(p[0]+p[1])/(p[0]+p[1])*0.181/0.0235*pow((p[0]*cos(x[0])-p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1])))/(p[0]*cos(x[0])+p[1]*sqrt(1-sin(x[0])*sin(x[0])*(p[0]/p[1])*(p[0]/p[1]))),2.);
+    //pow(({p*\cos(x)-p_{2}*\sqrt{1-\sin(x)*\sin(x)*(p/p_{2})*(p/p_{2})}}/{p*\cos(x)+p_{2}*\sqrt{1-\sin(x)*\sin(x)*(p/p_{2})*(p/p_{2})}}\right)^{2}0.181/0.0245\cdot\left(p\cdot p_{2}\cdot\frac{4}{\left(p+p_{2}\right)^{2}}),2)
     };
     TF1* fRefS1= new TF1("L", lRefS1, 0.,1.6,2);
 
@@ -251,14 +252,14 @@ int main(){
 
 
 
-    fTransS1->SetParameters(0,1.45);
-    fTransS1->SetParameters(1,1.);
-    fTransP1->SetParameters(0,1.45);
-    fTransP1->SetParameters(1,1.);    
-    fRefP1->SetParameters(0,1.45);
-    fRefP1->SetParameters(1,1.);
-    fRefS1->SetParameters(0,1.45);
-    fRefS1->SetParameters(1,1);
+    fTransS1->SetParameter(0,1.48);
+    fTransS1->SetParameter(1,1);
+    fTransP1->SetParameter(0,1.48);
+    fTransP1->SetParameter(1,1);    
+    fRefP1->SetParameter(0,1.48);
+    fRefP1->SetParameter(1,1);
+    fRefS1->SetParameter(0,1.48);
+    fRefS1->SetParameter(1,1.);
 
 
 
@@ -296,22 +297,57 @@ int main(){
     c1->SaveAs("ref4.png");
     c1->Clear();*/
 
+    TGraph gTransS1,gTransP1,gRefS1,gRefP1;
+
+    for(int i=0;i<1000000;i++){
+        if(fTransS1->Eval(i*1.6/1000000)<10)
+            gTransS1.SetPoint(i,i*1.6/1000000,fTransS1->Eval(i*1.6/1000000));
+
+        if(fTransP1->Eval(i*1.6/1000000)<10)
+            gTransP1.SetPoint(i,i*1.6/1000000,fTransP1->Eval(i*1.6/1000000));
+        
+        if(fRefS1->Eval(i*1.6/1000000)<10)
+            gRefS1.SetPoint(i,i*1.6/1000000,fRefS1->Eval(i*1.6/1000000));
+        
+        if(fRefP1->Eval(i*1.6/1000000)<10)
+            gRefP1.SetPoint(i,i*1.6/1000000,fRefP1->Eval(i*1.6/1000000));
+//        cout<<i*1.6/1000000<<"   "<<fRefP1->Eval(i*1.6/10000)<<"   "<<fTransP1->Eval(i*1.6/10000)<<endl;
+    }
+
+
+
+    TAxis *ax_t = G_ref2.GetXaxis();
+    TAxis *ay_t = G_ref2.GetYaxis();
+
+    ax_t->SetLimits(0,1.6);
+    ay_t->SetRangeUser(0,10);
+
+    TAxis *ax_t1 = G_ref4.GetXaxis();
+    TAxis *ay_t1 = G_ref4.GetYaxis();
+
+    ax_t1->SetLimits(0,1.6);
+    ay_t1->SetRangeUser(0,10);
+
 
 
     G_tra2.Draw("AL");
-    fTransS1->Draw("same");
+    gTransS1.Draw("same");
+    //fTransS1->Draw("same");
     c1->SaveAs("tra2.png");
     c1->Clear();
     G_tra4.Draw("AL");
-    fTransP1->Draw("same");
+    gTransP1.Draw("same");
+    //fTransP1->Draw("same");
     c1->SaveAs("tra4.png");
     c1->Clear();
     G_ref2.Draw("AL");
-    fRefS1->Draw("same");
+    gRefS1.Draw("same");
+    //fRefS1->Draw("same");
     c1->SaveAs("ref2.png");
     c1->Clear();
     G_ref4.Draw("AL");
-    fRefP1->Draw("same");
+    gRefP1.Draw("same");
+    //fRefP1->Draw("same");
     c1->SaveAs("ref4.png");
     c1->Clear();
 
