@@ -104,14 +104,14 @@ int main(){
         if(data4[i][5]==0) tra4.push_back(0); else tra4.push_back(((data4[i][3]+data4[i][4])/2.)/data4[i][5]);
     }
 
-    TGraph G_tra1; G_tra1.SetTitle("Transmitido, Polarizacao S, Face Plana"); G_tra1.SetLineColor(kBlue);
-    TGraph G_tra2; G_tra2.SetTitle("Transmitido, Polarizacao S, Face Curva"); G_tra2.SetLineColor(kBlue);
-    TGraph G_tra3; G_tra3.SetTitle("Transmitido, Polarizacao P, Face Plana"); G_tra3.SetLineColor(kBlue);
-    TGraph G_tra4; G_tra4.SetTitle("Transmitido, Polarizacao P, Face Curva"); G_tra4.SetLineColor(kBlue);
-    TGraph G_ref1; G_ref1.SetTitle("Refletido, Polarizacao S, Face Plana");   G_ref1.SetLineColor(kGreen);
-    TGraph G_ref2; G_ref2.SetTitle("Refletido, Polarizacao S, Face Curva");   G_ref2.SetLineColor(kGreen);
-    TGraph G_ref3; G_ref3.SetTitle("Refletido, Polarizacao P, Face Plana");   G_ref3.SetLineColor(kGreen);
-    TGraph G_ref4; G_ref4.SetTitle("Refletido, Polarizacao P, Face Curva");   G_ref4.SetLineColor(kGreen);
+    TGraph G_tra1; G_tra1.SetTitle("Transmitido, Polarizacao S, Face Plana"); G_tra1.SetLineColor(kBlue);  G_tra1.SetLineWidth(2);
+    TGraph G_tra2; G_tra2.SetTitle("Transmitido, Polarizacao S, Face Curva"); G_tra2.SetLineColor(kBlue);  G_tra2.SetLineWidth(2);
+    TGraph G_tra3; G_tra3.SetTitle("Transmitido, Polarizacao P, Face Plana"); G_tra3.SetLineColor(kBlue);  G_tra3.SetLineWidth(2);
+    TGraph G_tra4; G_tra4.SetTitle("Transmitido, Polarizacao P, Face Curva"); G_tra4.SetLineColor(kBlue);  G_tra4.SetLineWidth(2);
+    TGraph G_ref1; G_ref1.SetTitle("Refletido, Polarizacao S, Face Plana");   G_ref1.SetLineColor(kGreen); G_ref1.SetLineWidth(2);
+    TGraph G_ref2; G_ref2.SetTitle("Refletido, Polarizacao S, Face Curva");   G_ref2.SetLineColor(kGreen); G_ref2.SetLineWidth(2);
+    TGraph G_ref3; G_ref3.SetTitle("Refletido, Polarizacao P, Face Plana");   G_ref3.SetLineColor(kGreen); G_ref3.SetLineWidth(2);
+    TGraph G_ref4; G_ref4.SetTitle("Refletido, Polarizacao P, Face Curva");   G_ref4.SetLineColor(kGreen); G_ref4.SetLineWidth(2);
     for(int i=0; i<N;++i){
         G_tra1.SetPoint(i,ang1[i],tra1[i]);
         G_tra2.SetPoint(i,ang2[i],tra2[i]);
@@ -149,6 +149,15 @@ int main(){
     c1->SaveAs("ref4.png");
     c1->Clear();
 
+    G_tra1.SetTitle("Intensidade Transmitida");
+    G_tra2.SetTitle("Intensidade Transmitida");
+    G_tra3.SetTitle("Intensidade Transmitida");
+    G_tra4.SetTitle("Intensidade Transmitida");
+    G_ref1.SetTitle("Intensidade Refletida");  
+    G_ref2.SetTitle("Intensidade Refletida");  
+    G_ref3.SetTitle("Intensidade Refletida");  
+    G_ref4.SetTitle("Intensidade Refletida");  
+
     double thCs=(angconv(4,43,0)+angconv(3,45,0)+angconv(4,55,0)+angconv(3,50,0)+angconv(4,39,9)+angconv(3,40,0))/6.+40*(M_PI/180.);
     double thCp=70*(M_PI/180.)-(angconv(27,23,30)+angconv(27,50,0)+angconv(27,36,30)+angconv(28,0,0)+angconv(27,19,30)+angconv(28,2,30))/6.;
 
@@ -170,13 +179,14 @@ int main(){
     double Its=((0.179+0.183)/2.)/0.0235;
     cout<<"Ip= "<<Itp<<endl<<"Is= "<<Its<<endl;
 
-    TGraph G_Itp; G_Itp.SetLineColor(kRed);
-    TGraph G_Its; G_Its.SetLineColor(kRed);
+    TGraph G_Itp; G_Itp.SetLineColor(kRed); G_Itp.SetTitle("Intensidade sem o cilindro"); G_Itp.SetLineWidth(2);
+    TGraph G_Its; G_Its.SetLineColor(kRed); G_Its.SetTitle("Intensidade sem o cilindro"); G_Its.SetLineWidth(2);
 
-    TGraph G_It1;
-    TGraph G_It2;
-    TGraph G_It3;
-    TGraph G_It4;
+    TGraph G_It1; G_It1.SetTitle("Intensidade Total"); G_It1.SetLineWidth(2);
+    TGraph G_It2; G_It2.SetTitle("Intensidade Total"); G_It2.SetLineWidth(2);
+    TGraph G_It3; G_It3.SetTitle("Intensidade Total"); G_It3.SetLineWidth(2);
+    TGraph G_It4; G_It4.SetTitle("Intensidade Total"); G_It4.SetLineWidth(2);
+
     for(int i=0; i<N;++i){
         G_It1.SetPoint(i,ang1[i],tra1[i]+ref1[i]);
         G_It2.SetPoint(i,ang2[i],tra2[i]+ref2[i]);
@@ -191,33 +201,46 @@ int main(){
     TMultiGraph* mult3= new TMultiGraph(); mult3->SetTitle("Intensidade total, polarizacao P, face P");
     TMultiGraph* mult4= new TMultiGraph(); mult4->SetTitle("Intensidade total, polarizacao P, face C");
 
-    mult1->Add(&G_It1);
+    auto lMed = [&](double *x,double *p=nullptr){
+    return p[0]+0*x[0];
+    };
+    TF1 *fMed = new TF1("MED", lMed, -10000,10000,1);
+    G_It1.Fit(fMed);
+    G_It2.Fit(fMed);
+    G_It3.Fit(fMed);
+    G_It4.Fit(fMed);
+
     mult1->Add(&G_tra1);
     mult1->Add(&G_ref1);
     mult1->Add(&G_Its);
-    mult2->Add(&G_It2);
+    mult1->Add(&G_It1);
     mult2->Add(&G_tra2);
     mult2->Add(&G_ref2);
     mult2->Add(&G_Its);
-    mult3->Add(&G_It3);
+    mult2->Add(&G_It2);
     mult3->Add(&G_tra3);
     mult3->Add(&G_ref3);
     mult3->Add(&G_Itp);
-    mult4->Add(&G_It4);
+    mult3->Add(&G_It3);
     mult4->Add(&G_tra4);
     mult4->Add(&G_ref4);
     mult4->Add(&G_Itp);
+    mult4->Add(&G_It4);
 
     mult1->Draw("AL");
+    c1->BuildLegend(0.1,0.2,0.4,0.5);
     c1->SaveAs("It1.png");
     c1->Clear();
     mult2->Draw("AL");
+    c1->BuildLegend(0.1,0.2,0.4,0.5);
     c1->SaveAs("It2.png");
     c1->Clear();
     mult3->Draw("AL");
+    c1->BuildLegend(0.1,0.2,0.4,0.5);
     c1->SaveAs("It3.png");
     c1->Clear();
     mult4->Draw("AL");
+    c1->BuildLegend(0.1,0.2,0.4,0.5);
     c1->SaveAs("It4.png");
     c1->Clear();
 
