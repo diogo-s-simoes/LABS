@@ -170,14 +170,14 @@ int main(){
     TF1* fTransP= new TF1("L", lTransP, 0.,1.6,2);
 
 
-    fTransS->SetParameters(0,1);
-    fTransS->SetParameters(1,1.45);    
-    fTransP->SetParameters(0,1);
-    fTransP->SetParameters(1,1.45);    
-    fRefP->SetParameters(0,1);
-    fRefP->SetParameters(1,1.45);
-    fRefS->SetParameters(0,1);
-    fRefS->SetParameters(1,1.45);
+    fTransS->SetParameter(0,1);   
+    fTransS->SetParameter(1,1.45);    
+    fTransP->SetParameter(0,1);   
+    fTransP->SetParameter(1,1.45);    
+    fRefP->SetParameter(0,1);     
+    fRefP->SetParameter(1,1.45);  
+    fRefS->SetParameter(0,1);     
+    fRefS->SetParameter(1,1.45);  
 
 
     /*
@@ -251,51 +251,14 @@ int main(){
 
 
 
-    fTransS1->SetParameters(0,1.45);
-    fTransS1->SetParameters(1,1.);
-    fTransP1->SetParameters(0,1.45);
-    fTransP1->SetParameters(1,1.);    
-    fRefP1->SetParameters(0,1.45);
-    fRefP1->SetParameters(1,1.);
-    fRefS1->SetParameters(0,1.45);
-    fRefS1->SetParameters(1,1);
-
-
-
-/*
-    TAxis *ax_t = G_tra2.GetXaxis();
-    TAxis *ay_t = G_tra2.GetYaxis();
-
-    ax_t->SetLimits(0,1.6);
-    ay_t->SetRangeUser(0,10);
-
-
-    TAxis *ax_t1 = G_ref4.GetXaxis();
-    TAxis *ay_t1 = G_ref4.GetYaxis();
-
-    ax_t1->SetLimits(0,1.6);
-    ay_t1->SetRangeUser(0,10);
-
-
-    //G_tra2.Fit(fTransS1);
-    G_tra2.Draw("AL");
-    fTransS->Draw("same");
-    c1->SaveAs("tra2.png");
-    c1->Clear();
-    G_tra4.Fit(fTransP1);
-    G_tra4.Draw("AL");
-    c1->SaveAs("tra4.png");
-    c1->Clear();
-    G_ref2.Fit(fRefS1);
-    G_ref2.Draw("AL");
-    c1->SaveAs("ref2.png");
-    c1->Clear();
-    G_ref4.Fit(fRefP1);
-    G_ref4.Draw("AL");
-    fRefP1->Draw("same");
-    c1->SaveAs("ref4.png");
-    c1->Clear();*/
-
+    fTransS1->SetParameter(0,1.45);
+    fTransS1->SetParameter(1,1.);  
+    fTransP1->SetParameter(0,1.45);
+    fTransP1->SetParameter(1,1.);    
+    fRefP1->SetParameter(0,1.45);  
+    fRefP1->SetParameter(1,1.);    
+    fRefS1->SetParameter(0,1.45);  
+    fRefS1->SetParameter(1,1.);     
 
 
     G_tra2.Draw("AL");
