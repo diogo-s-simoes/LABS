@@ -170,6 +170,7 @@ int main(){
     TF1* fTransP= new TF1("L", lTransP, 0.,1.6,2);
 
 
+<<<<<<< HEAD
     fTransS->SetParameter(0,1);
     fTransS->SetParameter(1,1.48);    
     fTransP->SetParameter(0,1);
@@ -178,6 +179,16 @@ int main(){
     fRefP->SetParameter(1,1.48);
     fRefS->SetParameter(0,1);
     fRefS->SetParameter(1,1.48);
+=======
+    fTransS->SetParameter(0,1);   
+    fTransS->SetParameter(1,1.45);    
+    fTransP->SetParameter(0,1);   
+    fTransP->SetParameter(1,1.45);    
+    fRefP->SetParameter(0,1);     
+    fRefP->SetParameter(1,1.45);  
+    fRefS->SetParameter(0,1);     
+    fRefS->SetParameter(1,1.45);  
+>>>>>>> ecf379b8cb6c654f018e08fa4e1dcaea35e543ee
 
 
     /*
@@ -327,6 +338,7 @@ int main(){
 
     ax_t1->SetLimits(0,1.6);
     ay_t1->SetRangeUser(0,10);
+
 
 
 
