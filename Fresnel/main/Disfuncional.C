@@ -386,6 +386,12 @@ int main(){
     c1->SaveAs("PolS_FaceC.png");
     c1->Clear();
 
+    TGraph LinhaS2;
+    LinhaS2.SetPoint(0,0.74,3.75);
+    LinhaS2.SetPoint(1,1.6,3.75);
+    LinhaS2.SetLineColor(kRed); 
+    LinhaS2.SetLineWidth(3);
+
     gTransP1.SetLineColor(kGreen); 
     gTransP1.SetLineWidth(3);
 
@@ -416,13 +422,13 @@ int main(){
     mult4->Add(&gRefP1);
     mult4->Add(&G_tra4);
     mult4->Add(&gTransP1);
-    mult4->Add(&LinhaS1);
+    mult4->Add(&LinhaS2);
     TAxis *ax2 = mult4->GetXaxis();
     TAxis *ay2 = mult4->GetYaxis();
     ax2->SetTitle("#theta (rad)");
     ay2->SetTitle("Potencia Recebida");
     ax2->SetLimits(0,1.5);
-    ay2->SetRangeUser(0,20);
+    ay2->SetRangeUser(0,6);
     mult4->Draw("APL");
     auto legend4 = new TLegend(0.5,0.8,0.9,0.9);
     legend4->SetTextFont(62);
