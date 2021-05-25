@@ -343,15 +343,26 @@ int main(){
         Galpha.SetPoint(i,fTransP1->Eval(G_tra4.GetX()[i]),G_tra4.GetY()[i]);
     }
 
+    for(int i=9; i<N; ++i){
+        if(G_ref2.GetY()[i]>0) Gar2.SetPoint(i, 7.17, G_ref2.GetY()[i]);
+        //Gat2.SetPoint(i,fTransS1->Eval(G_tra2.GetX()[i]),G_tra2.GetY()[i]);
+        if(G_ref4.GetY()[i]>0) Gar4.SetPoint(i, 3.75, G_ref4.GetY()[i]);
+        //Gat4.SetPoint(i,fTransP1->Eval(G_tra4.GetX()[i]),G_tra4.GetY()[i]);
+        //Galpha.SetPoint(i,  fRefS1->Eval(G_ref2.GetX()[i]),G_ref2.GetY()[i]);
+        //Galpha.SetPoint(i,fTransS1->Eval(G_tra2.GetX()[i]),G_tra2.GetY()[i]);
+        //Galpha.SetPoint(i,  fRefP1->Eval(G_ref4.GetX()[i]),G_ref4.GetY()[i]);
+        //Galpha.SetPoint(i,fTransP1->Eval(G_tra4.GetX()[i]),G_tra4.GetY()[i]);
+    }
+
     //Gar1.Fit(fAlp);
     Gat1.Fit(fAlp);    //4.22477
-    Gar2.Fit(fAlp2);   //12.1466
+    Gar2.Fit(fAlp2);   //6.57601
     Gat2.Fit(fAlp);    //4.26575
     //Gar3.Fit(fAlp);
     Gat3.Fit(fAlp);    //6.1149
-    Gar4.Fit(fAlp2);   //14.3803
+    Gar4.Fit(fAlp2);   //5.51132
     Gat4.Fit(fAlp);    //5.48525
-    Galpha.Fit(fAlp);
+    Galpha.Fit(fAlp);  //6.28117
 
     Gat1.Draw("AP");
     c1->SaveAs("aT1.png");
