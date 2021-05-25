@@ -311,15 +311,31 @@ int main(){
     };
     TF1* fAlp2= new TF1("FALP2", lAlp2, 0.,50.,1);
 
-    TGraph Gar1;   Gar1.SetMarkerStyle(16);
-    TGraph Gat1;   Gat1.SetMarkerStyle(16);
-    TGraph Gar2;   Gar2.SetMarkerStyle(16);
-    TGraph Gat2;   Gat2.SetMarkerStyle(16);
-    TGraph Gar3;   Gar3.SetMarkerStyle(16);
-    TGraph Gat3;   Gat3.SetMarkerStyle(16);
-    TGraph Gar4;   Gar4.SetMarkerStyle(16);
-    TGraph Gat4;   Gat4.SetMarkerStyle(16);
-    TGraph Galpha; Galpha.SetMarkerStyle(16);
+    TGraph Gar1;   Gar1.SetMarkerStyle(33);
+    TGraph Gat1;   Gat1.SetMarkerStyle(33);
+    TGraph Gar2;   Gar2.SetMarkerStyle(33);
+    TGraph Gat2;   Gat2.SetMarkerStyle(33);
+    TGraph Gar3;   Gar3.SetMarkerStyle(33);
+    TGraph Gat3;   Gat3.SetMarkerStyle(33);
+    TGraph Gar4;   Gar4.SetMarkerStyle(33);
+    TGraph Gat4;   Gat4.SetMarkerStyle(33);
+    TGraph Galpha; Galpha.SetMarkerStyle(33);
+
+    Gat1.SetMarkerSize(2);
+    Gat2.SetMarkerSize(2);
+    Gat3.SetMarkerSize(2);
+    Gat4.SetMarkerSize(2);
+    Gar2.SetMarkerSize(2);
+    Gar4.SetMarkerSize(2);
+    Galpha.SetMarkerSize(2);
+
+    Gat1.SetMarkerColor(kBlue+2);
+    Gat2.SetMarkerColor(kBlue+2);
+    Gar2.SetMarkerColor(kBlue+2);
+    Gat3.SetMarkerColor(kBlue+2);
+    Gat4.SetMarkerColor(kBlue+2);
+    Gar4.SetMarkerColor(kBlue+2);
+    Galpha.SetMarkerColor(kBlue+2);
 
     for(int i=0; i<N; ++i){
         Gar1.SetPoint(i,   fRefS->Eval(G_ref1.GetX()[i]),G_ref1.GetY()[i]);
@@ -354,6 +370,12 @@ int main(){
         //Galpha.SetPoint(i,fTransP1->Eval(G_tra4.GetX()[i]),G_tra4.GetY()[i]);
     }
 
+    fAlp->SetLineColor(kOrange+7); 
+    fAlp->SetLineWidth(3);
+    fAlp2->SetLineColor(kOrange+7); 
+    fAlp2->SetLineWidth(3);
+
+
     //Gar1.Fit(fAlp);
     Gat1.Fit(fAlp);    //4.22477
     Gar2.Fit(fAlp2);   //6.57601
@@ -363,7 +385,7 @@ int main(){
     Gar4.Fit(fAlp2);   //5.51132
     Gat4.Fit(fAlp);    //5.48525
     Galpha.Fit(fAlp);  //6.28117
-
+    
     Gat1.Draw("AP");
     c1->SaveAs("aT1.png");
     c1->Clear();
