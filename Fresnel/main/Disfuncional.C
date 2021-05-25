@@ -317,36 +317,20 @@ int main(){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     TMultiGraph* mult3= new TMultiGraph(); mult3->SetTitle("Polarizacao S, Face C");
     TMultiGraph* mult4= new TMultiGraph(); mult4->SetTitle("Polarizacao P, Face C");
 
-
-
-  gStyle->SetOptFit(111);
-  gStyle -> SetStatBorderSize(5);
-  gStyle -> SetStatFontSize(1);
-  gStyle -> SetStatFont(62);
-  gStyle -> SetStatTextColor(1);
-  gStyle -> SetStatColor(3);
-  gStyle -> SetStatStyle(0);
-  gStyle -> SetStatX(0.55);
-  gStyle -> SetStatY(0.85);
-  gStyle -> SetStatW(0.2165);
-  gPad->SetGrid(1, 1); gPad->Update();
+    gStyle->SetOptFit(111);
+    gStyle -> SetStatBorderSize(5);
+    gStyle -> SetStatFontSize(1);
+    gStyle -> SetStatFont(62);
+    gStyle -> SetStatTextColor(1);
+    gStyle -> SetStatColor(3);
+    gStyle -> SetStatStyle(0);
+    gStyle -> SetStatX(0.55);
+    gStyle -> SetStatY(0.85);
+    gStyle -> SetStatW(0.2165);
+    gPad->SetGrid(1, 1); gPad->Update();
 
 
 
@@ -363,11 +347,10 @@ int main(){
     G_ref2.SetMarkerSize(1.5); 
     G_ref2.SetMarkerStyle(33);
     G_ref2.SetMarkerColor(kRed);
-    c1->SaveAs("tra4.png");
-    c1->Clear();
     G_ref2.Draw("AP");
     gRefS1.Draw("same");
-
+    c1->SaveAs("ref2.png");
+    c1->Clear();
 
     gTransS1.SetLineColor(kGreen); 
     gTransS1.SetLineWidth(3);
@@ -376,32 +359,11 @@ int main(){
     G_tra2.SetMarkerStyle(33);
     G_tra2.SetMarkerColor(kGreen);
 
-
-
-
     G_tra2.Draw("APL");
     gTransS1.Draw("same");
     //fTransS1->Draw("same");
     c1->SaveAs("tra2.png");
     c1->Clear();
-
-    G_tra4.Draw("APL");
-    gTransP1.Draw("same");
-    //fTransP1->Draw("same");
-
-
-    //fRefS1->Draw("same");
-    c1->SaveAs("ref2.png");
-    c1->Clear();
-    G_ref4.Draw("APL");
-    gRefP1.Draw("same");
-    //fRefP1->Draw("same");
-    c1->SaveAs("ref4.png");
-    c1->Clear();
-
-
-
-
 
     mult3->Add(&G_ref2);
     mult3->Add(&gRefS1);
@@ -422,6 +384,53 @@ int main(){
     legend3->AddEntry(&gTransS1,"P_{t}-Potencia transmitida","l");
     legend3->Draw("same");
     c1->SaveAs("PolS_FaceC.png");
+    c1->Clear();
+
+    gTransP1.SetLineColor(kGreen); 
+    gTransP1.SetLineWidth(3);
+
+    G_tra4.SetMarkerSize(1.5); 
+    G_tra4.SetMarkerStyle(33);
+    G_tra4.SetMarkerColor(kGreen);
+    G_tra4.Draw("APL");
+    gTransP1.Draw("same");
+    //fTransP1->Draw("same");
+    //fRefS1->Draw("same");
+    c1->SaveAs("tra4.png");
+    c1->Clear();
+
+    gRefP1.SetLineColor(kRed); 
+    gRefP1.SetLineWidth(3);
+
+    G_ref4.SetMarkerSize(1.5); 
+    G_ref4.SetMarkerStyle(43);
+    G_ref4.SetMarkerColor(kRed);
+
+    G_ref4.Draw("APL");
+    gRefP1.Draw("same");
+    //fRefP1->Draw("same");
+    c1->SaveAs("ref4.png");
+    c1->Clear();
+
+    mult4->Add(&G_ref4);
+    mult3->Add(&gRefP1);
+    mult4->Add(&G_tra4);
+    mult4->Add(&gTransP1);
+    //mult4->Add(&LinhaS1);
+    TAxis *ax2 = mult4->GetXaxis();
+    TAxis *ay2 = mult4->GetYaxis();
+    ax2->SetTitle("#theta (rad)");
+    ay2->SetTitle("Potencia Recebida");
+    ax2->SetLimits(0,1.5);
+    ay2->SetRangeUser(0,6);
+    mult4->Draw("APL");
+    auto legend4 = new TLegend(0.5,0.8,0.9,0.9);
+    legend4->SetTextFont(62);
+    legend4->SetTextSize(0.03);
+    legend4->AddEntry(&gRefP1,"P_{r}-Potencia refletida","l");
+    legend4->AddEntry(&gTransP1,"P_{t}-Potencia transmitida","l");
+    legend4->Draw("same");
+    c1->SaveAs("PolP_FaceC.png");
     c1->Clear();
 
 
