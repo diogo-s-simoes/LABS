@@ -302,36 +302,45 @@ int main(){
 
 
     auto lAlp = [](double *x,double *p=nullptr){
-        return x[0]*exp(-p[0]*0.025);
+        return x[0]*exp(-p[0]*0.025)+p[1];
     };
     TF1* fAlp= new TF1("FALP", lAlp, 0.,50.,1);
 
     auto lAlp2 = [](double *x,double *p=nullptr){
-        return x[0]*exp(-p[0]*0.05);
+        return x[0]*exp(-p[0]*0.05)+p[1];
     };
     TF1* fAlp2= new TF1("FALP2", lAlp2, 0.,50.,1);
 
-    TGraph Gar1;
-    TGraph Gat1;
-    TGraph Gar2;
-    TGraph Gat2;
-    TGraph Gar3;
-    TGraph Gat3;
-    TGraph Gar4;
-    TGraph Gat4;
+    TGraph Gar1;   Gar1.SetMarkerStyle(16);
+    TGraph Gat1;   Gat1.SetMarkerStyle(16);
+    TGraph Gar2;   Gar2.SetMarkerStyle(16);
+    TGraph Gat2;   Gat2.SetMarkerStyle(16);
+    TGraph Gar3;   Gar3.SetMarkerStyle(16);
+    TGraph Gat3;   Gat3.SetMarkerStyle(16);
+    TGraph Gar4;   Gar4.SetMarkerStyle(16);
+    TGraph Gat4;   Gat4.SetMarkerStyle(16);
+    TGraph Galpha; Galpha.SetMarkerStyle(16);
 
     for(int i=0; i<N; ++i){
         Gar1.SetPoint(i,   fRefS->Eval(G_ref1.GetX()[i]),G_ref1.GetY()[i]);
         Gat1.SetPoint(i, fTransS->Eval(G_tra1.GetX()[i]),G_tra1.GetY()[i]);
         Gar3.SetPoint(i,   fRefP->Eval(G_ref3.GetX()[i]),G_ref3.GetY()[i]);
         Gat3.SetPoint(i, fTransP->Eval(G_tra3.GetX()[i]),G_tra3.GetY()[i]);
+        //Galpha.SetPoint(i,   fRefS->Eval(G_ref1.GetX()[i]),G_ref1.GetY()[i]);
+        Galpha.SetPoint(i, fTransS->Eval(G_tra1.GetX()[i]),G_tra1.GetY()[i]);
+        //Galpha.SetPoint(i,   fRefP->Eval(G_ref3.GetX()[i]),G_ref3.GetY()[i]);
+        Galpha.SetPoint(i, fTransP->Eval(G_tra3.GetX()[i]),G_tra3.GetY()[i]);
     }
 
     for(int i=0; i<9; ++i){
-        Gar2.SetPoint(i,  fRefS1->Eval(G_ref2.GetX()[i]),G_ref2.GetY()[i]);
+        if(G_ref2.GetY()[i]>0) Gar2.SetPoint(i,  fRefS1->Eval(G_ref2.GetX()[i]),G_ref2.GetY()[i]);
         Gat2.SetPoint(i,fTransS1->Eval(G_tra2.GetX()[i]),G_tra2.GetY()[i]);
-        Gar4.SetPoint(i,  fRefP1->Eval(G_ref4.GetX()[i]),G_ref4.GetY()[i]);
+        if(G_ref4.GetY()[i]>0) Gar4.SetPoint(i,  fRefP1->Eval(G_ref4.GetX()[i]),G_ref4.GetY()[i]);
         Gat4.SetPoint(i,fTransP1->Eval(G_tra4.GetX()[i]),G_tra4.GetY()[i]);
+        //Galpha.SetPoint(i,  fRefS1->Eval(G_ref2.GetX()[i]),G_ref2.GetY()[i]);
+        Galpha.SetPoint(i,fTransS1->Eval(G_tra2.GetX()[i]),G_tra2.GetY()[i]);
+        //Galpha.SetPoint(i,  fRefP1->Eval(G_ref4.GetX()[i]),G_ref4.GetY()[i]);
+        Galpha.SetPoint(i,fTransP1->Eval(G_tra4.GetX()[i]),G_tra4.GetY()[i]);
     }
 
     //Gar1.Fit(fAlp);
@@ -342,24 +351,28 @@ int main(){
     Gat3.Fit(fAlp);    //6.1149
     Gar4.Fit(fAlp2);   //14.3803
     Gat4.Fit(fAlp);    //5.48525
+    Galpha.Fit(fAlp);
 
-    Gat1.Draw("AL");
+    Gat1.Draw("AP");
     c1->SaveAs("aT1.png");
     c1->Clear();
-    Gar2.Draw("AL");
+    Gar2.Draw("AP");
     c1->SaveAs("aR2.png");
     c1->Clear();
-    Gat2.Draw("AL");
+    Gat2.Draw("AP");
     c1->SaveAs("aT2.png");
     c1->Clear();
-    Gat3.Draw("AL");
+    Gat3.Draw("AP");
     c1->SaveAs("aT3.png");
     c1->Clear();
-    Gar4.Draw("AL");
+    Gar4.Draw("AP");
     c1->SaveAs("aR4.png");
     c1->Clear();
-    Gat4.Draw("AL");
+    Gat4.Draw("AP");
     c1->SaveAs("aT4.png");
+    c1->Clear();
+    Galpha.Draw("AP");
+    c1->SaveAs("alpha.png");
     c1->Clear();
 
     return 0;
