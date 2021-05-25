@@ -370,9 +370,9 @@ int main(){
         //Galpha.SetPoint(i,fTransP1->Eval(G_tra4.GetX()[i]),G_tra4.GetY()[i]);
     }
 
-    fAlp->SetLineColor(kOrange+7); 
+    fAlp->SetLineColor(kViolet); 
     fAlp->SetLineWidth(3);
-    fAlp2->SetLineColor(kOrange+7); 
+    fAlp2->SetLineColor(kViolet); 
     fAlp2->SetLineWidth(3);
 
 
@@ -386,24 +386,64 @@ int main(){
     Gat4.Fit(fAlp);    //5.48525
     Galpha.Fit(fAlp);  //6.28117
     
+    TAxis *ax = Gat1.GetXaxis();
+    TAxis *ay = Gat1.GetYaxis();
+    ax->SetTitle("#Iota_{0}");
+    ay->SetTitle("#Iota");
+    //ax->SetLimits(1.5,8);
+    //ay->SetRangeUser(0,7.1);
     Gat1.Draw("AP");
     c1->SaveAs("aT1.png");
     c1->Clear();
+    
+    TAxis *ax1 = Gar2.GetXaxis();
+    TAxis *ay1 = Gar2.GetYaxis();
+    ax1->SetTitle("#Iota_{0}");
+    ay1->SetTitle("#Iota");
+    ax1->SetLimits(0.005,7.8);
+    ay1->SetRangeUser(0,6);
     Gar2.Draw("AP");
     c1->SaveAs("aR2.png");
     c1->Clear();
+
+    TAxis *ax2 = Gat2.GetXaxis();
+    TAxis *ay2 = Gat2.GetYaxis();
+    ax2->SetTitle("#Iota_{0}");
+    ay2->SetTitle("#Iota");
     Gat2.Draw("AP");
     c1->SaveAs("aT2.png");
     c1->Clear();
+
+    TAxis *ax3 = Gat3.GetXaxis();
+    TAxis *ay3 = Gat3.GetYaxis();
+    ax3->SetTitle("#Iota_{0}");
+    ay3->SetTitle("#Iota");
     Gat3.Draw("AP");
     c1->SaveAs("aT3.png");
     c1->Clear();
+
+    TAxis *ax4 = Gar4.GetXaxis();
+    TAxis *ay4 = Gar4.GetYaxis();
+    ax4->SetTitle("#Iota_{0}");
+    ay4->SetTitle("#Iota");
+    ax4->SetLimits(0.005,4.12);
+    ay4->SetRangeUser(0,3.3);
     Gar4.Draw("AP");
     c1->SaveAs("aR4.png");
     c1->Clear();
+
+    TAxis *ax5 = Gat4.GetXaxis();
+    TAxis *ay5 = Gat4.GetYaxis();
+    ax5->SetTitle("#Iota_{0}");
+    ay5->SetTitle("#Iota");
     Gat4.Draw("AP");
     c1->SaveAs("aT4.png");
     c1->Clear();
+
+    TAxis *ax6 = Galpha.GetXaxis();
+    TAxis *ay6 = Galpha.GetYaxis();
+    ax6->SetTitle("#Iota_{0}");
+    ay6->SetTitle("#Iota");
     Galpha.Draw("AP");
     c1->SaveAs("alpha.png");
     c1->Clear();
