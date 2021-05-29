@@ -43,13 +43,11 @@ int main(){
     };
     TF1 *Bex= new TF1("F", Bx, -10000,10000,0);
 
-
-
     auto ez = [&](double *x,double *p=nullptr){
         return Rb/pow((Rb*Rb+p[0]*p[0]), 3/2);
     };
     TF1 *fez= new TF1("F", ez, -10000,10000,1);
-    //Bobine circular
+    
     auto Bz = [&](double *x,double *p=nullptr){
         fez->SetParameter(0, x[0]);
         Integrator B(0, 2*M_PI, *fez);
@@ -59,16 +57,13 @@ int main(){
     };
     TF1 *Bez= new TF1("F", Bz, -10000,10000,0);
 
-
-
-
-
+    //x=0.025 y=0
     double xx=0.025; //m
     auto ex2 = [&](double *x,double *p=nullptr){
         return p[0]*sin(x[0])/pow((Rb*Rb+p[0]*p[0]+xx*xx-2*Rb*xx*sin(x[0])), 3/2);
     };
     TF1 *fex2= new TF1("F", ex2, -10000,10000,1);
-    //Bobine circular
+    
     auto Bx2 = [&](double *x,double *p=nullptr){
         fex2->SetParameter(0, x[0]);
         Integrator B(0, 2*M_PI, *fex2);
@@ -82,7 +77,8 @@ int main(){
         return (Rb-xx*sin(x[0]))/pow((Rb*Rb+p[0]*p[0]+xx*xx-2*Rb*xx*sin(x[0])), 3/2);
     };
     TF1 *fez2= new TF1("F", ez2, -10000,10000,1);
-    //Bobine circular
+
+
     auto Bz2 = [&](double *x,double *p=nullptr){
         fez2->SetParameter(0, x[0]);
         Integrator B(0, 2*M_PI, *fez2);
@@ -92,8 +88,23 @@ int main(){
     };
     TF1 *Bez2= new TF1("F", Bz2, -10000,10000,0);
 
+    //y=0 z=0
+    double L=0;
+    auto exx =[&](double *x,double *p=nullptr){
+        return ((L/2)*sin(x[0]))/(Rb*Rb+p[0]*p[0]+(L/2)*(L/2)-2*p[0]*Rb*sin(x[0]));
+    };
+    TF1 *fexx= new TF1("F", exx, -10000,10000,1);
+    auto Bxx = [&](double *x,double *p=nullptr){
+        fexx->SetParameter(0, x[0]);
+        Integrator B(0, 2*M_PI, *fexx);
+        double Bvalue;
+        B.Simpson(1000, Bvalue, err);
+        return m0*Nb*Rb*I/(4*M_PI)*Bvalue;
+    };
+    TF1 *Bexx= new TF1("F", Bxx, -10000,10000,0);
+
     auto ezx =[&](double *x,double *p=nullptr){
-        return (Rb-p[0]*sin(x[0]))/(Rb*Rb+p[0]*p[0]-2*p[0]*Rb*sin(x[0]));
+        return (Rb-p[0]*sin(x[0]))/(Rb*Rb+p[0]*p[0]+(L/2)*(L/2)-2*p[0]*Rb*sin(x[0]));
     };
     TF1 *fezx= new TF1("F", ezx, -10000,10000,1);
     auto Bzx = [&](double *x,double *p=nullptr){
@@ -104,6 +115,36 @@ int main(){
         return m0*Nb*Rb*I/(4*M_PI)*Bvalue;
     };
     TF1 *Bezx= new TF1("F", Bzx, -10000,10000,0);
+
+    //Bobines de Helmholtz
+    auto Bh1x=[&](double *x,double *p=nullptr){
+        return Bex->Eval(x[0]-L/2)+Bex->Eval(x[0]+L/2);
+    };
+    TF1 *Bh1ex= new TF1("F", Bh1x, -10000,10000,0);
+    auto Bh1z=[&](double *x,double *p=nullptr){
+        return Bez->Eval(x[0]-L/2)+Bez->Eval(x[0]+L/2);
+    };
+    TF1 *Bh1ez= new TF1("F", Bh1z, -10000,10000,0);
+
+    auto Bh2x=[&](double *x,double *p=nullptr){
+        return Bex2->Eval(x[0]-L/2)+Bex2->Eval(x[0]+L/2);
+    };
+    TF1 *Bh2ex= new TF1("F", Bh2x, -10000,10000,0);
+    auto Bh2z=[&](double *x,double *p=nullptr){
+        return Bez2->Eval(x[0]-L/2)+Bez2->Eval(x[0]+L/2);
+    };
+    TF1 *Bh2ez= new TF1("F", Bh2z, -10000,10000,0);
+    L=dbH;
+    auto Bh3x=[&](double *x,double *p=nullptr){
+        return Bexx->Eval(x[0]-L/2)+Bexx->Eval(x[0]+L/2);
+    };
+    TF1 *Bh3ex= new TF1("F", Bh3x, -10000,10000,0);
+    auto Bh3z=[&](double *x,double *p=nullptr){
+        return Bezx->Eval(x[0]-L/2)+Bezx->Eval(x[0]+L/2);
+    };
+    TF1 *Bh3ez= new TF1("F", Bh3z, -10000,10000,0);
+
+
 
 
     return 0;
