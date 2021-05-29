@@ -29,7 +29,7 @@ int main(){
     vector<vector<double>> databxx;
     vector<vector<double>> datahzz;
     vector<vector<double>> datahzx;
-    vector<vector<double>> datahzz;
+    vector<vector<double>> datahxx;
     vector<vector<double>> dataa;
     vector<vector<double>> dataf;
 
@@ -99,15 +99,15 @@ int main(){
         temp.clear();
     }
 
-    TGraph Gcalib;
-    TGraph Gbzz;
-    TGraph Gbzx;
-    TGraph Gbxx;
-    TGraph Ghzz;
-    TGraph Ghzx;
-    TGraph Ghxx;
-    TGraph Gar;
-    TGraph Gfe;
+    TGraph Gcalib; Gcalib.SetTitle(""); Gcalib.SetLineColor(kMagenta); Gcalib.SetLineWidth(2); Gcalib.SetMarkerStyle(16); Gcalib.SetMarkerColor(kOrange);
+    TGraph Gbzz;   Gbzz.SetTitle(""); Gbzz.SetLineColor(kMagenta); Gbzz.SetLineWidth(2); Gbzz.SetMarkerStyle(16); Gbzz.SetMarkerColor(kOrange);
+    TGraph Gbzx;   Gbzx.SetTitle(""); Gbzx.SetLineColor(kMagenta); Gbzx.SetLineWidth(2); Gbzx.SetMarkerStyle(16); Gbzx.SetMarkerColor(kOrange);
+    TGraph Gbxx;   Gbxx.SetTitle(""); Gbxx.SetLineColor(kMagenta); Gbxx.SetLineWidth(2); Gbxx.SetMarkerStyle(16); Gbxx.SetMarkerColor(kOrange);
+    TGraph Ghzz;   Ghzz.SetTitle(""); Ghzz.SetLineColor(kMagenta); Ghzz.SetLineWidth(2); Ghzz.SetMarkerStyle(16); Ghzz.SetMarkerColor(kOrange);
+    TGraph Ghzx;   Ghzx.SetTitle(""); Ghzx.SetLineColor(kMagenta); Ghzx.SetLineWidth(2); Ghzx.SetMarkerStyle(16); Ghzx.SetMarkerColor(kOrange);
+    TGraph Ghxx;   Ghxx.SetTitle(""); Ghxx.SetLineColor(kMagenta); Ghxx.SetLineWidth(2); Ghxx.SetMarkerStyle(16); Ghxx.SetMarkerColor(kOrange);
+    TGraph Gar;    Gar.SetTitle(""); Gar.SetLineColor(kMagenta); Gar.SetLineWidth(2); Gar.SetMarkerStyle(16); Gar.SetMarkerColor(kOrange);
+    TGraph Gfe;    Gar.SetTitle(""); Gfe.SetLineColor(kMagenta); Gfe.SetLineWidth(2); Gfe.SetMarkerStyle(16); Gfe.SetMarkerColor(kOrange);
 
     for(int i=0;i<Calib.GetLines();++i){
         Gcalib.SetPoint(i,datac[0][i],datac[1][i]);
@@ -131,8 +131,40 @@ int main(){
         Ghxx.SetPoint(i,datahxx[0][i],datahxx[1][i]);
     }
     for(int i=0;i<ar.GetLines();++i){
-        Gar.SetPoint(i,datac[0][i],datac[1][i]);
+        Gar.SetPoint(i,dataa[0][i],dataa[1][i]);
     }
     for(int i=0;i<ferro.GetLines();++i){
-        Gfe.SetPoint(i,datac[0][i],datac[1][i]);
+        Gfe.SetPoint(i,dataf[0][i],dataf[1][i]);
     }
+
+    TCanvas* c1 = new TCanvas();
+    Gcalib.Draw("APL");
+    c1->SaveAs("calib.png");
+    c1->Clear();
+    Gbzz.Draw("APL");
+    c1->SaveAs("bzz.png");
+    c1->Clear();
+    Gbzx.Draw("APL");
+    c1->SaveAs("bzx.png");
+    c1->Clear();
+    Gbxx.Draw("APL");
+    c1->SaveAs("bxx.png");
+    c1->Clear();
+    Ghzz.Draw("APL");
+    c1->SaveAs("hzz.png");
+    c1->Clear();
+    Ghzx.Draw("APL");
+    c1->SaveAs("hzx.png");
+    c1->Clear();
+    Ghxx.Draw("APL");
+    c1->SaveAs("hxx.png");
+    c1->Clear();
+    Gar.Draw("APL");
+    c1->SaveAs("ar.png");
+    c1->Clear();
+    Gfe.Draw("APL");
+    c1->SaveAs("fe.png");
+    c1->Clear();
+
+    return 0;
+}
