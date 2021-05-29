@@ -59,6 +59,10 @@ int main(){
     };
     TF1 *Bez= new TF1("F", Bz, -10000,10000,0);
 
+
+
+
+
     double xx=0.025; //m
     auto ex2 = [&](double *x,double *p=nullptr){
         return p[0]*sin(x[0])/pow((Rb*Rb+p[0]*p[0]+xx*xx-2*Rb*xx*sin(x[0])), 3/2);
@@ -81,12 +85,26 @@ int main(){
     //Bobine circular
     auto Bz2 = [&](double *x,double *p=nullptr){
         fez2->SetParameter(0, x[0]);
-        Integrator B(0, 2*M_PI, *fez);
+        Integrator B(0, 2*M_PI, *fez2);
         double Bvalue;
         B.Simpson(1000, Bvalue, err);
         return m0*Nb*Rb*I/(4*M_PI)*Bvalue;
     };
     TF1 *Bez2= new TF1("F", Bz2, -10000,10000,0);
+
+    auto ezx =[&](double *x,double *p=nullptr){
+        return (Rb-p[0]*sin(x[0]))/(Rb*Rb+p[0]*p[0]-2*p[0]*Rb*sin(x[0]));
+    };
+    TF1 *fezx= new TF1("F", ezx, -10000,10000,1);
+    auto Bzx = [&](double *x,double *p=nullptr){
+        fezx->SetParameter(0, x[0]);
+        Integrator B(0, 2*M_PI, *fezx);
+        double Bvalue;
+        B.Simpson(1000, Bvalue, err);
+        return m0*Nb*Rb*I/(4*M_PI)*Bvalue;
+    };
+    TF1 *Bezx= new TF1("F", Bzx, -10000,10000,0);
+
 
     return 0;
 }
