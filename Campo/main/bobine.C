@@ -150,7 +150,7 @@ int main(){
     }
     Gxb.SetPoint(0,4./100,Fcalib->Eval(-0.41/1000));
     Gxb.SetPoint(1,10./100,Fcalib->Eval(0.42/1000));
-    offset=0.00078;
+    offset=0.00078-0.00024;
     for(int i=0;i<Bobinexx.GetLines();++i){
         Gbxx.SetPoint(i,databxx[i][0]/100,Fcalib->Eval(databxx[i][1]/1000));
         Gtotb.SetPoint(i+Bobinezz.GetLines()+Bobinezx.GetLines(),0,databxx[i][0]/100,Fcalib->Eval(databxx[i][1]/1000));
@@ -168,10 +168,10 @@ int main(){
     Gxh.SetPoint(0,0.,Fcalib->Eval(0.19/1000));
     Gxh.SetPoint(1,5.5/100,Fcalib->Eval(-0.92/1000));
     Gxh.SetPoint(2,10.5/100,Fcalib->Eval(0.04/1000));
-    offset=0.00076;
+    offset=0.00076-0.00018;
     for(int i=0;i<Helmholtzxx.GetLines();++i){
         Ghxx.SetPoint(i,datahxx[i][0]/100,Fcalib->Eval(datahxx[i][1]/1000));
-        Gtoth.SetPoint(i+Helmholtzzz.GetLines()+Helmholtzzx.GetLines(),0,databxx[i][0]/100,Fcalib->Eval(databxx[i][1]/1000));
+        Gtoth.SetPoint(i+Helmholtzzz.GetLines()+Helmholtzzx.GetLines(),0,datahxx[i][0]/100,Fcalib->Eval(datahxx[i][1]/1000));
     }
     offset=0.00054;
     for(int i=0;i<ar.GetLines();++i){
@@ -409,8 +409,8 @@ int main(){
     c1->SetPhi(330.);
     c1->SaveAs("3Db.png");
     c1->Clear();
-    Gtoth.Draw("P");
-    G3Dh.Draw("TRIW SAME");
+    G3Dh.Draw("TRIW");
+    Gtoth.Draw("P SAME");
     c1->SetPhi(330.);
     c1->SaveAs("3Dh.png");
     c1->Clear();
