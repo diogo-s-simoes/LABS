@@ -122,14 +122,14 @@ int main(){
         return Bez2->Eval(x[0]-L/2)+Bez2->Eval(x[0]+L/2);
     };
     TF1 *Bh2ez= new TF1("F", Bh2z, -0.15,0.15,0);
-    
+
     L=dbH;
     auto Bh3x=[&](double *x,double *p=nullptr){
         return -Bexx->Eval(x[0])+Bexx->Eval(x[0]);
     };
     TF1 *Bh3ex= new TF1("F", Bh3x, -0.15,0.15,0);
     auto Bh3z=[&](double *x,double *p=nullptr){
-        return -Bezx->Eval(x[0])+Bezx->Eval(x[0]);
+        return Bezx->Eval(x[0])+Bezx->Eval(x[0]);
     };
     TF1 *Bh3ez= new TF1("F", Bh3z, -0.15,0.15,0);
 
