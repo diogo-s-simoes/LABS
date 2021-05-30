@@ -111,7 +111,7 @@ int main(){
     TGraph Gfe;    Gar.SetTitle(""); Gfe.SetLineColor(kMagenta); Gfe.SetLineWidth(2); Gfe.SetMarkerStyle(16); Gfe.SetMarkerColor(kAzure+3);
 
     for(int i=0;i<Calib.GetLines();++i){
-        Gcalib.SetPoint(i,datac[i][0],datac[i][1]/1000);
+        Gcalib.SetPoint(i,datac[i][0]/100,datac[i][1]/1000);
     }
 
     double Rb=0.068; //m
@@ -127,33 +127,33 @@ int main(){
     Gcalib.Fit(Ffit);
 
     auto calib = [&](double *x,double *p=nullptr){
-        return m0*Nb*(x[0]-0.000715773)/(2*Rb*0.00610303);
+        return m0*Nb*(x[0]-0.000715773)/(2*Rb*0.610303);
     };
     TF1 *Fcalib = new TF1("FIT", calib, -10000,10000,0);
 
     for(int i=0;i<Bobinezz.GetLines();++i){
-        Gbzz.SetPoint(i,databzz[i][0],Fcalib->Eval(databzz[i][1]/1000));
+        Gbzz.SetPoint(i,databzz[i][0]/100,Fcalib->Eval(databzz[i][1]/1000));
     }
     for(int i=0;i<Bobinezx.GetLines();++i){
-        Gbzx.SetPoint(i,databzx[i][0],Fcalib->Eval(databzx[i][1]/1000));
+        Gbzx.SetPoint(i,databzx[i][0]/100,Fcalib->Eval(databzx[i][1]/1000));
     }
     for(int i=0;i<Bobinexx.GetLines();++i){
-        Gbxx.SetPoint(i,databxx[i][0],Fcalib->Eval(databxx[i][1]/1000));
+        Gbxx.SetPoint(i,databxx[i][0]/100,Fcalib->Eval(databxx[i][1]/1000));
     }
     for(int i=0;i<Helmholtzzz.GetLines();++i){
-        Ghzz.SetPoint(i,datahzz[i][0],Fcalib->Eval(datahzz[i][1]/1000));
+        Ghzz.SetPoint(i,datahzz[i][0]/100,Fcalib->Eval(datahzz[i][1]/1000));
     }
     for(int i=0;i<Helmholtzzx.GetLines();++i){
-        Ghzx.SetPoint(i,datahzx[i][0],Fcalib->Eval(datahzx[i][1]/1000));
+        Ghzx.SetPoint(i,datahzx[i][0]/100,Fcalib->Eval(datahzx[i][1]/1000));
     }
     for(int i=0;i<Helmholtzxx.GetLines();++i){
-        Ghxx.SetPoint(i,datahxx[i][0],Fcalib->Eval(datahxx[i][1]/1000));
+        Ghxx.SetPoint(i,datahxx[i][0]/100,Fcalib->Eval(datahxx[i][1]/1000));
     }
     for(int i=0;i<ar.GetLines();++i){
-        Gar.SetPoint(i,dataa[i][0],Fcalib->Eval(dataa[i][1]/1000));
+        Gar.SetPoint(i,dataa[i][0]/100,Fcalib->Eval(dataa[i][1]/1000));
     }
     for(int i=0;i<ferro.GetLines();++i){
-        Gfe.SetPoint(i,dataf[i][0],Fcalib->Eval(dataf[i][1]/1000));
+        Gfe.SetPoint(i,dataf[i][0]/100,Fcalib->Eval(dataf[i][1]/1000));
     }
     
     double I=1;
@@ -185,7 +185,7 @@ int main(){
         B.Simpson(10000, Bvalue, err);
         return m0*Nb*Rb*I/(4*M_PI)*Bvalue;
     };
-    TF1 *Bez= new TF1("F", Bz, -10000,10000,0);
+    TF1 *Bez= new TF1("F", Bz, -1000,1000,0);
 
     TCanvas* c1 = new TCanvas();
     Gcalib.Draw("AP");
