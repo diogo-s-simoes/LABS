@@ -111,6 +111,7 @@ int main(){
     TGraph Gfe;    Gar.SetTitle("");    Gfe.SetLineColor(kMagenta);    Gfe.SetLineWidth(3);    Gfe.SetMarkerStyle(45);    Gfe.SetMarkerColor(kAzure+3);    Gfe.SetMarkerSize(2);
     TGraph Gxb;    Gxb.SetTitle("");    Gxb.SetLineColor(kMagenta);    Gxb.SetLineWidth(3);    Gxb.SetMarkerStyle(45);    Gxb.SetMarkerColor(kAzure+3);    Gxb.SetMarkerSize(2);
     TGraph Gxh;    Gxh.SetTitle("");    Gxh.SetLineColor(kMagenta);    Gxh.SetLineWidth(3);    Gxh.SetMarkerStyle(45);    Gxh.SetMarkerColor(kAzure+3);    Gxh.SetMarkerSize(2);
+    TGraph Gtot;    Gtot.SetTitle("");    Gtot.SetLineColor(kMagenta);    Gtot.SetLineWidth(3);    Gtot.SetMarkerStyle(45);    Gtot.SetMarkerColor(kAzure+3);    Gtot.SetMarkerSize(2);
 
     for(int i=0;i<Calib.GetLines();++i){
         Gcalib.SetPoint(i,datac[i][0],datac[i][1]/1000);
