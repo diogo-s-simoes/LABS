@@ -133,6 +133,24 @@ int main(){
     };
     TF1 *Bh3ez= new TF1("F", Bh3z, -0.15,0.15,0);
 
+    //solenoides
+    double Rar=0.02;
+    double Lar=0.186;
+    double Rf=0.028;
+    double Lf=0.15;
+    double nar=39./0.03;
+    double nf=45./0.03;
+
+    auto Bzar = [&](double *x,double *p=nullptr){
+        return m0*nar*I/2*((Lar/2-x[0])/sqrt((Lar/2-x[0])*(Lar/2-x[0])+Rar*Rar)+(Lar/2+x[0])/sqrt((Lar/2+x[0])*(Lar/2+x[0])+Rar*Rar));
+    };
+    TF1 *Bar= new TF1("F", Bzar, -0.15,0.15,0);
+
+    auto Bzf = [&](double *x,double *p=nullptr){
+        return p[0]*(nf*I+p[1])/2*((Lf/2-x[0])/sqrt((Lf/2-x[0])*(Lf/2-x[0])+Rf*Rf)+(Lf/2+x[0])/sqrt((Lf/2+x[0])*(Lf/2+x[0])+Rf*Rf));
+    };
+    TF1 *Bf= new TF1("F", Bzf, -0.15,0.15,2);
+
     return 0;
 }
 
