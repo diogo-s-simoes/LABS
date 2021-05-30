@@ -161,8 +161,9 @@ int main(){
         Gar.SetPoint(i,dataa[i][0]/100,Fcalib->Eval(dataa[i][1]/1000));
     }
     offset=0.00054;
+    double Lf=0.15;
     for(int i=0;i<ferro.GetLines();++i){
-        Gfe.SetPoint(i,dataf[i][0]/100,Fcalib->Eval(dataf[i][1]/1000));
+        Gfe.SetPoint(i,dataf[i][0]/100+Lf/2.,Fcalib->Eval(dataf[i][1]/1000));
     }
     
     double I=1;
@@ -273,6 +274,24 @@ int main(){
     };
     TF1 *Bh3ez= new TF1("F", Bh3z, -0.15,0.15,0);
 
+    //solenoides
+    double Rar=0.02;
+    double Lar=0.186;
+    double Rf=0.028;
+    double nar=39./0.03;
+    double nf=45./0.03;
+
+    auto Bzar = [&](double *x,double *p=nullptr){
+        return m0*nar*I/2*((Lar/2-x[0])/sqrt((Lar/2-x[0])*(Lar/2-x[0])+Rar*Rar)+(Lar/2+x[0])/sqrt((Lar/2+x[0])*(Lar/2+x[0])+Rar*Rar));
+    };
+    TF1 *Bar= new TF1("F", Bzar, -0.15,0.15,0);
+
+    auto Bzf = [&](double *x,double *p=nullptr){
+        return m0*(nf*I+p[0])/2*((Lf/2-x[0])/sqrt((Lf/2-x[0])*(Lf/2-x[0])+Rf*Rf)+(Lf/2+x[0])/sqrt((Lf/2+x[0])*(Lf/2+x[0])+Rf*Rf));
+    };
+    TF1 *Bf= new TF1("F", Bzf, -0.15,0.15,1);
+
+    //Draw
     TCanvas* c1 = new TCanvas();
     Gcalib.Draw("AP");
     c1->SaveAs("calib.png");
@@ -314,9 +333,11 @@ int main(){
     //Solenoides
     I=0.995;
     Gar.Draw("AP");
+    Bar->Draw("SAME");
     c1->SaveAs("ar.png");
     c1->Clear();
     I=0.993;
+    Gfe.Fit(Bf);
     Gfe.Draw("AP");
     c1->SaveAs("fe.png");
     c1->Clear();
