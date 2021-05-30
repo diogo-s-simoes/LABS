@@ -83,7 +83,7 @@ int main(){
     //y=0 z=0
     double L=0;
     auto exx =[&](double *x,double *p=nullptr){
-        return ((L/2)*sin(x[0]))/(Rb*Rb+p[0]*p[0]+(L/2)*(L/2)-2*p[0]*Rb*sin(x[0]));
+        return ((L/2)*sin(x[0]))/pow(Rb*Rb+p[0]*p[0]+(L/2)*(L/2)-2*p[0]*Rb*sin(x[0]), 3./2.);
     };
     TF1 *fexx= new TF1("F", exx, -0.15,0.15,1);
     auto Bxx = [&](double *x,double *p=nullptr){
@@ -94,7 +94,7 @@ int main(){
     TF1 *Bexx= new TF1("F", Bxx, -0.15,0.15,0);
 
     auto ezx =[&](double *x,double *p=nullptr){
-        return (Rb-p[0]*sin(x[0]))/(Rb*Rb+p[0]*p[0]+(L/2)*(L/2)-2*p[0]*Rb*sin(x[0]));
+        return (Rb-p[0]*sin(x[0]))/pow(Rb*Rb+p[0]*p[0]+(L/2)*(L/2)-2*p[0]*Rb*sin(x[0]),3./2.);
     };
     TF1 *fezx= new TF1("F", ezx, -0.15,0.15,1);
     auto Bzx = [&](double *x,double *p=nullptr){
@@ -122,13 +122,14 @@ int main(){
         return Bez2->Eval(x[0]-L/2)+Bez2->Eval(x[0]+L/2);
     };
     TF1 *Bh2ez= new TF1("F", Bh2z, -0.15,0.15,0);
+    
     L=dbH;
     auto Bh3x=[&](double *x,double *p=nullptr){
-        return Bexx->Eval(x[0]-L/2)+Bexx->Eval(x[0]+L/2);
+        return -Bexx->Eval(x[0])+Bexx->Eval(x[0]);
     };
     TF1 *Bh3ex= new TF1("F", Bh3x, -0.15,0.15,0);
     auto Bh3z=[&](double *x,double *p=nullptr){
-        return Bezx->Eval(x[0]-L/2)+Bezx->Eval(x[0]+L/2);
+        return -Bezx->Eval(x[0])+Bezx->Eval(x[0]);
     };
     TF1 *Bh3ez= new TF1("F", Bh3z, -0.15,0.15,0);
 
