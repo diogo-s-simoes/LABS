@@ -18,9 +18,9 @@ int main(){
     DataReader Bobinezz("data/bobine-zz.txt");
     DataReader Bobinezx("data/bobine-zx.txt");
     DataReader Bobinexx("data/bobine-xx.txt");
-    DataReader Helmholtzzz("data/bobine-zz.txt");
-    DataReader Helmholtzzx("data/bobine-zx.txt");
-    DataReader Helmholtzxx("data/bobine-xx.txt");
+    DataReader Helmholtzzz("data/helmholtz-zz.txt");
+    DataReader Helmholtzzx("data/helmholtz-zx.txt");
+    DataReader Helmholtzxx("data/helmholtz-xx.txt");
     DataReader ar("data/ar.txt");
     DataReader ferro("data/ferro.txt");
 
@@ -118,6 +118,7 @@ int main(){
     double Nb=320;
     double dbH=0.068; //m
     double m0=1.256637e-6; //H/m
+    double offset=0.000715773;
 
     auto lfit = [&](double *x,double *p=nullptr){
         return p[0]*x[0]+p[1];
@@ -127,37 +128,44 @@ int main(){
     Gcalib.Fit(Ffit);
 
     auto calib = [&](double *x,double *p=nullptr){
-        return m0*Nb*(x[0]-0.000715773)/(2*Rb*0.00610303);
+        return m0*Nb*(x[0]-offset)/(2*Rb*0.00610303);
     };
     TF1 *Fcalib = new TF1("FIT", calib, -10000,10000,0);
 
+    offset=0.00070;
     for(int i=0;i<Bobinezz.GetLines();++i){
         Gbzz.SetPoint(i,databzz[i][0]/100,Fcalib->Eval(databzz[i][1]/1000));
     }
+    offset=0.00071;
     for(int i=0;i<Bobinezx.GetLines();++i){
         Gbzx.SetPoint(i,databzx[i][0]/100,Fcalib->Eval(databzx[i][1]/1000));
     }
+    offset=0.00078;
     for(int i=0;i<Bobinexx.GetLines();++i){
         Gbxx.SetPoint(i,databxx[i][0]/100,Fcalib->Eval(databxx[i][1]/1000));
     }
+    offset=0.00080;
     for(int i=0;i<Helmholtzzz.GetLines();++i){
         Ghzz.SetPoint(i,datahzz[i][0]/100,Fcalib->Eval(datahzz[i][1]/1000));
     }
+    offset=0.00074;
     for(int i=0;i<Helmholtzzx.GetLines();++i){
         Ghzx.SetPoint(i,datahzx[i][0]/100,Fcalib->Eval(datahzx[i][1]/1000));
     }
+    offset=0.00076;
     for(int i=0;i<Helmholtzxx.GetLines();++i){
         Ghxx.SetPoint(i,datahxx[i][0]/100,Fcalib->Eval(datahxx[i][1]/1000));
     }
+    offset=0.00054;
     for(int i=0;i<ar.GetLines();++i){
         Gar.SetPoint(i,dataa[i][0]/100,Fcalib->Eval(dataa[i][1]/1000));
     }
+    offset=0.00054;
     for(int i=0;i<ferro.GetLines();++i){
         Gfe.SetPoint(i,dataf[i][0]/100,Fcalib->Eval(dataf[i][1]/1000));
     }
     
     double I=1;
-    double err=0;
     //Bobine circular
     //x=0 y=0
     auto ex = [&](double *x,double *p=nullptr){
@@ -211,7 +219,7 @@ int main(){
     TF1 *Bez2= new TF1("F", Bz2, -0.15,0.15,0);
 
     //y=0 z=0
-    double L=0;
+    double L;
     auto exx =[&](double *x,double *p=nullptr){
         return ((L/2)*sin(x[0]))/pow(Rb*Rb+p[0]*p[0]+(L/2)*(L/2)-2*p[0]*Rb*sin(x[0]), 3./2.);
     };
@@ -235,6 +243,7 @@ int main(){
     TF1 *Bezx= new TF1("F", Bzx, -0.15,0.15,0);
 
     //Bobines de Helmholtz
+    //x=0 y=0
     auto Bh1x=[&](double *x,double *p=nullptr){
         return Bex->Eval(x[0]-L/2)+Bex->Eval(x[0]+L/2);
     };
@@ -244,6 +253,7 @@ int main(){
     };
     TF1 *Bh1ez= new TF1("F", Bh1z, -0.15,0.15,0);
 
+    //x=2.5 y=0
     auto Bh2x=[&](double *x,double *p=nullptr){
         return Bex2->Eval(x[0]-L/2)+Bex2->Eval(x[0]+L/2);
     };
@@ -253,13 +263,13 @@ int main(){
     };
     TF1 *Bh2ez= new TF1("F", Bh2z, -0.15,0.15,0);
     
-    L=dbH;
+    //z=0 y=0
     auto Bh3x=[&](double *x,double *p=nullptr){
         return -Bexx->Eval(x[0])+Bexx->Eval(x[0]);
     };
     TF1 *Bh3ex= new TF1("F", Bh3x, -0.15,0.15,0);
     auto Bh3z=[&](double *x,double *p=nullptr){
-        return -Bezx->Eval(x[0])+Bezx->Eval(x[0]);
+        return 2*Bezx->Eval(x[0]);
     };
     TF1 *Bh3ez= new TF1("F", Bh3z, -0.15,0.15,0);
 
@@ -267,30 +277,46 @@ int main(){
     Gcalib.Draw("AP");
     c1->SaveAs("calib.png");
     c1->Clear();
+    //Bobine
+    L=0;
+    I=1.001;
     Gbzz.Draw("AP");
     Bez->Draw("SAME");
     c1->SaveAs("bzz.png");
     c1->Clear();
+    I=0.998;
     Gbzx.Draw("AP");
     Bez2->Draw("SAME");
     c1->SaveAs("bzx.png");
     c1->Clear();
+    I=0.997;
     Gbxx.Draw("AP");
     Bezx->Draw("SAME");
     c1->SaveAs("bxx.png");
     c1->Clear();
+    //Helmholtz
+    I=0.995;
+    L=dbH;
     Ghzz.Draw("AP");
+    Bh1ez->Draw("SAME");
     c1->SaveAs("hzz.png");
     c1->Clear();
+    I=0.993;
     Ghzx.Draw("AP");
+    Bh2ez->Draw("SAME");
     c1->SaveAs("hzx.png");
     c1->Clear();
+    I=0.993;
     Ghxx.Draw("AP");
+    Bh3ez->Draw("SAME");
     c1->SaveAs("hxx.png");
     c1->Clear();
+    //Solenoides
+    I=0.995;
     Gar.Draw("AP");
     c1->SaveAs("ar.png");
     c1->Clear();
+    I=0.993;
     Gfe.Draw("AP");
     c1->SaveAs("fe.png");
     c1->Clear();
