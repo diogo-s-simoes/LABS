@@ -158,7 +158,7 @@ int main(){
     
     double I=1;
     auto ex = [&](double *x,double *p=nullptr){
-        return p[0]*sin(x[0])/pow((Rb*Rb+p[0]*p[0]), 3/2);
+        return p[0]*sin(x[0])/pow((Rb*Rb+p[0]*p[0]), 3./2.);
     };
     TF1 *fex= new TF1("F", ex, -10000,10000,1);
     //Bobine circular
@@ -173,19 +173,16 @@ int main(){
     TF1 *Bex= new TF1("F", Bx, -10000,10000,0);
 
     auto ez = [&](double *x,double *p=nullptr){
-        return Rb/pow((Rb*Rb+p[0]*p[0]), 3/2);
+        return Rb/pow((Rb*Rb+p[0]*p[0]), 3./2.);
     };
     TF1 *fez= new TF1("F", ez, -10000,10000,1);
     
     auto Bz = [&](double *x,double *p=nullptr){
         fez->SetParameter(0, x[0]);
-        Integrator B(0, 2*M_PI, *fez);
-        double Bvalue=0;
-        double err=0;
-        B.Simpson(10000, Bvalue, err);
-        return 10*m0*Nb*Rb*I/(4*M_PI)*Bvalue;
+        double Bvalue=fez->Integral(0,2*M_PI);
+        return 0.01*m0*Nb*Rb*I/(4*M_PI)*Bvalue;
     };
-    TF1 *Bez= new TF1("F", Bz, -100,100,0);
+    TF1 *Bez= new TF1("F", Bz, -0.15,0.15,0);
 
     TCanvas* c1 = new TCanvas();
     Gcalib.Draw("AP");
