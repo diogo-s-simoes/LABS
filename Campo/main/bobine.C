@@ -12,6 +12,8 @@
 #include "TLatex.h"
 #include "TGraphErrors.h"
 #include "Integrator.h"
+#include "TGraph2D.h"
+#include "TF2.h"
 
 int main(){
     DataReader Calib("data/calib.txt");
@@ -111,7 +113,8 @@ int main(){
     TGraph Gfe;    Gar.SetTitle("");    Gfe.SetLineColor(kMagenta);    Gfe.SetLineWidth(3);    Gfe.SetMarkerStyle(45);    Gfe.SetMarkerColor(kAzure+3);    Gfe.SetMarkerSize(2);
     TGraph Gxb;    Gxb.SetTitle("");    Gxb.SetLineColor(kMagenta);    Gxb.SetLineWidth(3);    Gxb.SetMarkerStyle(45);    Gxb.SetMarkerColor(kAzure+3);    Gxb.SetMarkerSize(2);
     TGraph Gxh;    Gxh.SetTitle("");    Gxh.SetLineColor(kMagenta);    Gxh.SetLineWidth(3);    Gxh.SetMarkerStyle(45);    Gxh.SetMarkerColor(kAzure+3);    Gxh.SetMarkerSize(2);
-    TGraph Gtot;    Gtot.SetTitle("");    Gtot.SetLineColor(kMagenta);    Gtot.SetLineWidth(3);    Gtot.SetMarkerStyle(45);    Gtot.SetMarkerColor(kAzure+3);    Gtot.SetMarkerSize(2);
+    TGraph2D Gtotb;    Gtotb.SetTitle("");    Gtotb.SetLineColor(kMagenta);    Gtotb.SetLineWidth(3);    Gtotb.SetMarkerStyle(45);    Gtotb.SetMarkerColor(kAzure+3);    Gtotb.SetMarkerSize(2);
+    TGraph2D Gtoth;    Gtoth.SetTitle("");    Gtoth.SetLineColor(kMagenta);    Gtoth.SetLineWidth(3);    Gtoth.SetMarkerStyle(45);    Gtoth.SetMarkerColor(kAzure+3);    Gtoth.SetMarkerSize(2);
 
     for(int i=0;i<Calib.GetLines();++i){
         Gcalib.SetPoint(i,datac[i][0],datac[i][1]/1000);
@@ -138,24 +141,29 @@ int main(){
     offset=0.00070;
     for(int i=0;i<Bobinezz.GetLines();++i){
         Gbzz.SetPoint(i,databzz[i][0]/100,Fcalib->Eval(databzz[i][1]/1000));
+        Gtotb.SetPoint(i,databzz[i][0]/100,0,Fcalib->Eval(databzz[i][1]/1000));
     }
     offset=0.00071;
     for(int i=0;i<Bobinezx.GetLines();++i){
         Gbzx.SetPoint(i,databzx[i][0]/100,Fcalib->Eval(databzx[i][1]/1000));
+        Gtotb.SetPoint(i+Bobinezz.GetLines(),databzx[i][0]/100,0.025,Fcalib->Eval(databzx[i][1]/1000));
     }
     Gxb.SetPoint(0,4./100,Fcalib->Eval(-0.41/1000));
     Gxb.SetPoint(1,10./100,Fcalib->Eval(0.42/1000));
     offset=0.00078;
     for(int i=0;i<Bobinexx.GetLines();++i){
         Gbxx.SetPoint(i,databxx[i][0]/100,Fcalib->Eval(databxx[i][1]/1000));
+        Gtotb.SetPoint(i+Bobinezz.GetLines()+Bobinezx.GetLines(),0,databxx[i][0]/100,Fcalib->Eval(databxx[i][1]/1000));
     }
     offset=0.00080;
     for(int i=0;i<Helmholtzzz.GetLines();++i){
         Ghzz.SetPoint(i,datahzz[i][0]/100,Fcalib->Eval(datahzz[i][1]/1000));
+        Gtoth.SetPoint(i,datahzz[i][0]/100,0,Fcalib->Eval(datahzz[i][1]/1000));
     }
     offset=0.00074;
     for(int i=0;i<Helmholtzzx.GetLines();++i){
         Ghzx.SetPoint(i,datahzx[i][0]/100,Fcalib->Eval(datahzx[i][1]/1000));
+        Gtoth.SetPoint(i+Helmholtzzz.GetLines(),datahzz[i][0]/100,0.025,Fcalib->Eval(datahzz[i][1]/1000));
     }
     Gxh.SetPoint(0,0.,Fcalib->Eval(0.19/1000));
     Gxh.SetPoint(1,5.5/100,Fcalib->Eval(-0.92/1000));
@@ -163,6 +171,7 @@ int main(){
     offset=0.00076;
     for(int i=0;i<Helmholtzxx.GetLines();++i){
         Ghxx.SetPoint(i,datahxx[i][0]/100,Fcalib->Eval(datahxx[i][1]/1000));
+        Gtoth.SetPoint(i+Helmholtzzz.GetLines()+Helmholtzzx.GetLines(),0,databxx[i][0]/100,Fcalib->Eval(databxx[i][1]/1000));
     }
     offset=0.00054;
     for(int i=0;i<ar.GetLines();++i){
@@ -299,6 +308,25 @@ int main(){
     };
     TF1 *Bf= new TF1("F", Bzf, -0.15,0.15,1);
 
+    //2D
+    auto l3db = [&](double *x,double *p=nullptr){
+        return (Rb-p[1]*sin(x[0]))/pow((Rb*Rb+p[0]*p[0]+p[1]*p[1]-2*Rb*p[1]*sin(x[0])), 3./2.);
+    };
+    TF1 *f3db= new TF1("F", l3db, -0.15,0.15,2);
+    
+    auto ltotb = [&](double *x,double *p=nullptr){
+        f3db->SetParameter(0, x[0]);
+        f3db->SetParameter(1, x[1]);
+        double Bvalue=f3db->Integral(0,2*M_PI);
+        return m0*Nb*Rb*I/(4*M_PI)*Bvalue;
+    };
+    TF2 *ftotb= new TF2("F", ltotb, 0,0.12,-0.04,0.04,0);
+
+    auto ltoth = [&](double *x,double *p=nullptr){
+        return ftotb->Eval(x[0]-dbH/2,x[1])+ftotb->Eval(x[0]+dbH/2,x[1]);
+    };
+    TF2 *ftoth= new TF2("F", ltoth, 0,0.12,-0.04,0.04,0);
+
     //Draw
     TCanvas* c1 = new TCanvas();
     Gcalib.Draw("AP");
@@ -356,6 +384,35 @@ int main(){
     Gfe.Fit(Bf);
     Gfe.Draw("AP");
     c1->SaveAs("fe.png");
+    c1->Clear();
+    //3D
+    TGraph2D G3Db;
+    TGraph2D G3Dh;
+    int numpnts = 25;
+    for(int j = 0; j<numpnts; ++j){
+        for(int l=0; l<numpnts; ++l){
+            G3Db.SetPoint(l+numpnts*j,0.12/numpnts*j,-0.04+0.08/numpnts*l,ftotb->Eval(0.12/numpnts*j,-0.04+0.08/numpnts*l));
+            G3Dh.SetPoint(l+numpnts*j,0.12/numpnts*j,-0.04+0.08/numpnts*l,ftoth->Eval(0.12/numpnts*j,-0.04+0.08/numpnts*l));
+        }
+    }
+    G3Db.SetMarkerColor(kGreen-8);
+    G3Db.SetLineColor(kGreen-8);
+    G3Db.SetMarkerSize(.5);
+    G3Db.SetMarkerStyle(8);
+    G3Dh.SetMarkerColor(kGreen-8);
+    G3Dh.SetLineColor(kGreen-8);
+    G3Dh.SetMarkerSize(.5);
+    G3Dh.SetMarkerStyle(8);
+    I=1;
+    Gtotb.Draw("P");
+    G3Db.Draw("TRIW SAME");
+    c1->SetPhi(330.);
+    c1->SaveAs("3Db.png");
+    c1->Clear();
+    Gtoth.Draw("P");
+    G3Dh.Draw("TRIW SAME");
+    c1->SetPhi(330.);
+    c1->SaveAs("3Dh.png");
     c1->Clear();
 
     return 0;
