@@ -183,9 +183,9 @@ int main(){
         double Bvalue=0;
         double err=0;
         B.Simpson(10000, Bvalue, err);
-        return m0*Nb*Rb*I/(4*M_PI)*Bvalue;
+        return 10*m0*Nb*Rb*I/(4*M_PI)*Bvalue;
     };
-    TF1 *Bez= new TF1("F", Bz, -1000,1000,0);
+    TF1 *Bez= new TF1("F", Bz, -100,100,0);
 
     TCanvas* c1 = new TCanvas();
     Gcalib.Draw("AP");
