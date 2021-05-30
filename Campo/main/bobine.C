@@ -100,15 +100,17 @@ int main(){
         temp.clear();
     }
 
-    TGraph Gcalib; Gcalib.SetTitle(""); Gcalib.SetLineColor(kMagenta); Gcalib.SetLineWidth(2); Gcalib.SetMarkerStyle(16); Gcalib.SetMarkerColor(kAzure+3);
-    TGraph Gbzz;   Gbzz.SetTitle(""); Gbzz.SetLineColor(kMagenta); Gbzz.SetLineWidth(2); Gbzz.SetMarkerStyle(16); Gbzz.SetMarkerColor(kAzure+3);
-    TGraph Gbzx;   Gbzx.SetTitle(""); Gbzx.SetLineColor(kMagenta); Gbzx.SetLineWidth(2); Gbzx.SetMarkerStyle(16); Gbzx.SetMarkerColor(kAzure+3);
-    TGraph Gbxx;   Gbxx.SetTitle(""); Gbxx.SetLineColor(kMagenta); Gbxx.SetLineWidth(2); Gbxx.SetMarkerStyle(16); Gbxx.SetMarkerColor(kAzure+3);
-    TGraph Ghzz;   Ghzz.SetTitle(""); Ghzz.SetLineColor(kMagenta); Ghzz.SetLineWidth(2); Ghzz.SetMarkerStyle(16); Ghzz.SetMarkerColor(kAzure+3);
-    TGraph Ghzx;   Ghzx.SetTitle(""); Ghzx.SetLineColor(kMagenta); Ghzx.SetLineWidth(2); Ghzx.SetMarkerStyle(16); Ghzx.SetMarkerColor(kAzure+3);
-    TGraph Ghxx;   Ghxx.SetTitle(""); Ghxx.SetLineColor(kMagenta); Ghxx.SetLineWidth(2); Ghxx.SetMarkerStyle(16); Ghxx.SetMarkerColor(kAzure+3);
-    TGraph Gar;    Gar.SetTitle(""); Gar.SetLineColor(kMagenta); Gar.SetLineWidth(2); Gar.SetMarkerStyle(16); Gar.SetMarkerColor(kAzure+3);
-    TGraph Gfe;    Gar.SetTitle(""); Gfe.SetLineColor(kMagenta); Gfe.SetLineWidth(2); Gfe.SetMarkerStyle(16); Gfe.SetMarkerColor(kAzure+3);
+    TGraph Gcalib; Gcalib.SetTitle(""); Gcalib.SetLineColor(kMagenta); Gcalib.SetLineWidth(3); Gcalib.SetMarkerStyle(45); Gcalib.SetMarkerColor(kAzure+3); Gcalib.SetMarkerSize(2);
+    TGraph Gbzz;   Gbzz.SetTitle("");   Gbzz.SetLineColor(kMagenta);   Gbzz.SetLineWidth(3);   Gbzz.SetMarkerStyle(45);   Gbzz.SetMarkerColor(kAzure+3);   Gbzz.SetMarkerSize(2);
+    TGraph Gbzx;   Gbzx.SetTitle("");   Gbzx.SetLineColor(kMagenta);   Gbzx.SetLineWidth(3);   Gbzx.SetMarkerStyle(45);   Gbzx.SetMarkerColor(kAzure+3);   Gbzx.SetMarkerSize(2);
+    TGraph Gbxx;   Gbxx.SetTitle("");   Gbxx.SetLineColor(kMagenta);   Gbxx.SetLineWidth(3);   Gbxx.SetMarkerStyle(45);   Gbxx.SetMarkerColor(kAzure+3);   Gbxx.SetMarkerSize(2);
+    TGraph Ghzz;   Ghzz.SetTitle("");   Ghzz.SetLineColor(kMagenta);   Ghzz.SetLineWidth(3);   Ghzz.SetMarkerStyle(45);   Ghzz.SetMarkerColor(kAzure+3);   Ghzz.SetMarkerSize(2);
+    TGraph Ghzx;   Ghzx.SetTitle("");   Ghzx.SetLineColor(kMagenta);   Ghzx.SetLineWidth(3);   Ghzx.SetMarkerStyle(45);   Ghzx.SetMarkerColor(kAzure+3);   Ghzx.SetMarkerSize(2);
+    TGraph Ghxx;   Ghxx.SetTitle("");   Ghxx.SetLineColor(kMagenta);   Ghxx.SetLineWidth(3);   Ghxx.SetMarkerStyle(45);   Ghxx.SetMarkerColor(kAzure+3);   Ghxx.SetMarkerSize(2);
+    TGraph Gar;    Gar.SetTitle("");    Gar.SetLineColor(kMagenta);    Gar.SetLineWidth(3);    Gar.SetMarkerStyle(45);    Gar.SetMarkerColor(kAzure+3);    Gar.SetMarkerSize(2);
+    TGraph Gfe;    Gar.SetTitle("");    Gfe.SetLineColor(kMagenta);    Gfe.SetLineWidth(3);    Gfe.SetMarkerStyle(45);    Gfe.SetMarkerColor(kAzure+3);    Gfe.SetMarkerSize(2);
+    TGraph Gxb;    Gxb.SetTitle("");    Gxb.SetLineColor(kMagenta);    Gxb.SetLineWidth(3);    Gxb.SetMarkerStyle(45);    Gxb.SetMarkerColor(kAzure+3);    Gxb.SetMarkerSize(2);
+    TGraph Gxh;    Gxh.SetTitle("");    Gxh.SetLineColor(kMagenta);    Gxh.SetLineWidth(3);    Gxh.SetMarkerStyle(45);    Gxh.SetMarkerColor(kAzure+3);    Gxh.SetMarkerSize(2);
 
     for(int i=0;i<Calib.GetLines();++i){
         Gcalib.SetPoint(i,datac[i][0],datac[i][1]/1000);
@@ -140,6 +142,8 @@ int main(){
     for(int i=0;i<Bobinezx.GetLines();++i){
         Gbzx.SetPoint(i,databzx[i][0]/100,Fcalib->Eval(databzx[i][1]/1000));
     }
+    Gxb.SetPoint(0,4./100,Fcalib->Eval(-0.41/1000));
+    Gxb.SetPoint(1,10./100,Fcalib->Eval(0.42/1000));
     offset=0.00078;
     for(int i=0;i<Bobinexx.GetLines();++i){
         Gbxx.SetPoint(i,databxx[i][0]/100,Fcalib->Eval(databxx[i][1]/1000));
@@ -152,6 +156,9 @@ int main(){
     for(int i=0;i<Helmholtzzx.GetLines();++i){
         Ghzx.SetPoint(i,datahzx[i][0]/100,Fcalib->Eval(datahzx[i][1]/1000));
     }
+    Gxh.SetPoint(0,0.,Fcalib->Eval(0.19/1000));
+    Gxh.SetPoint(1,5.5/100,Fcalib->Eval(-0.92/1000));
+    Gxh.SetPoint(2,10.5/100,Fcalib->Eval(0.04/1000));
     offset=0.00076;
     for(int i=0;i<Helmholtzxx.GetLines();++i){
         Ghxx.SetPoint(i,datahxx[i][0]/100,Fcalib->Eval(datahxx[i][1]/1000));
@@ -308,6 +315,10 @@ int main(){
     Bez2->Draw("SAME");
     c1->SaveAs("bzx.png");
     c1->Clear();
+    Gxb.Draw("AP");
+    Bex2->Draw("SAME");
+    c1->SaveAs("bex.png");
+    c1->Clear();
     I=0.997;
     Gbxx.Draw("AP");
     Bezx->Draw("SAME");
@@ -324,6 +335,10 @@ int main(){
     Ghzx.Draw("AP");
     Bh2ez->Draw("SAME");
     c1->SaveAs("hzx.png");
+    c1->Clear();
+    Gxh.Draw("AP");
+    Bh2ex->Draw("SAME");
+    c1->SaveAs("hex.png");
     c1->Clear();
     I=0.993;
     Ghxx.Draw("AP");
