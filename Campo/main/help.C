@@ -147,7 +147,7 @@ int main(){
     TF1 *Bar= new TF1("F", Bzar, -0.15,0.15,0);
 
     auto Bzf = [&](double *x,double *p=nullptr){
-        return p[0]*(nf*I+p[1])/2*((Lf/2-x[0])/sqrt((Lf/2-x[0])*(Lf/2-x[0])+Rf*Rf)+(Lf/2+x[0])/sqrt((Lf/2+x[0])*(Lf/2+x[0])+Rf*Rf));
+        return m0*(nf*I+p[0])/2*((Lf/2-x[0])/sqrt((Lf/2-x[0])*(Lf/2-x[0])+Rf*Rf)+(Lf/2+x[0])/sqrt((Lf/2+x[0])*(Lf/2+x[0])+Rf*Rf));
     };
     TF1 *Bf= new TF1("F", Bzf, -0.15,0.15,2);
 
