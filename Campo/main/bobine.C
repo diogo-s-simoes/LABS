@@ -152,6 +152,7 @@ int main(){
         TAxis *ax9 = Gfe.GetXaxis();
         TAxis *ay9 = Gfe.GetYaxis();
         ax9->SetTitle("z (m)");
+        //ay9->SetTitleOffset(2.0);
         ay9->SetTitle("Bz (T)");
         TAxis *ax0 = Gxb.GetXaxis();
         TAxis *ay0 = Gxb.GetYaxis();
@@ -384,6 +385,7 @@ int main(){
 
     //Draw
     TCanvas* c1 = new TCanvas("","",1200,800);
+    c1->SetLeftMargin(0.2);
     Gcalib.Draw("AP");
     c1->SaveAs("calib.png");
     c1->Clear();
