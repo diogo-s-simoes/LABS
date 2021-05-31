@@ -102,20 +102,20 @@ int main(){
         temp.clear();
     }
 
-    TGraph Gcalib; Gcalib.SetTitle(""); Gcalib.SetLineColor(kMagenta); Gcalib.SetLineWidth(3); Gcalib.SetMarkerStyle(45); Gcalib.SetMarkerColor(kAzure+3); Gcalib.SetMarkerSize(2);
-    TGraph Gbzz;   Gbzz.SetTitle("");   Gbzz.SetLineColor(kMagenta);   Gbzz.SetLineWidth(3);   Gbzz.SetMarkerStyle(45);   Gbzz.SetMarkerColor(kAzure+3);   Gbzz.SetMarkerSize(2);
-    TGraph Gbzx;   Gbzx.SetTitle("");   Gbzx.SetLineColor(kMagenta);   Gbzx.SetLineWidth(3);   Gbzx.SetMarkerStyle(45);   Gbzx.SetMarkerColor(kAzure+3);   Gbzx.SetMarkerSize(2);
-    TGraph Gbxx;   Gbxx.SetTitle("");   Gbxx.SetLineColor(kMagenta);   Gbxx.SetLineWidth(3);   Gbxx.SetMarkerStyle(45);   Gbxx.SetMarkerColor(kAzure+3);   Gbxx.SetMarkerSize(2);
-    TGraph Ghzz;   Ghzz.SetTitle("");   Ghzz.SetLineColor(kMagenta);   Ghzz.SetLineWidth(3);   Ghzz.SetMarkerStyle(45);   Ghzz.SetMarkerColor(kAzure+3);   Ghzz.SetMarkerSize(2);
-    TGraph Ghzx;   Ghzx.SetTitle("");   Ghzx.SetLineColor(kMagenta);   Ghzx.SetLineWidth(3);   Ghzx.SetMarkerStyle(45);   Ghzx.SetMarkerColor(kAzure+3);   Ghzx.SetMarkerSize(2);
-    TGraph Ghxx;   Ghxx.SetTitle("");   Ghxx.SetLineColor(kMagenta);   Ghxx.SetLineWidth(3);   Ghxx.SetMarkerStyle(45);   Ghxx.SetMarkerColor(kAzure+3);   Ghxx.SetMarkerSize(2);
-    TGraph Gar;    Gar.SetTitle("");    Gar.SetLineColor(kMagenta);    Gar.SetLineWidth(3);    Gar.SetMarkerStyle(45);    Gar.SetMarkerColor(kAzure+3);    Gar.SetMarkerSize(2);
-    TGraph Gfe;    Gar.SetTitle("");    Gfe.SetLineColor(kMagenta);    Gfe.SetLineWidth(3);    Gfe.SetMarkerStyle(45);    Gfe.SetMarkerColor(kAzure+3);    Gfe.SetMarkerSize(2);
-    TGraph Gxb;    Gxb.SetTitle("");    Gxb.SetLineColor(kMagenta);    Gxb.SetLineWidth(3);    Gxb.SetMarkerStyle(45);    Gxb.SetMarkerColor(kAzure+3);    Gxb.SetMarkerSize(2);
-    TGraph Gxh;    Gxh.SetTitle("");    Gxh.SetLineColor(kMagenta);    Gxh.SetLineWidth(3);    Gxh.SetMarkerStyle(45);    Gxh.SetMarkerColor(kAzure+3);    Gxh.SetMarkerSize(2);
-    TGraph2D Gtotb;    Gtotb.SetTitle("");    Gtotb.SetLineColor(kMagenta);    Gtotb.SetLineWidth(3);    Gtotb.SetMarkerStyle(45);    Gtotb.SetMarkerColor(kAzure+3);    Gtotb.SetMarkerSize(2);
-    TGraph2D Gtoth;    Gtoth.SetTitle("");    Gtoth.SetLineColor(kMagenta);    Gtoth.SetLineWidth(3);    Gtoth.SetMarkerStyle(45);    Gtoth.SetMarkerColor(kAzure+3);    Gtoth.SetMarkerSize(2);
-
+    TGraph Gcalib; Gcalib.SetTitle(""); Gcalib.SetLineColor(kMagenta); Gcalib.SetLineWidth(3); Gcalib.SetMarkerStyle(16); Gcalib.SetMarkerColor(kAzure+3); Gcalib.SetMarkerSize(2);
+    TGraph Gbzz;   Gbzz.SetTitle("");   Gbzz.SetLineColor(kMagenta);   Gbzz.SetLineWidth(3);   Gbzz.SetMarkerStyle(16);   Gbzz.SetMarkerColor(kAzure+3);   Gbzz.SetMarkerSize(2);
+    TGraph Gbzx;   Gbzx.SetTitle("");   Gbzx.SetLineColor(kMagenta);   Gbzx.SetLineWidth(3);   Gbzx.SetMarkerStyle(16);   Gbzx.SetMarkerColor(kAzure+3);   Gbzx.SetMarkerSize(2);
+    TGraph Gbxx;   Gbxx.SetTitle("");   Gbxx.SetLineColor(kMagenta);   Gbxx.SetLineWidth(3);   Gbxx.SetMarkerStyle(16);   Gbxx.SetMarkerColor(kAzure+3);   Gbxx.SetMarkerSize(2);
+    TGraph Ghzz;   Ghzz.SetTitle("");   Ghzz.SetLineColor(kMagenta);   Ghzz.SetLineWidth(3);   Ghzz.SetMarkerStyle(16);   Ghzz.SetMarkerColor(kAzure+3);   Ghzz.SetMarkerSize(2);
+    TGraph Ghzx;   Ghzx.SetTitle("");   Ghzx.SetLineColor(kMagenta);   Ghzx.SetLineWidth(3);   Ghzx.SetMarkerStyle(16);   Ghzx.SetMarkerColor(kAzure+3);   Ghzx.SetMarkerSize(2);
+    TGraph Ghxx;   Ghxx.SetTitle("");   Ghxx.SetLineColor(kMagenta);   Ghxx.SetLineWidth(3);   Ghxx.SetMarkerStyle(16);   Ghxx.SetMarkerColor(kAzure+3);   Ghxx.SetMarkerSize(2);
+    TGraph Gar;    Gar.SetTitle("");    Gar.SetLineColor(kMagenta);    Gar.SetLineWidth(3);    Gar.SetMarkerStyle(16);    Gar.SetMarkerColor(kAzure+3);    Gar.SetMarkerSize(2);
+    TGraph Gfe;    Gar.SetTitle("");    Gfe.SetLineColor(kMagenta);    Gfe.SetLineWidth(3);    Gfe.SetMarkerStyle(16);    Gfe.SetMarkerColor(kAzure+3);    Gfe.SetMarkerSize(2);
+    TGraph Gxb;    Gxb.SetTitle("");    Gxb.SetLineColor(kMagenta);    Gxb.SetLineWidth(3);    Gxb.SetMarkerStyle(16);    Gxb.SetMarkerColor(kAzure+3);    Gxb.SetMarkerSize(2);
+    TGraph Gxh;    Gxh.SetTitle("");    Gxh.SetLineColor(kMagenta);    Gxh.SetLineWidth(3);    Gxh.SetMarkerStyle(16);    Gxh.SetMarkerColor(kAzure+3);    Gxh.SetMarkerSize(2);
+    TGraph2D Gtotb;    Gtotb.SetTitle("");    Gtotb.SetLineColor(kMagenta);    Gtotb.SetLineWidth(3);    Gtotb.SetMarkerStyle(16);    Gtotb.SetMarkerColor(kAzure+3);    Gtotb.SetMarkerSize(2);
+    TGraph2D Gtoth;    Gtoth.SetTitle("");    Gtoth.SetLineColor(kMagenta);    Gtoth.SetLineWidth(3);    Gtoth.SetMarkerStyle(16);    Gtoth.SetMarkerColor(kAzure+3);    Gtoth.SetMarkerSize(2);
+    TGraph2D GInvis;
     {
         TAxis *ax1 = Gcalib.GetXaxis();
         TAxis *ay1 = Gcalib.GetYaxis();
@@ -168,6 +168,27 @@ int main(){
         axB->SetTitle("z (m)");
         ayB->SetTitle("x (m)");
         azB->SetTitle("Bz (T)");
+        axB->SetTitleOffset(2.0);
+        ayB->SetTitleOffset(2.0);
+        azB->SetTitleOffset(2.0);
+        TAxis *axC = GInvis.GetXaxis();
+        TAxis *ayC = GInvis.GetYaxis();
+        TAxis *azC = GInvis.GetZaxis();
+        axC->SetTitle("z (m)");
+        ayC->SetTitle("x (m)");
+        azC->SetTitle("Bz (T)");
+        axC->SetTitleOffset(2.0);
+        ayC->SetTitleOffset(2.0);
+        azC->SetTitleOffset(2.0);
+        //ayC->SetRangeUser(-0.04,0.04);
+        GInvis.SetPoint(0,0,0.04,0);
+        GInvis.SetPoint(1,0,0.04,0.005);
+        GInvis.SetPoint(2,0,-0.04,0);
+        GInvis.SetPoint(3,0,-0.04,0.005);
+        GInvis.SetPoint(4,0.12,0.04,0);
+        GInvis.SetPoint(5,0.12,0.04,0.005);
+        GInvis.SetPoint(6,0.12,-0.04,0);
+        GInvis.SetPoint(7,0.12,-0.04,0.005);
     }
 
     for(int i=0;i<Calib.GetLines();++i){
@@ -445,12 +466,6 @@ int main(){
     //3D
     TGraph2D G3Db; G3Db.SetTitle(""); G3Db.SetLineColor(kGreen); G3Db.SetMarkerStyle(8); G3Db.SetMarkerColor(kGreen); G3Db.SetMarkerSize(.5);
     TGraph2D G3Dh; G3Dh.SetTitle(""); G3Dh.SetLineColor(kGreen); G3Dh.SetMarkerStyle(8); G3Dh.SetMarkerColor(kGreen); G3Dh.SetMarkerSize(.5);
-    TAxis *axC = G3Dh.GetXaxis();
-    TAxis *ayC = G3Dh.GetYaxis();
-    TAxis *azC = G3Dh.GetZaxis();
-    axC->SetTitle("z (m)");
-    ayC->SetTitle("x (m)");
-    azC->SetTitle("Bz (T)");
     int numpnts = 25;
     for(int j = 0; j<numpnts; ++j){
         for(int l=0; l<numpnts; ++l){
@@ -464,8 +479,9 @@ int main(){
     c1->SetPhi(330.);
     c1->SaveAs("3Db.png");
     c1->Clear();
-    G3Dh.Draw("P TRIW");
+    GInvis.Draw("P");
     Gtoth.Draw("P SAME");
+    G3Dh.Draw("P TRIW SAME");
     c1->SetPhi(330.);
     c1->SaveAs("3Dh.png");
     c1->Clear();
