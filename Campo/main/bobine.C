@@ -383,7 +383,7 @@ int main(){
     TF2 *ftoth= new TF2("F", ltoth, 0,0.12,-0.04,0.04,0);
 
     //Draw
-    TCanvas* c1 = new TCanvas();
+    TCanvas* c1 = new TCanvas("","",1200,800);
     Gcalib.Draw("AP");
     c1->SaveAs("calib.png");
     c1->Clear();
