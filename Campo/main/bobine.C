@@ -116,6 +116,59 @@ int main(){
     TGraph2D Gtotb;    Gtotb.SetTitle("");    Gtotb.SetLineColor(kMagenta);    Gtotb.SetLineWidth(3);    Gtotb.SetMarkerStyle(45);    Gtotb.SetMarkerColor(kAzure+3);    Gtotb.SetMarkerSize(2);
     TGraph2D Gtoth;    Gtoth.SetTitle("");    Gtoth.SetLineColor(kMagenta);    Gtoth.SetLineWidth(3);    Gtoth.SetMarkerStyle(45);    Gtoth.SetMarkerColor(kAzure+3);    Gtoth.SetMarkerSize(2);
 
+    {
+        TAxis *ax1 = Gcalib.GetXaxis();
+        TAxis *ay1 = Gcalib.GetYaxis();
+        ax1->SetTitle("I (A)");
+        ay1->SetTitle("Bz (T)");
+        TAxis *ax2 = Gbzz.GetXaxis();
+        TAxis *ay2 = Gbzz.GetYaxis();
+        ax2->SetTitle("z (m)");
+        ay2->SetTitle("Bz (T)");
+        TAxis *ax3 = Gbzx.GetXaxis();
+        TAxis *ay3 = Gbzx.GetYaxis();
+        ax3->SetTitle("z (m)");
+        ay3->SetTitle("Bz (T)");
+        TAxis *ax4 = Gbxx.GetXaxis();
+        TAxis *ay4 = Gbxx.GetYaxis();
+        ax4->SetTitle("x (m)");
+        ay4->SetTitle("Bz (T)");
+        TAxis *ax5 = Ghzz.GetXaxis();
+        TAxis *ay5 = Ghzz.GetYaxis();
+        ax5->SetTitle("z (m)");
+        ay5->SetTitle("Bz (T)");
+        TAxis *ax6 = Ghzx.GetXaxis();
+        TAxis *ay6 = Ghzx.GetYaxis();
+        ax6->SetTitle("z (m)");
+        ay6->SetTitle("Bz (T)");
+        TAxis *ax7 = Ghxx.GetXaxis();
+        TAxis *ay7 = Ghxx.GetYaxis();
+        ax7->SetTitle("x (m)");
+        ay7->SetTitle("Bz (T)");
+        TAxis *ax8 = Gar.GetXaxis();
+        TAxis *ay8 = Gar.GetYaxis();
+        ax8->SetTitle("z (m)");
+        ay8->SetTitle("Bz (T)");
+        TAxis *ax9 = Gfe.GetXaxis();
+        TAxis *ay9 = Gfe.GetYaxis();
+        ax9->SetTitle("z (m)");
+        ay9->SetTitle("Bz (T)");
+        TAxis *ax0 = Gxb.GetXaxis();
+        TAxis *ay0 = Gxb.GetYaxis();
+        ax0->SetTitle("z (m)");
+        ay0->SetTitle("Bx (T)");
+        TAxis *axA = Gxh.GetXaxis();
+        TAxis *ayA = Gxh.GetYaxis();
+        axA->SetTitle("z (m)");
+        ayA->SetTitle("Bx (T)");
+        TAxis *axB = Gtotb.GetXaxis();
+        TAxis *ayB = Gtotb.GetYaxis();
+        TAxis *azB = Gtotb.GetZaxis();
+        axB->SetTitle("z (m)");
+        ayB->SetTitle("x (m)");
+        azB->SetTitle("Bz (T)");
+    }
+
     for(int i=0;i<Calib.GetLines();++i){
         Gcalib.SetPoint(i,datac[i][0],datac[i][1]/1000);
     }
@@ -148,6 +201,7 @@ int main(){
         Gbzx.SetPoint(i,databzx[i][0]/100,Fcalib->Eval(databzx[i][1]/1000));
         Gtotb.SetPoint(i+Bobinezz.GetLines(),databzx[i][0]/100,0.025,Fcalib->Eval(databzx[i][1]/1000));
     }
+    offset=0.0005;
     Gxb.SetPoint(0,4./100,Fcalib->Eval(-0.41/1000));
     Gxb.SetPoint(1,10./100,Fcalib->Eval(0.42/1000));
     offset=0.00078-0.00024;
@@ -165,6 +219,7 @@ int main(){
         Ghzx.SetPoint(i,datahzx[i][0]/100,Fcalib->Eval(datahzx[i][1]/1000));
         Gtoth.SetPoint(i+Helmholtzzz.GetLines(),datahzz[i][0]/100,0.025,Fcalib->Eval(datahzz[i][1]/1000));
     }
+    offset=0.0005;
     Gxh.SetPoint(0,0.,Fcalib->Eval(0.19/1000));
     Gxh.SetPoint(1,5.5/100,Fcalib->Eval(-0.92/1000));
     Gxh.SetPoint(2,10.5/100,Fcalib->Eval(0.04/1000));
@@ -386,8 +441,14 @@ int main(){
     c1->SaveAs("fe.png");
     c1->Clear();
     //3D
-    TGraph2D G3Db;
-    TGraph2D G3Dh;
+    TGraph2D G3Db; G3Db.SetTitle(""); G3Db.SetLineColor(kGreen); G3Db.SetMarkerStyle(8); G3Db.SetMarkerColor(kGreen); G3Db.SetMarkerSize(.5);
+    TGraph2D G3Dh; G3Dh.SetTitle(""); G3Dh.SetLineColor(kGreen); G3Dh.SetMarkerStyle(8); G3Dh.SetMarkerColor(kGreen); G3Dh.SetMarkerSize(.5);
+    TAxis *axC = G3Dh.GetXaxis();
+    TAxis *ayC = G3Dh.GetYaxis();
+    TAxis *azC = G3Dh.GetZaxis();
+    axC->SetTitle("z (m)");
+    ayC->SetTitle("x (m)");
+    azC->SetTitle("Bz (T)");
     int numpnts = 25;
     for(int j = 0; j<numpnts; ++j){
         for(int l=0; l<numpnts; ++l){
@@ -395,21 +456,13 @@ int main(){
             G3Dh.SetPoint(l+numpnts*j,0.12/numpnts*j,-0.04+0.08/numpnts*l,ftoth->Eval(0.12/numpnts*j,-0.04+0.08/numpnts*l));
         }
     }
-    G3Db.SetMarkerColor(kGreen-8);
-    G3Db.SetLineColor(kGreen-8);
-    G3Db.SetMarkerSize(.5);
-    G3Db.SetMarkerStyle(8);
-    G3Dh.SetMarkerColor(kGreen-8);
-    G3Dh.SetLineColor(kGreen-8);
-    G3Dh.SetMarkerSize(.5);
-    G3Dh.SetMarkerStyle(8);
     I=1;
     Gtotb.Draw("P");
-    G3Db.Draw("TRIW SAME");
+    G3Db.Draw("P TRIW SAME");
     c1->SetPhi(330.);
     c1->SaveAs("3Db.png");
     c1->Clear();
-    G3Dh.Draw("TRIW");
+    G3Dh.Draw("P TRIW");
     Gtoth.Draw("P SAME");
     c1->SetPhi(330.);
     c1->SaveAs("3Dh.png");
