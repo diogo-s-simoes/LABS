@@ -115,12 +115,13 @@ int main(){
     TGraph Gxh;    Gxh.SetTitle("");    Gxh.SetLineColor(kMagenta);    Gxh.SetLineWidth(3);    Gxh.SetMarkerStyle(16);    Gxh.SetMarkerColor(kAzure+3);    Gxh.SetMarkerSize(2);
     TGraph2D Gtotb;    Gtotb.SetTitle("");    Gtotb.SetLineColor(kMagenta);    Gtotb.SetLineWidth(3);    Gtotb.SetMarkerStyle(16);    Gtotb.SetMarkerColor(kAzure+3);    Gtotb.SetMarkerSize(2);
     TGraph2D Gtoth;    Gtoth.SetTitle("");    Gtoth.SetLineColor(kMagenta);    Gtoth.SetLineWidth(3);    Gtoth.SetMarkerStyle(16);    Gtoth.SetMarkerColor(kAzure+3);    Gtoth.SetMarkerSize(2);
-    TGraph2D GInvis;
+    TGraph2D GInvis; GInvis.SetTitle("");
+    TGraph GInvis2; GInvis2.SetTitle("");
     {
         TAxis *ax1 = Gcalib.GetXaxis();
         TAxis *ay1 = Gcalib.GetYaxis();
         ax1->SetTitle("I (A)");
-        ay1->SetTitle("Bz (T)");
+        ay1->SetTitle("V (T)");
         TAxis *ax2 = Gbzz.GetXaxis();
         TAxis *ay2 = Gbzz.GetYaxis();
         ax2->SetTitle("z (m)");
@@ -141,10 +142,14 @@ int main(){
         TAxis *ay6 = Ghzx.GetYaxis();
         ax6->SetTitle("z (m)");
         ay6->SetTitle("Bz (T)");
-        TAxis *ax7 = Ghxx.GetXaxis();
-        TAxis *ay7 = Ghxx.GetYaxis();
+        TAxis *ax7 = GInvis2.GetXaxis();
+        TAxis *ay7 = GInvis2.GetYaxis();
         ax7->SetTitle("x (m)");
         ay7->SetTitle("Bz (T)");
+        GInvis2.SetPoint(0,0.,0.0038);
+        GInvis2.SetPoint(1,0.,0.0042);
+        GInvis2.SetPoint(2,0.044,0.0038);
+        GInvis2.SetPoint(3,0.044,0.0042);
         TAxis *ax8 = Gar.GetXaxis();
         TAxis *ay8 = Gar.GetYaxis();
         ax8->SetTitle("z (m)");
@@ -152,7 +157,6 @@ int main(){
         TAxis *ax9 = Gfe.GetXaxis();
         TAxis *ay9 = Gfe.GetYaxis();
         ax9->SetTitle("z (m)");
-        //ay9->SetTitleOffset(2.0);
         ay9->SetTitle("Bz (T)");
         TAxis *ax0 = Gxb.GetXaxis();
         TAxis *ay0 = Gxb.GetYaxis();
@@ -180,7 +184,6 @@ int main(){
         axC->SetTitleOffset(2.0);
         ayC->SetTitleOffset(2.0);
         azC->SetTitleOffset(2.0);
-        //ayC->SetRangeUser(-0.04,0.04);
         GInvis.SetPoint(0,0,0.04,0);
         GInvis.SetPoint(1,0,0.04,0.005);
         GInvis.SetPoint(2,0,-0.04,0);
@@ -404,6 +407,15 @@ int main(){
     };
     TF2 *ftoth= new TF2("F", ltoth, 0,0.12,-0.04,0.04,0);
 
+    TGraph corrb1;
+    TGraph corrb2;
+    TGraph corrb3;
+    TGraph corrh1;
+    TGraph corrh2;
+    TGraph corrh3;
+    TGraph corrar;
+    TGraph corrfe;
+
     //Draw
     TCanvas* c1 = new TCanvas("","",1200,800);
     c1->SetLeftMargin(0.2);
@@ -413,11 +425,17 @@ int main(){
     //Bobine
     L=0;
     I=1.001;
+    for (int i=0; i<Bobinezz.GetLines(); ++i){
+        corrb1.SetPoint(i,Gbzz.GetY()[i],Bez->Eval(Gbzz.GetX()[i]));
+    }
     Gbzz.Draw("AP");
     Bez->Draw("SAME");
     c1->SaveAs("bzz.png");
     c1->Clear();
     I=0.998;
+    for (int i=0; i<Bobinezx.GetLines(); ++i){
+        corrb2.SetPoint(i,Gbzx.GetY()[i],Bez2->Eval(Gbzx.GetX()[i]));
+    }
     Gbzx.Draw("AP");
     Bez2->Draw("SAME");
     c1->SaveAs("bzx.png");
@@ -427,18 +445,27 @@ int main(){
     c1->SaveAs("bex.png");
     c1->Clear();
     I=0.997;
+    for (int i=0; i<Bobinexx.GetLines(); ++i){
+        corrb3.SetPoint(i,Gbxx.GetY()[i],Bezx->Eval(Gbxx.GetX()[i]));
+    }
     Gbxx.Draw("AP");
     Bezx->Draw("SAME");
     c1->SaveAs("bxx.png");
     c1->Clear();
     //Helmholtz
     I=0.995;
+    for (int i=0; i<Helmholtzzz.GetLines(); ++i){
+        corrh1.SetPoint(i,Ghzz.GetY()[i],Bh1ez->Eval(Ghzz.GetX()[i]));
+    }
     L=dbH;
     Ghzz.Draw("AP");
     Bh1ez->Draw("SAME");
     c1->SaveAs("hzz.png");
     c1->Clear();
     I=0.993;
+    for (int i=0; i<Helmholtzzx.GetLines(); ++i){
+        corrh2.SetPoint(i,Ghzx.GetY()[i],Bh2ez->Eval(Ghzx.GetX()[i]));
+    }
     Ghzx.Draw("AP");
     Bh2ez->Draw("SAME");
     c1->SaveAs("hzx.png");
@@ -448,17 +475,27 @@ int main(){
     c1->SaveAs("hex.png");
     c1->Clear();
     I=0.993;
-    Ghxx.Draw("AP");
+    for (int i=0; i<Helmholtzxx.GetLines(); ++i){
+        corrh3.SetPoint(i,Ghxx.GetY()[i],Bh3ez->Eval(Ghxx.GetX()[i]));
+    }
+    GInvis2.Draw("AP");
+    Ghxx.Draw("P SAME");
     Bh3ez->Draw("SAME");
     c1->SaveAs("hxx.png");
     c1->Clear();
     //Solenoides
     I=0.995;
+    for (int i=0; i<ar.GetLines(); ++i){
+        corrar.SetPoint(i,Gar.GetY()[i],Bar->Eval(Gar.GetX()[i]));
+    }
     Gar.Draw("AP");
     Bar->Draw("SAME");
     c1->SaveAs("ar.png");
     c1->Clear();
     I=0.993;
+    for (int i=0; i<ferro.GetLines(); ++i){
+        corrfe.SetPoint(i,Gfe.GetY()[i],Bf->Eval(Gfe.GetX()[i]));
+    }
     Gfe.Fit(Bf);
     Gfe.Draw("AP");
     c1->SaveAs("fe.png");
@@ -485,6 +522,137 @@ int main(){
     c1->SetPhi(330.);
     c1->SaveAs("3Dh.png");
     c1->Clear();
+
+    double Exb1=corrb1.GetMean(1);
+    double Eyb1=corrb1.GetMean(2);
+    double Exb2=corrb2.GetMean(1);
+    double Eyb2=corrb2.GetMean(2);
+    double Exb3=corrb3.GetMean(1);
+    double Eyb3=corrb3.GetMean(2);
+    double Exh1=corrh1.GetMean(1);
+    double Eyh1=corrh1.GetMean(2);
+    double Exh2=corrh2.GetMean(1);
+    double Eyh2=corrh2.GetMean(2);
+    double Exh3=corrh3.GetMean(1);
+    double Eyh3=corrh3.GetMean(2);
+    double Exar=corrar.GetMean(1);
+    double Eyar=corrar.GetMean(2);
+    double Exfe=corrfe.GetMean(1);
+    double Eyfe=corrfe.GetMean(2);
+
+    double covb1=0;
+    double vxb1=0;
+    double vyb1=0;
+    double covb2=0;
+    double vxb2=0;
+    double vyb2=0;
+    double covb3=0;
+    double vxb3=0;
+    double vyb3=0;
+    double covh1=0;
+    double vxh1=0;
+    double vyh1=0;
+    double covh2=0;
+    double vxh2=0;
+    double vyh2=0;
+    double covh3=0;
+    double vxh3=0;
+    double vyh3=0;
+    double covar=0;
+    double vxar=0;
+    double vyar=0;
+    double covfe=0;
+    double vxfe=0;
+    double vyfe=0;
+
+    for (int i = 0; i<corrb1.GetN(); ++i){
+        covb1+=(corrb1.GetX()[i]-Exb1)*(corrb1.GetY()[i]-Eyb1);
+        vxb1+=(corrb1.GetX()[i]-Exb1)*(corrb1.GetX()[i]-Exb1);
+        vyb1+=(corrb1.GetY()[i]-Eyb1)*(corrb1.GetY()[i]-Eyb1);
+    }
+    covb1/=corrb1.GetN();
+    vxb1/=corrb1.GetN();
+    vyb1/=corrb1.GetN();
+    double Rb1=covb1/sqrt(vxb1*vyb1);
+
+    for (int i = 0; i<corrb2.GetN(); ++i){
+        covb2+=(corrb2.GetX()[i]-Exb2)*(corrb2.GetY()[i]-Eyb2);
+        vxb2+=(corrb2.GetX()[i]-Exb2)*(corrb2.GetX()[i]-Exb2);
+        vyb2+=(corrb2.GetY()[i]-Eyb2)*(corrb2.GetY()[i]-Eyb2);
+    }
+    covb2/=corrb2.GetN();
+    vxb2/=corrb2.GetN();
+    vyb2/=corrb2.GetN();
+    double Rb2=covb2/sqrt(vxb2*vyb2);
+
+    for (int i = 0; i<corrb3.GetN(); ++i){
+        covb3+=(corrb3.GetX()[i]-Exb3)*(corrb3.GetY()[i]-Eyb3);
+        vxb3+=(corrb3.GetX()[i]-Exb3)*(corrb3.GetX()[i]-Exb3);
+        vyb3+=(corrb3.GetY()[i]-Eyb3)*(corrb3.GetY()[i]-Eyb3);
+    }
+    covb3/=corrb3.GetN();
+    vxb3/=corrb3.GetN();
+    vyb3/=corrb3.GetN();
+    double Rb3=covb3/sqrt(vxb3*vyb3);
+
+    for (int i = 0; i<corrh1.GetN(); ++i){
+        covh1+=(corrh1.GetX()[i]-Exh1)*(corrh1.GetY()[i]-Eyh1);
+        vxh1+=(corrh1.GetX()[i]-Exh1)*(corrh1.GetX()[i]-Exh1);
+        vyh1+=(corrh1.GetY()[i]-Eyh1)*(corrh1.GetY()[i]-Eyh1);
+    }
+    covh1/=corrh1.GetN();
+    vxh1/=corrh1.GetN();
+    vyh1/=corrh1.GetN();
+    double Rh1=covh1/sqrt(vxh1*vyh1);
+
+    for (int i = 0; i<corrh2.GetN(); ++i){
+        covh2+=(corrh2.GetX()[i]-Exh2)*(corrh2.GetY()[i]-Eyh2);
+        vxh2+=(corrh2.GetX()[i]-Exh2)*(corrh2.GetX()[i]-Exh2);
+        vyh2+=(corrh2.GetY()[i]-Eyh2)*(corrh2.GetY()[i]-Eyh2);
+    }
+    covh2/=corrh2.GetN();
+    vxh2/=corrh2.GetN();
+    vyh2/=corrh2.GetN();
+    double Rh2=covh2/sqrt(vxh2*vyh2);
+
+    for (int i = 0; i<corrh3.GetN(); ++i){
+        covh3+=(corrh3.GetX()[i]-Exh3)*(corrh3.GetY()[i]-Eyh3);
+        vxh3+=(corrh3.GetX()[i]-Exh3)*(corrh3.GetX()[i]-Exh3);
+        vyh3+=(corrh3.GetY()[i]-Eyh3)*(corrh3.GetY()[i]-Eyh3);
+    }
+    covh3/=corrh3.GetN();
+    vxh3/=corrh3.GetN();
+    vyh3/=corrh3.GetN();
+    double Rh3=covh3/sqrt(vxh3*vyh3);
+
+    for (int i = 0; i<corrar.GetN(); ++i){
+        covar+=(corrar.GetX()[i]-Exar)*(corrar.GetY()[i]-Eyar);
+        vxar+=(corrar.GetX()[i]-Exar)*(corrar.GetX()[i]-Exar);
+        vyar+=(corrar.GetY()[i]-Eyar)*(corrar.GetY()[i]-Eyar);
+    }
+    covar/=corrar.GetN();
+    vxar/=corrar.GetN();
+    vyar/=corrar.GetN();
+    double Rhoar=covar/sqrt(vxar*vyar);
+
+    for (int i = 0; i<corrfe.GetN(); ++i){
+        covfe+=(corrfe.GetX()[i]-Exfe)*(corrfe.GetY()[i]-Eyfe);
+        vxfe+=(corrfe.GetX()[i]-Exfe)*(corrfe.GetX()[i]-Exfe);
+        vyfe+=(corrfe.GetY()[i]-Eyfe)*(corrfe.GetY()[i]-Eyfe);
+    }
+    covfe/=corrfe.GetN();
+    vxfe/=corrfe.GetN();
+    vyfe/=corrfe.GetN();
+    double Rfe=covfe/sqrt(vxfe*vyfe);
+
+    cout<<"b1:  "<<Rb1<<endl;
+    cout<<"b2:  "<<Rb2<<endl;
+    cout<<"b3:  "<<Rb3<<endl;
+    cout<<"h1:  "<<Rh1<<endl;
+    cout<<"h2:  "<<Rh2<<endl;
+    cout<<"h3:  "<<Rh3<<endl;
+    cout<<"ar:  "<<Rhoar<<endl;
+    cout<<"fe:  "<<Rfe<<endl;
 
     return 0;
 }
