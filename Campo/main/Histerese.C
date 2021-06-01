@@ -25,11 +25,12 @@ int main(){
   vector<double> temp1;
 
   int N=ficheiro1.GetLines();
+  cout<<N<<endl;
 
-  for(int i=0;i<ficheiro1.GetLines();++i){
+  for(int i=0;i<N;++i){
     for(int j = 0;j<17;++j){
-      temp1.push_back(atof(&(ficheiro1.GetData()[i][j][0])));
-      cout<<atof(&(ficheiro1.GetData()[i][j][0]))<<"   ";
+      temp1.push_back(stod(ficheiro1.GetData()[i][j]));
+      cout<<"i: "<<i<<" j: "<<j<<" v: "<<stod(ficheiro1.GetData()[i][j])<<endl;
     }
     cout<<endl;
     DADOS.push_back(temp1);
@@ -38,7 +39,7 @@ int main(){
     
   }
 
-
+cout << "a"<<endl;
 
   TGraphErrors *Hysteresisis = new TGraphErrors[10];
 
