@@ -103,12 +103,12 @@ int main(){
     }
 
     TGraph Gcalib; Gcalib.SetTitle(""); Gcalib.SetLineColor(kMagenta); Gcalib.SetLineWidth(3); Gcalib.SetMarkerStyle(16); Gcalib.SetMarkerColor(kAzure+3); Gcalib.SetMarkerSize(2);
-    TGraph Gbzz;   Gbzz.SetTitle("");   Gbzz.SetLineColor(kMagenta);   Gbzz.SetLineWidth(3);   Gbzz.SetMarkerStyle(16);   Gbzz.SetMarkerColor(kViolet+1);   Gbzz.SetMarkerSize(2);
-    TGraph Gbzx;   Gbzx.SetTitle("");   Gbzx.SetLineColor(kMagenta);   Gbzx.SetLineWidth(3);   Gbzx.SetMarkerStyle(16);   Gbzx.SetMarkerColor(kViolet+1);   Gbzx.SetMarkerSize(2);
-    TGraph Gbxx;   Gbxx.SetTitle("");   Gbxx.SetLineColor(kMagenta);   Gbxx.SetLineWidth(3);   Gbxx.SetMarkerStyle(16);   Gbxx.SetMarkerColor(kViolet+1);   Gbxx.SetMarkerSize(2);
-    TGraph Ghzz;   Ghzz.SetTitle("");   Ghzz.SetLineColor(kMagenta);   Ghzz.SetLineWidth(3);   Ghzz.SetMarkerStyle(16);   Ghzz.SetMarkerColor(kOrange+7);   Ghzz.SetMarkerSize(2);
-    TGraph Ghzx;   Ghzx.SetTitle("");   Ghzx.SetLineColor(kMagenta);   Ghzx.SetLineWidth(3);   Ghzx.SetMarkerStyle(16);   Ghzx.SetMarkerColor(kOrange+7);   Ghzx.SetMarkerSize(2);
-    TGraph Ghxx;   Ghxx.SetTitle("");   Ghxx.SetLineColor(kMagenta);   Ghxx.SetLineWidth(3);   Ghxx.SetMarkerStyle(16);   Ghxx.SetMarkerColor(kOrange+7);   Ghxx.SetMarkerSize(2);
+    TGraph Gbzz;   Gbzz.SetTitle("");   Gbzz.SetLineColor(kMagenta);   Gbzz.SetLineWidth(3);   Gbzz.SetMarkerStyle(16);   Gbzz.SetMarkerColor(kViolet+2);   Gbzz.SetMarkerSize(2);
+    TGraph Gbzx;   Gbzx.SetTitle("");   Gbzx.SetLineColor(kMagenta);   Gbzx.SetLineWidth(3);   Gbzx.SetMarkerStyle(16);   Gbzx.SetMarkerColor(kViolet+2);   Gbzx.SetMarkerSize(2);
+    TGraph Gbxx;   Gbxx.SetTitle("");   Gbxx.SetLineColor(kMagenta);   Gbxx.SetLineWidth(3);   Gbxx.SetMarkerStyle(16);   Gbxx.SetMarkerColor(kViolet+2);   Gbxx.SetMarkerSize(2);
+    TGraph Ghzz;   Ghzz.SetTitle("");   Ghzz.SetLineColor(kMagenta);   Ghzz.SetLineWidth(3);   Ghzz.SetMarkerStyle(16);   Ghzz.SetMarkerColor(kOrange-3);   Ghzz.SetMarkerSize(2);
+    TGraph Ghzx;   Ghzx.SetTitle("");   Ghzx.SetLineColor(kMagenta);   Ghzx.SetLineWidth(3);   Ghzx.SetMarkerStyle(16);   Ghzx.SetMarkerColor(kOrange-3);   Ghzx.SetMarkerSize(2);
+    TGraph Ghxx;   Ghxx.SetTitle("");   Ghxx.SetLineColor(kMagenta);   Ghxx.SetLineWidth(3);   Ghxx.SetMarkerStyle(16);   Ghxx.SetMarkerColor(kOrange-3);   Ghxx.SetMarkerSize(2);
     TGraph Gar;    Gar.SetTitle("");    Gar.SetLineColor(kMagenta);    Gar.SetLineWidth(3);    Gar.SetMarkerStyle(16);    Gar.SetMarkerColor(kAzure+3);    Gar.SetMarkerSize(2);
     TGraph Gfe;    Gar.SetTitle("");    Gfe.SetLineColor(kMagenta);    Gfe.SetLineWidth(3);    Gfe.SetMarkerStyle(16);    Gfe.SetMarkerColor(kAzure+3);    Gfe.SetMarkerSize(2);
     TGraph Gxb;    Gxb.SetTitle("");    Gxb.SetLineColor(kMagenta);    Gxb.SetLineWidth(3);    Gxb.SetMarkerStyle(16);    Gxb.SetMarkerColor(kAzure+3);    Gxb.SetMarkerSize(2);
@@ -416,12 +416,12 @@ int main(){
     TGraph corrar;
     TGraph corrfe;
 
-    Bez->SetLineColor(kOrange+7);
-    Bez2->SetLineColor(kOrange+7);
-    Bezx->SetLineColor(kOrange+7);
-    Bh1ez->SetLineColor(kViolet+1);
-    Bh2ez->SetLineColor(kViolet+1);
-    Bh3ez->SetLineColor(kViolet+1);
+    Bez->SetLineColor(kOrange-3);
+    Bez2->SetLineColor(kOrange-3);
+    Bezx->SetLineColor(kOrange-3);
+    Bh1ez->SetLineColor(kViolet+2);
+    Bh2ez->SetLineColor(kViolet+2);
+    Bh3ez->SetLineColor(kViolet+2);
 
     //Draw
     TCanvas* c1 = new TCanvas("","",1200,800);
