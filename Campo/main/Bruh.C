@@ -71,19 +71,19 @@ int main(){
 
 
 
-
-cout << "a"<<endl;
-
   TGraphErrors *Hysteresisis = new TGraphErrors[DADOS.size()];
-  TGraph HCoerc,Bsat,Brem;
+  TGraph HCoerc,Bsat,Brem,Bsmol;
   HCoerc.SetMarkerStyle(33);
   Bsat.SetMarkerStyle(33);
+  Bsmol.SetMarkerStyle(33);
   Brem.SetMarkerStyle(33);
-  HCoerc.SetMarkerColor(kAzure-3);
+  HCoerc.SetMarkerColor(kGreen+2);
   Bsat.SetMarkerColor(kAzure-3);
-  Brem.SetMarkerColor(kAzure-3);
+  Bsmol.SetMarkerColor(kAzure-3);
+  Brem.SetMarkerColor(kViolet+2);
   HCoerc.SetMarkerSize(2.5);
   Bsat.SetMarkerSize(2.5);
+  Bsmol.SetMarkerSize(2.5);
   Brem.SetMarkerSize(2.5);
   TAxis *ax1 = HCoerc.GetXaxis();
   TAxis *ay1 = HCoerc.GetYaxis();
@@ -93,18 +93,25 @@ cout << "a"<<endl;
   TAxis *ay2 = Bsat.GetYaxis();
   ay2->SetTitle("B_{max} (T)");
   ax2->SetTitle("H_{max} (A/m)");
+  TAxis *axs = Bsmol.GetXaxis();
+  TAxis *ays = Bsmol.GetYaxis();
+  ays->SetTitle("B_{max} (T)");
+  axs->SetTitle("H_{max} (A/m)");
   TAxis *ax3 = Brem.GetXaxis();
   TAxis *ay3 = Brem.GetYaxis();
   ay3->SetTitle("B_{rem} (T)");
   ax3->SetTitle("H_{max} (A/m)");
 
 
+    double ConvB=10*0.1/(49.*15.4e-4);
+    double ConvH=10*505/0.48;
+
   for(int i=0;i<DADOS.size();i++){
     double Hm,HM,Bm,BM,B0m,B0M,H0m,H0M;
 
     double eHm,eHM,eBm,eBM,eB0m,eB0M,eH0m,eH0M;
 
-    double scale=0;
+    double scale=0.;
 
     if(DADOS[i][16]==1)
       scale = .4;
@@ -113,27 +120,26 @@ cout << "a"<<endl;
     else if(DADOS[i][16]==3)
       scale = 4.;
 
-    double ConvB=.1/49/.154;
-    double ConvH=505/0.48;
 
-    Hm=(DADOS[i][0]+DADOS[i][1])/2*scale*ConvH;
-    HM=(DADOS[i][2]+DADOS[i][3])/2*scale*ConvH;
-    Bm=(DADOS[i][4]+DADOS[i][5])/2*ConvB;
-    BM=(DADOS[i][6]+DADOS[i][7])/2*ConvB;
-    B0m=(DADOS[i][8]+DADOS[i][9])/2*ConvB;
-    B0M=(DADOS[i][10]+DADOS[i][11])/2*ConvB;
-    H0m=(DADOS[i][12]+DADOS[i][13])/2*scale*ConvH;
-    H0M=(DADOS[i][14]+DADOS[i][15])/2*scale*ConvH;
+    Hm=0.001*(DADOS[i][0]+DADOS[i][1])/2*scale*ConvH;
+    HM=0.001*(DADOS[i][2]+DADOS[i][3])/2*scale*ConvH;
+    Bm=0.001*(DADOS[i][4]+DADOS[i][5])/2*ConvB;
+    BM=0.001*(DADOS[i][6]+DADOS[i][7])/2*ConvB;
+    B0m=0.001*(DADOS[i][8]+DADOS[i][9])/2*ConvB;
+    B0M=0.001*(DADOS[i][10]+DADOS[i][11])/2*ConvB;
+    H0m=0.001*(DADOS[i][12]+DADOS[i][13])/2*scale*ConvH;
+    H0M=0.001*(DADOS[i][14]+DADOS[i][15])/2*scale*ConvH;
 
 
-    eHm=(DADOS[i][0]-DADOS[i][1])/2*scale*ConvH;
-    eHM=(DADOS[i][2]-DADOS[i][3])/2*scale*ConvH;
-    eBm=(DADOS[i][4]-DADOS[i][5])/2*ConvB;
-    eBM=(DADOS[i][6]-DADOS[i][7])/2*ConvB;
-    eB0m=(DADOS[i][8]-DADOS[i][9])/2*ConvB;
-    eB0M=(DADOS[i][10]-DADOS[i][11])/2*ConvB;
-    eH0m=(DADOS[i][12]-DADOS[i][13])/2*scale*ConvH;
-    eH0M=(DADOS[i][14]-DADOS[i][15])/2*scale*ConvH;
+
+    eHm=0.001*(DADOS[i][0]-DADOS[i][1])/2*scale*ConvH;
+    eHM=0.001*(DADOS[i][2]-DADOS[i][3])/2*scale*ConvH;
+    eBm=0.001*(DADOS[i][4]-DADOS[i][5])/2*ConvB;
+    eBM=0.001*(DADOS[i][6]-DADOS[i][7])/2*ConvB;
+    eB0m=0.001*(DADOS[i][8]-DADOS[i][9])/2*ConvB;
+    eB0M=0.001*(DADOS[i][10]-DADOS[i][11])/2*ConvB;
+    eH0m=0.001*(DADOS[i][12]-DADOS[i][13])/2*scale*ConvH;
+    eH0M=0.001*(DADOS[i][14]-DADOS[i][15])/2*scale*ConvH;
 
 
 
@@ -152,7 +158,9 @@ cout << "a"<<endl;
 
 
     Bsat.SetPoint(i,(HM-Hm)/2,(BM-Bm)/2-1.25663*1e-6*(HM-Hm)/2);
-    cout<<HM<<"   "<<1.25663*1e-6*(HM-Hm)/2<<endl;
+    if(i==4||i==3||i==5) Bsmol.SetPoint(i,(HM-Hm)/2,(BM-Bm)/2-1.25663*1e-6*(HM-Hm)/2);
+    //cout<<"1 "<<i<<" "<<(BM-Bm)/2-1.25663*1e-6*(HM-Hm)/2<<endl;
+    //cout<<HM<<"   "<<1.25663*1e-6*(HM-Hm)/2<<endl;
     Brem.SetPoint(i,(HM-Hm)/2,(B0M-B0m)/2-1.25663*1e-6*(HM-Hm)/2);
     HCoerc.SetPoint(i,(HM-Hm)/2,(H0M-H0m)/2);
   }
@@ -164,7 +172,7 @@ cout << "a"<<endl;
 
     double eHm,eHM,eBm,eBM,eB0m,eB0M,eH0m,eH0M;
 
-    double scale=0;
+    double scale=0.;
 
     if(DADOS2[i][16]==1)
       scale = .4;
@@ -173,29 +181,39 @@ cout << "a"<<endl;
     else if(DADOS2[i][16]==3)
       scale = 4.;
 
-    double ConvB=.1/49/.154;
-    double ConvH=505/0.48;
 
-    Hm=(DADOS2[i][0]+DADOS2[i][1])/2*scale*ConvH;
-    HM=(DADOS2[i][2]+DADOS2[i][3])/2*scale*ConvH;
-    Bm=(DADOS2[i][4]+DADOS2[i][5])/2*ConvB;
-    BM=(DADOS2[i][6]+DADOS2[i][7])/2*ConvB;
-    B0m=(DADOS2[i][8]+DADOS2[i][9])/2*ConvB;
-    B0M=(DADOS2[i][10]+DADOS2[i][11])/2*ConvB;
-    H0m=(DADOS2[i][12]+DADOS2[i][13])/2*scale*ConvH;
-    H0M=(DADOS2[i][14]+DADOS2[i][15])/2*scale*ConvH;
+    Hm=0.001*(DADOS2[i][0]+DADOS2[i][1])/2*scale*ConvH;
+    HM=0.001*(DADOS2[i][2]+DADOS2[i][3])/2*scale*ConvH;
+    Bm=0.001*(DADOS2[i][4]+DADOS2[i][5])/2*ConvB;
+    BM=0.001*(DADOS2[i][6]+DADOS2[i][7])/2*ConvB;
+    B0m=0.001*(DADOS2[i][8]+DADOS2[i][9])/2*ConvB;
+    B0M=0.001*(DADOS2[i][10]+DADOS2[i][11])/2*ConvB;
+    H0m=0.001*(DADOS2[i][12]+DADOS2[i][13])/2*scale*ConvH;
+    H0M=0.001*(DADOS2[i][14]+DADOS2[i][15])/2*scale*ConvH;
 
 
     Bsat.SetPoint(i+DADOS.size(),(HM-Hm)/2,(BM-Bm)/2-1.25663*1e-6*(HM-Hm)/2);
-    cout<<HM<<"   "<<1.25663*1e-6*(HM-Hm)/2<<endl;
+    //cout<<HM<<"   "<<1.25663*1e-6*(HM-Hm)/2<<endl;
+    if(i==0||i==1) Bsmol.SetPoint(i+2,(HM-Hm)/2,(BM-Bm)/2-1.25663*1e-6*(HM-Hm)/2);
+    //cout<<"2 "<<i<<" "<<(BM-Bm)/2-1.25663*1e-6*(HM-Hm)/2<<endl;
     Brem.SetPoint(i+DADOS.size(),(HM-Hm)/2,(B0M-B0m)/2-1.25663*1e-6*(HM-Hm)/2);
     HCoerc.SetPoint(i+DADOS.size(),(HM-Hm)/2,(H0M-H0m)/2);
   }
+
+  auto llinfit = [&](double *x,double *p=nullptr){
+    return p[0]*x[0];
+  };
+  TF1 *Flinfit= new TF1("F", llinfit, -1000,1000,1);
+
+  Bsmol.Fit(Flinfit);  
 
   TCanvas* c1 = new TCanvas("","",1200,800);
     c1->SetLeftMargin(0.2);
     Bsat.Draw("AP");
     c1->SaveAs("Saturado.png");
+    c1->Clear();
+    Bsmol.Draw("AP");
+    c1->SaveAs("Smol.png");
     c1->Clear();
     HCoerc.Draw("AP");
     c1->SaveAs("Coerc.png");
@@ -267,7 +285,8 @@ cout << "a"<<endl;
     cout<<"Coerc:"<<TMath::MaxElement(HCoerc.GetN(),HCoerc.GetY())<<endl;
     cout<<"Sat:"<<TMath::MaxElement(Bsat.GetN(),Bsat.GetY())<<endl;
     cout<<"Rem:"<<TMath::MaxElement(Brem.GetN(),Brem.GetY())<<endl;
-
+    double mu0=1.2566370614e-6;
+    cout<<"mu_r: "<<Flinfit->GetParameter(0)/mu0<<endl;
 
   return 0;
 }
