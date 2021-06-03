@@ -113,17 +113,17 @@ cout << "a"<<endl;
     else if(DADOS[i][16]==3)
       scale = 4.;
 
-    double ConvB=.1/49/.154;
+    double ConvB=100/49/.154;
     double ConvH=505/0.48;
 
-    Hm=(DADOS[i][0]+DADOS[i][1])/2*scale*ConvH;
-    HM=(DADOS[i][2]+DADOS[i][3])/2*scale*ConvH;
-    Bm=(DADOS[i][4]+DADOS[i][5])/2*ConvB;
-    BM=(DADOS[i][6]+DADOS[i][7])/2*ConvB;
-    B0m=(DADOS[i][8]+DADOS[i][9])/2*ConvB;
-    B0M=(DADOS[i][10]+DADOS[i][11])/2*ConvB;
-    H0m=(DADOS[i][12]+DADOS[i][13])/2*scale*ConvH;
-    H0M=(DADOS[i][14]+DADOS[i][15])/2*scale*ConvH;
+    Hm=(DADOS[i][0]+DADOS[i][1])/2*scale*ConvH/1000;
+    HM=(DADOS[i][2]+DADOS[i][3])/2*scale*ConvH/1000;
+    Bm=(DADOS[i][4]+DADOS[i][5])/2*ConvB/1000;
+    BM=(DADOS[i][6]+DADOS[i][7])/2*ConvB/1000;
+    B0m=(DADOS[i][8]+DADOS[i][9])/2*ConvB/1000;
+    B0M=(DADOS[i][10]+DADOS[i][11])/2*ConvB/1000;
+    H0m=(DADOS[i][12]+DADOS[i][13])/2*scale*ConvH/1000;
+    H0M=(DADOS[i][14]+DADOS[i][15])/2*scale*ConvH/1000;
 
 
     eHm=(DADOS[i][0]-DADOS[i][1])/2*scale*ConvH;
@@ -173,22 +173,22 @@ cout << "a"<<endl;
     else if(DADOS2[i][16]==3)
       scale = 4.;
 
-    double ConvB=.1/49/.154;
+    double ConvB=100/49/.154;
     double ConvH=505/0.48;
 
-    Hm=(DADOS2[i][0]+DADOS2[i][1])/2*scale*ConvH;
-    HM=(DADOS2[i][2]+DADOS2[i][3])/2*scale*ConvH;
-    Bm=(DADOS2[i][4]+DADOS2[i][5])/2*ConvB;
-    BM=(DADOS2[i][6]+DADOS2[i][7])/2*ConvB;
-    B0m=(DADOS2[i][8]+DADOS2[i][9])/2*ConvB;
-    B0M=(DADOS2[i][10]+DADOS2[i][11])/2*ConvB;
-    H0m=(DADOS2[i][12]+DADOS2[i][13])/2*scale*ConvH;
-    H0M=(DADOS2[i][14]+DADOS2[i][15])/2*scale*ConvH;
+    Hm=(DADOS2[i][0]+DADOS2[i][1])/2*scale*ConvH/1000;
+    HM=(DADOS2[i][2]+DADOS2[i][3])/2*scale*ConvH/1000;
+    Bm=(DADOS2[i][4]+DADOS2[i][5])/2*ConvB/1000;
+    BM=(DADOS2[i][6]+DADOS2[i][7])/2*ConvB/1000;
+    B0m=(DADOS2[i][8]+DADOS2[i][9])/2*ConvB/1000;
+    B0M=(DADOS2[i][10]+DADOS2[i][11])/2*ConvB/1000;
+    H0m=(DADOS2[i][12]+DADOS2[i][13])/2*scale*ConvH/1000;
+    H0M=(DADOS2[i][14]+DADOS2[i][15])/2*scale*ConvH/1000;
 
 
-    Bsat.SetPoint(i+DADOS.size(),(HM-Hm)/2,(BM-Bm)/2-1.25663*1e-6*(HM-Hm)/2);
+    Bsat.SetPoint(i+DADOS.size(),(HM-Hm)/2,(BM-Bm)/2);
     cout<<HM<<"   "<<1.25663*1e-6*(HM-Hm)/2<<endl;
-    Brem.SetPoint(i+DADOS.size(),(HM-Hm)/2,(B0M-B0m)/2-1.25663*1e-6*(HM-Hm)/2);
+    Brem.SetPoint(i+DADOS.size(),(HM-Hm)/2,(B0M-B0m)/2);
     HCoerc.SetPoint(i+DADOS.size(),(HM-Hm)/2,(H0M-H0m)/2);
   }
 
@@ -205,60 +205,6 @@ cout << "a"<<endl;
     c1->Clear();
 
 
-/*
-  //p[0]=M(0)   //p[1]=c  //p[2]=a  //p[3]=alpha  //p[4]=k
-  auto li2 = [&](double *x,double *p=nullptr){
-    double Ms= (4.67726e-17)*(2.33088e22);
-    double c=p[1];
-    double a=p[2];
-    double alpha=p[3];
-    double k=p[4];
-    double delta =1;
-  //    return (p[1]*Ms/p[2]*(1-coth((x[1]+p[3]*x[0])/p[2])*coth((x[1]+p[3]*x[0])/p[2])+(p[2]/(x[1]+p[3]*x[0]))*(p[2]/(x[1]+p[3]*x[0])))+(1-p[1])*(Ms*(coth((x[1]+p[3]*x[0])/p[2])-p[2]/(x[1]+p[3]*x[0]))-x[0])/(p[4]*delta*(1-p[1])-p[3]*((Ms*(coth((x[1]+p[3]*x[0])/p[2])-p[2]/(x[1]+p[3]*x[0])))-x[0])))/(1-p[3]*p[1]);
-  
-      Man=Ms*(1/(tanh(He/a))-a/He);
-
-  //     if(down==1) delta=-1;
-  //     else delta=1;
-
-      dMirr=(Man-Mirr)/(k*delta-alpha*(Man-Mirr))*dH;
-
-      Mirr+=dMirr;
-
-      M=c*Man+(1-c)*Mirr;
-
-
-  };
-  TF1 *Fn= new TF1("F", li2, -10000,10000,5);
-
-
-
-  auto lt = [&](double *x,double *p=nullptr){
-    vector<double> v;
-    v.push_back(0.);
-    ODEpoint P0(0,v);
-
-
-
-    Fn->SetParameter(0,0);
-    Fn->SetParameter(1,p[1]);
-    Fn->SetParameter(2,p[2]);
-    Fn->SetParameter(3,p[3]);
-    Fn->SetParameter(4,p[4]);
-
-    vector<TF1> VF;
-    VF.push_back(*Fn);
-    ODEsolver S(VF);
-    double h = .1;
-    double tmax = 9000;
-    vector<ODEpoint> P = S.RK4(P0, h, x[0]);
-
-    //cout << "oi:"<< P[0][2] <<endl;
-
-    return P.back()[0];
-  };
-*/
-
 
   auto li2 = [&](double *x,double *p=nullptr){
     double Ms= p[0];
@@ -269,8 +215,8 @@ cout << "a"<<endl;
     double delta =1;
 //    return (p[1]*Ms/p[2]*(1-coth((x[1]+p[3]*x[0])/p[2])*coth((x[1]+p[3]*x[0])/p[2])+(p[2]/(x[1]+p[3]*x[0]))*(p[2]/(x[1]+p[3]*x[0])))+(1-p[1])*(Ms*(coth((x[1]+p[3]*x[0])/p[2])-p[2]/(x[1]+p[3]*x[0]))-x[0])/(p[4]*delta*(1-p[1])-p[3]*((Ms*(coth((x[1]+p[3]*x[0])/p[2])-p[2]/(x[1]+p[3]*x[0])))-x[0])))/(1-p[3]*p[1]);
   
-
-    double dH=.1;
+    double B=0;
+    double dH=.0001;
     double dMirr,He,Man,Mirr=0;
       
     double M=0;
@@ -284,84 +230,95 @@ cout << "a"<<endl;
       dMirr=(Man-Mirr)/(k*delta-alpha*(Man-Mirr))*dH;
       Mirr+=dMirr;
       M=c*Man+(1-c)*Mirr;
+      B=(H+alpha*M)*1.256637e-6;
     }
      //if(x[0]<5000) cout<<x[0]<<endl;
 
-      return M;
+      return B;
   };
 
-
-  TF1 *Fn= new TF1("F", li2, -100000,100000,5);
-
-/*
-
-
-  auto lt = [&](double *x,double *p=nullptr){
-    vector<double> v;
-    v.push_back(0.);
-    ODEpoint P0(0,v);
-
-
-
-    Fn->SetParameter(0,0);
-    Fn->SetParameter(1,p[1]);
-    Fn->SetParameter(2,p[2]);
-    Fn->SetParameter(3,p[3]);
-    Fn->SetParameter(4,p[4]);
-
-    vector<TF1> VF;
-    VF.push_back(*Fn);
-    ODEsolver S(VF);
-    double h = .1;
-    double tmax = 9000;
-    vector<ODEpoint> P = S.RK4(P0, h, x[0]);
-
-    //cout << "oi:"<< P[0][2] <<endl;
-
-    return P.back()[0];
-  };*/
+  TF1 *Fn= new TF1("F", li2, -1,100,5);
 
 
 
 
-  //TF1 *Ft= new TF1("F", lt, 0,200,5);
 
-  //  Bsat.Fit(Ft);
-    //Hysteresisis->SetMarkerSize(1.5); 
-    //Hysteresisis->SetMarkerStyle(33);
-    //Hysteresisis->SetMarkerColor(kRed);
-    //Hysteresisis->Draw("AP");
 
+
+
+
+    //Fn->SetParLimits(0,10000.,3./1.256637e-6);
+    Fn->SetParameter(0,14130);
+
+    //Fn->SetParLimits(1,0.,1.);
+    Fn->SetParameter(1,0.062309);
     
-
-    Fn->SetParLimits(0,0.5999999/ 1.256637e-6,0.6000001/ 1.256637e-6);
-    Fn->SetParameter(0,0.6/ 1.256637e-6);
-
-    Fn->SetParLimits(1,0.,1.);
-    Fn->SetParameter(1,6.885e-3);
+    //Fn->SetParLimits(2,0.,1000000.);
+    Fn->SetParameter(2,0.0440371);
     
-    Fn->SetParLimits(2,0.,100000000000.);
-    Fn->SetParameter(2,70);
+    //Fn->SetParLimits(3,0.,100000.);
+    Fn->SetParameter(3,300);
     
-    Fn->SetParLimits(3,0.,100000000000.);
-    Fn->SetParameter(3,.001);
-    
-    Fn->SetParLimits(4,0.,100000000000.);
+    //Fn->SetParLimits(4,0.,100000.);
     Fn->SetParameter(4,200);
     
 
-    Bsat.Fit(Fn);
+    //Bsat.Fit(Fn);
 
 
-    Bsat.Draw("APL");
-    Fn->Draw("same");
-//    cout<<Fn->Eval(1.)<<endl;
+    Fn->Draw("");
+
+    Bsat.Draw("same");
+    cout<<Fn->Derivative(0.1)<<endl;
 
     c1->SaveAs("Hysteresisis.png");
     c1->Clear();
 
-    //c1->SaveAs("Hysteresisis.png");
-    //c1->Clear();
+
+    TGraph gCurva;
+
+
+    double Ms= 141030.9;
+    double c=0.062309;
+    double a=0.440371;
+    double alpha=9.40263e-04;
+    double k=300.9355;
+    double Hmax=100;
+    double delta =1;
+
+    int down=1;
+    double B=0;
+    double dH=.001;
+    double dMirr,He,Man,Mirr=0;
+      
+    double M=0,H=1e-12;
+
+    for(int i=0;i<5e5;i++){
+      He=H+alpha*M;
+      Man=Ms*(1/(tanh(He/a))-a/He);
+
+      if(down==-1) delta=-1;
+      else delta=1;
+
+      dMirr=(Man-Mirr)/(k*delta-alpha*(Man-Mirr))*dH*down;
+      Mirr+=dMirr;
+      M=c*Man+(1-c)*Mirr;
+      B=(H+alpha*M)*1.256637e-6;
+
+
+      gCurva.SetPoint(i,H,B);
+
+      //cout<<H<<"    "<<dMirr<<endl;
+      if(H>Hmax) down=-1;
+      else if(H<-Hmax) down=1;
+
+      H+=dH*down;
+
+    }
+
+
+    gCurva.Draw("AP");
+    c1->SaveAs("HysteresisisCurve.png");
 
 
 
