@@ -63,6 +63,37 @@ int main(){
         G3.SetPoint(i,data3[i][0],data3[i][1]/(1000.*data3[i][2]/R));
     }
 
+    //bobines de Helmholtz
+    double R1=0.068; //m
+    double N1=320;
+    double dbH=0.068; //m
+    double m0=1.256637e-6; //H/m
+
+    //bobine movel
+    double R2=0.0207; //m
+    double N2=500;
+
+    double I1=0.795;
+
+    double L=8/(sqrt(5)*5)*m0*N1/R1*N2*M_PI*R2*R2;
+
+    auto v1 = [&](double *x,double *p=nullptr){
+        //return 8/(sqrt(5)*5)*m0*N1*I1/R1*N2*S2*x[0];
+        return p[0]*I1*x[0];
+    };
+    TF1 *V1m= new TF1("F", v1, 0,1000,0);
+
+
+    auto v2 = [&](double *x,double *p=nullptr){
+        //return 8/(sqrt(5)*5)*m0*N1*N2*R2*x[0];
+        return p[0]*x[0];
+    };
+    TF1 *V2m= new TF1("F", v2, 0,1000,0);    
+
+    G1.Fit(V1m);
+    G2.Fit(V2m);
+    G3.Fit(V2m);
+
     TCanvas* c1 = new TCanvas("","",1200,800);
     c1->SetLeftMargin(0.2);
     G1.Draw("AP");
