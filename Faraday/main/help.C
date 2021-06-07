@@ -25,7 +25,7 @@ int main(){
     double R2=0.0207; //m
     double N2=500;
 
-    I1=0.8; //correct this
+    I1=0.795; //correct this
 
     auto v1 = [&](double *x,double *p=nullptr){
         return 8/(sqrt(5)*5)*m0*N1*I1/R1*N2*S2*x[0];
