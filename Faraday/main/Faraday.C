@@ -78,17 +78,15 @@ int main(){
     double L=8/(sqrt(5)*5)*m0*N1/R1*N2*M_PI*R2*R2;
 
     auto v1 = [&](double *x,double *p=nullptr){
-        //return 8/(sqrt(5)*5)*m0*N1*I1/R1*N2*S2*x[0];
         return p[0]*I1*x[0];
     };
-    TF1 *V1m= new TF1("F", v1, 0,1000,0);
+    TF1 *V1m= new TF1("F", v1, 0,1000,1);
 
 
     auto v2 = [&](double *x,double *p=nullptr){
-        //return 8/(sqrt(5)*5)*m0*N1*N2*R2*x[0];
         return p[0]*x[0];
     };
-    TF1 *V2m= new TF1("F", v2, 0,1000,0);    
+    TF1 *V2m= new TF1("F", v2, 0,1000,1);    
 
     G1.Fit(V1m);
     G2.Fit(V2m);
@@ -105,6 +103,8 @@ int main(){
     G3.Draw("AP");
     c1->SaveAs("F3.png");
     c1->Clear();
+
+    cout<<L<<endl;
 
     return 0;
 }
