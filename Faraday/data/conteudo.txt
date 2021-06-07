@@ -4,14 +4,14 @@ faraday2: f(Hz), 2V2(mV), 2VR1(V), com R=30ohm
 
 faraday3: f(Hz), 2V2(mV), 2VR1(V), com R=30ohm
 
-faraday4: V1max(V), V2max(mV) para f=50Hz; Dt = (300+-100)microsegundos
+transformador1: V1max(V), V2max(mV) para f=50Hz; Dt = (300+-100)microsegundos
 
-faraday5: V1max(V), V2max(mV) para f=100Hz; Dt = (500+-40)microsegundos
+transformador2: V1max(V), V2max(mV) para f=100Hz; Dt = (500+-40)microsegundos
 
-faraday6: V1max(V), V2max(mV) para f=(500+-0.5)Hz; Dt = (150+-10)microsegundos
+transformador3: V1max(V), V2max(mV) para f=(500+-0.5)Hz; Dt = (150+-10)microsegundos
 
-faraday7: V1max(V), V2max(mV) para f=(1000+-2)Hz; Dt = (110+-10)microsegundos
+transformador4: V1max(V), V2max(mV) para f=(1000+-2)Hz; Dt = (110+-10)microsegundos
 
-faraday8: V1max(V), V2max(mV) para f=(2500+-5)Hz; Dt = (68+-4)microsegundos
+transformador5: V1max(V), V2max(mV) para f=(2500+-5)Hz; Dt = (68+-4)microsegundos
 
-faraday9: f(Hz), V2max(mV), dt(microsegundos), V1max(V)
+ultimo: f(Hz), V2max(mV), dt(microsegundos), V1max(V)
