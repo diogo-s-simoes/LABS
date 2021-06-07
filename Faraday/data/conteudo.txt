@@ -1,4 +1,4 @@
-faraday1: f(Hz), 2Amax(mV) com I=0.795A
+faraday1: f(Hz), 2Vmax(mV) com I=0.795A
 
 faraday2: f(Hz), 2V2(mV), 2VR1(V), com R=30ohm
 
