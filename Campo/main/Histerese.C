@@ -126,14 +126,14 @@ cout << "a"<<endl;
     H0M=(DADOS[i][14]+DADOS[i][15])/2*scale*ConvH/1000;
 
 
-    eHm=(DADOS[i][0]-DADOS[i][1])/2*scale*ConvH;
-    eHM=(DADOS[i][2]-DADOS[i][3])/2*scale*ConvH;
-    eBm=(DADOS[i][4]-DADOS[i][5])/2*ConvB;
-    eBM=(DADOS[i][6]-DADOS[i][7])/2*ConvB;
-    eB0m=(DADOS[i][8]-DADOS[i][9])/2*ConvB;
-    eB0M=(DADOS[i][10]-DADOS[i][11])/2*ConvB;
-    eH0m=(DADOS[i][12]-DADOS[i][13])/2*scale*ConvH;
-    eH0M=(DADOS[i][14]-DADOS[i][15])/2*scale*ConvH;
+    eHm=(DADOS[i][0]-DADOS[i][1])/2*scale*ConvH/1000;
+    eHM=(DADOS[i][2]-DADOS[i][3])/2*scale*ConvH/1000;
+    eBm=(DADOS[i][4]-DADOS[i][5])/2*ConvB/1000;
+    eBM=(DADOS[i][6]-DADOS[i][7])/2*ConvB/1000;
+    eB0m=(DADOS[i][8]-DADOS[i][9])/2*ConvB/1000;
+    eB0M=(DADOS[i][10]-DADOS[i][11])/2*ConvB/1000;
+    eH0m=(DADOS[i][12]-DADOS[i][13])/2*scale*ConvH/1000;
+    eH0M=(DADOS[i][14]-DADOS[i][15])/2*scale*ConvH/1000;
 
 
 
@@ -143,12 +143,12 @@ cout << "a"<<endl;
     Hysteresisis[i].SetPointError(1,eHM,eBM);
     Hysteresisis[i].SetPoint(2,H0m,0.);
     Hysteresisis[i].SetPointError(2,eH0m,0.);
-    Hysteresisis[i].SetPoint(3,H0m,0.);
-    Hysteresisis[i].SetPointError(3,eH0m,0.);
+    Hysteresisis[i].SetPoint(3,H0M,0.);
+    Hysteresisis[i].SetPointError(3,eH0M,0.);
     Hysteresisis[i].SetPoint(4,0,B0m);
     Hysteresisis[i].SetPointError(4,0.,eB0m);
-    Hysteresisis[i].SetPoint(5,0,B0m);
-    Hysteresisis[i].SetPointError(5,0.,eB0m);
+    Hysteresisis[i].SetPoint(5,0,B0M);
+    Hysteresisis[i].SetPointError(5,0.,eB0M);
 
 
     Bsat.SetPoint(i,(HM-Hm)/2,(BM-Bm)/2-1.25663*1e-6*(HM-Hm)/2);
@@ -230,7 +230,7 @@ cout << "a"<<endl;
       dMirr=(Man-Mirr)/(k*delta-alpha*(Man-Mirr))*dH;
       Mirr+=dMirr;
       M=c*Man+(1-c)*Mirr;
-      B=(H+alpha*M)*1.256637e-6;
+      B=(H*1.256637e-6+alpha*M);
     }
      //if(x[0]<5000) cout<<x[0]<<endl;
 
@@ -248,27 +248,27 @@ cout << "a"<<endl;
 
 
     //Fn->SetParLimits(0,10000.,3./1.256637e-6);
-    Fn->SetParameter(0,14130);
+    Fn->SetParameter(0,14103.9);
 
     //Fn->SetParLimits(1,0.,1.);
     Fn->SetParameter(1,0.062309);
     
     //Fn->SetParLimits(2,0.,1000000.);
-    Fn->SetParameter(2,0.0440371);
+    Fn->SetParameter(2,0.440371);
     
     //Fn->SetParLimits(3,0.,100000.);
-    Fn->SetParameter(3,300);
+    Fn->SetParameter(3,9.40263e-05);
     
     //Fn->SetParLimits(4,0.,100000.);
-    Fn->SetParameter(4,200);
+    Fn->SetParameter(4,11.9355);
     
 
     //Bsat.Fit(Fn);
 
 
-    Fn->Draw("");
 
-    Bsat.Draw("same");
+    Bsat.Draw("AP");
+    Fn->Draw("same");
     cout<<Fn->Derivative(0.1)<<endl;
 
     c1->SaveAs("Hysteresisis.png");
@@ -276,13 +276,72 @@ cout << "a"<<endl;
 
 
     TGraph gCurva;
+    int choice=2;
 
 
-    double Ms= 141030.9;
+    double Ms= 14103.9;
     double c=0.062309;
     double a=0.440371;
-    double alpha=9.40263e-04;
-    double k=300.9355;
+    double alpha=9.40263e-05;
+    double k=11.9355;
+    double Hmax=Hysteresisis[choice].GetPointX(1);
+    double delta =1;
+
+    int down=1;
+    double B=0;
+    double dH=.00001;
+    double dMirr,He,Man,Mirr=0;
+      
+    double M=0,H=1e-12;
+
+    for(int i=0;i<1e8;i++){
+      He=H+alpha*M;
+      Man=Ms*(1/(tanh(He/a))-a/He);
+
+      if(down==-1) delta=-1;
+      else delta=1;
+
+      dMirr=(Man-Mirr)/(k*delta-alpha*(Man-Mirr))*dH*down;
+      Mirr+=dMirr;
+      M=c*Man+(1-c)*Mirr;
+      B=(1.256637e-6*H +alpha*M);
+
+
+      gCurva.SetPoint(i,H,B);
+
+      //cout<<H<<"    "<<dMirr<<endl;
+      if(H>Hmax) down=-1;
+      else if(H<-Hmax) down=1;
+      H+=dH*down;
+
+    }
+
+
+
+  Hysteresisis[choice].SetMarkerStyle(33);
+  Hysteresisis[choice].SetMarkerColor(kAzure-3);
+  Hysteresisis[choice].SetMarkerSize(2.5);
+
+
+  TAxis *ax5 = Hysteresisis[choice].GetXaxis();
+  TAxis *ay5 = Hysteresisis[choice].GetYaxis();
+  ay5->SetTitle("B (T)");
+  ax5->SetTitle("H (A/m)");
+
+  gCurva.SetMarkerStyle(1);
+  gCurva.SetMarkerColor(kAzure-6);
+  gCurva.SetMarkerSize(.5);
+
+    gCurva.Draw("AP");
+    Hysteresisis[choice].Draw("same P");
+
+    c1->SaveAs("HysteresisisCurve.png");
+
+/*  double Ms= 14103.9;
+    double c=0.062309;
+    double a=0.440371;
+    double alpha=9.40263e-05;
+    double k=11.9355;
     double Hmax=100;
     double delta =1;
 
@@ -303,7 +362,7 @@ cout << "a"<<endl;
       dMirr=(Man-Mirr)/(k*delta-alpha*(Man-Mirr))*dH*down;
       Mirr+=dMirr;
       M=c*Man+(1-c)*Mirr;
-      B=(H+alpha*M)*1.256637e-6;
+      B=(1.256637e-6*H +alpha*M);
 
 
       gCurva.SetPoint(i,H,B);
@@ -311,16 +370,76 @@ cout << "a"<<endl;
       //cout<<H<<"    "<<dMirr<<endl;
       if(H>Hmax) down=-1;
       else if(H<-Hmax) down=1;
-
       H+=dH*down;
 
     }
+  
+    Hysteresisis[0].SetMarkerStyle(33);
+    Hysteresisis[0].SetMarkerColor(kAzure-3);
+    Hysteresisis[0].SetMarkerSize(2.5);
 
 
-    gCurva.Draw("AP");
-    c1->SaveAs("HysteresisisCurve.png");
 
 
+  
+    Hysteresisis[0].Draw("AP");
+    gCurva.Draw("same P");
+    gCurva.Clear();
+
+
+
+    for(int i=1;i<6;i++){
+
+     Ms= 14103.9;
+     c=0.062309;
+     a=0.440371;
+     alpha=9.40263e-05;
+     k=11.9355;
+     delta =1;
+
+     down=1;
+     B=0;
+     dH=.001;
+     dMirr,He,Man,Mirr=0;
+      
+     M=0,H=1e-12;
+
+
+     Hmax=Hysteresisis[i].GetPointX(0);
+
+
+    for(int i=0;i<5e5;i++){
+      He=H+alpha*M;
+      Man=Ms*(1/(tanh(He/a))-a/He);
+
+      if(down==-1) delta=-1;
+      else delta=1;
+
+      dMirr=(Man-Mirr)/(k*delta-alpha*(Man-Mirr))*dH*down;
+      Mirr+=dMirr;
+      M=c*Man+(1-c)*Mirr;
+      B=(1.256637e-6*H +alpha*M);
+
+
+      gCurva.SetPoint(i,H,B);
+
+      //cout<<H<<"    "<<dMirr<<endl;
+      if(H>Hmax) down=-1;
+      else if(H<-Hmax) down=1;
+      H+=dH*down;
+
+    }
+  
+    Hysteresisis[i].SetMarkerStyle(33);
+    Hysteresisis[i].SetMarkerColor(kAzure-3);
+    Hysteresisis[i].SetMarkerSize(2.5);
+
+
+
+
+    gCurva.Draw("same P");
+    Hysteresisis[i].Draw("same P");
+  }*/
 
     cout<<"Coerc:"<<TMath::MaxElement(HCoerc.GetN(),HCoerc.GetY())<<endl;
     cout<<"Sat:"<<TMath::MaxElement(Bsat.GetN(),Bsat.GetY())<<endl;
