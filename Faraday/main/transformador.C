@@ -86,25 +86,40 @@ int main(){
     TGraph TF2500; TF2500.SetTitle(""); TF2500.SetLineColor(kMagenta); TF2500.SetLineWidth(3); TF2500.SetMarkerStyle(34); TF2500.SetMarkerColor(kMagenta+2); TF2500.SetMarkerSize(1.6);
 
    
-
-        IDEAL.SetPoint(0,0,0);
-        IDEAL.SetPoint(1,9,1.08);
+    TGraph2D G2D;
    
+    IDEAL.SetPoint(0,0,0);
+    IDEAL.SetPoint(1,9,1.08);
+   
+    int ofset=0;
+
     for(int i=0;i<transformador1.GetLines();++i){
         TF50.SetPoint(i,tf50[i][0],tf50[i][1]/1000);
+        G2D.SetPoint(i,50.,tf50[i][0],tf50[i][1]/1000);
     }
+    ofset+=transformador1.GetLines();
+    
     for(int i=0;i<transformador2.GetLines();++i){
         TF100.SetPoint(i,tf100[i][0],tf100[i][1]/1000);
+        G2D.SetPoint(i+ofset,500.,tf500[i][0],tf500[i][1]/1000);
     }
+    ofset+=transformador2.GetLines();
 
     for(int i=0;i<transformador3.GetLines();++i){
         TF500.SetPoint(i,tf500[i][0],tf500[i][1]/1000);
+        G2D.SetPoint(i+ofset,500.,tf500[i][0],tf500[i][1]/1000);
     }
+    ofset+=transformador3.GetLines();
+    
     for(int i=0;i<transformador4.GetLines();++i){
         TF1000.SetPoint(i,tf1000[i][0],tf1000[i][1]/1000);
+        G2D.SetPoint(i+ofset,1000.,tf1000[i][0],tf1000[i][1]/1000);
     }
+    ofset+=transformador4.GetLines();
+    
     for(int i=0;i<transformador5.GetLines();++i){
         TF2500.SetPoint(i,tf2500[i][0],tf2500[i][1]/1000);
+        G2D.SetPoint(i+ofset,2500.,tf2500[i][0],tf2500[i][1]/1000);
     }
 
 
@@ -161,6 +176,48 @@ int main(){
     c1->SaveAs("transformadorideal.png");
     c1->Clear();*/
 
+
+    auto l2Dfit = [&](double *x,double *p=nullptr){
+        double mu=4000;
+        double l=.48;
+        double A=16*1e-6;
+        double n1=600;
+        double n2=72;
+        double R=10;
+        double V=.48*16*1e-6;
+        double a=p[1];
+        double ex=p[2];
+
+        return (x[0]*x[0]*p[0]*n1*-x[1]*x[1]*(p[0]*n2+R))/(V*a*pow(n1*n1*p[0]*x[0]-n2*(n2*p[0]+R)*x[1],p[2]))*l/A/mu;
+    };
+
+    TF2 *f2Dfit= new TF2("F", l2Dfit, 0,2500,0,2500,3);
+
+    f2Dfit->SetParameter(0,.001);
+    f2Dfit->SetParameter(1,10.);
+    f2Dfit->SetParameter(2,1.);
+
+    TGraph2D G3Db; G3Db.SetTitle(""); G3Db.SetLineColor(kGreen); G3Db.SetMarkerStyle(8); G3Db.SetMarkerColor(kGreen); G3Db.SetMarkerSize(.5);
+    int numpnts = 25;
+    for(int j = 0; j<numpnts; ++j){
+    for(int l=0; l<numpnts; ++l){
+        G3Db.SetPoint(l+numpnts*j,0.12/numpnts*j,-0.04+0.08/numpnts*l,ftotb->Eval(0.12/numpnts*j,-0.04+0.08/numpnts*l));
+    }
+}
+I=1;
+Gtotb.Draw("P");
+G3Db.Draw("P TRIW SAME");
+c1->SetPhi(330.);
+c1->SaveAs("3Db.png");
+c1->Clear();
+
+//    G2D.Fit(f2Dfit);
+
+    c1->Clear();
+f2Dfit->Draw("");
+//    G2D.Draw("ALP");
+
+    c1->SaveAs("2dfit.pdf");
 
     return 0;
 }
