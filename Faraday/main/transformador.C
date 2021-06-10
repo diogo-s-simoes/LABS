@@ -205,7 +205,7 @@ int main(){
     double pr1;
     double pr2;
     double pr3;
-    for(int i = 0; i<1e7; ++i){
+    for(int i = 0; i<1e6; ++i){
         double chit=0;
         f2Dfit->SetParameter(0,Rand.Rndm()*0.1);
         f2Dfit->SetParameter(1,Rand.Rndm()*5);
@@ -230,7 +230,12 @@ int main(){
     f2Dfit->SetParameter(2,pr2);
     f2Dfit->SetParameter(3,pr3);
     
-    //G2D.Fit(f2Dfit);
+    /*G2D.Fit(f2Dfit);
+    double chifit=0;
+    for(int k = 0; k<G2D.GetN(); ++k){
+            chifit+=pow(G2D.GetZ()[k]-f2Dfit->Eval(G2D.GetX()[k],G2D.GetY()[k]),8);
+    }
+    cout<<"fit: "<<chifit<<endl;*/
 
     TGraph2D Gfunc; Gfunc.SetTitle(""); Gfunc.SetLineColor(kGreen); Gfunc.SetMarkerStyle(8); Gfunc.SetMarkerColor(kGreen); Gfunc.SetMarkerSize(1);
     int numpnts = 25;
