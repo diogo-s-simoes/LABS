@@ -14,6 +14,7 @@
 #include "Integrator.h"
 #include "TGraph2D.h"
 #include "TF2.h"
+#include "TRandom3.h"
 
 int main(){
     DataReader transformador1("data/transformador1.txt");
@@ -86,7 +87,7 @@ int main(){
     TGraph TF2500; TF2500.SetTitle(""); TF2500.SetLineColor(kMagenta); TF2500.SetLineWidth(3); TF2500.SetMarkerStyle(34); TF2500.SetMarkerColor(kMagenta+2); TF2500.SetMarkerSize(1.6);
 
    
-    TGraph2D G2D;
+    TGraph2D G2D; G2D.SetTitle(""); G2D.SetLineColor(kRed); G2D.SetMarkerStyle(8); G2D.SetMarkerColor(kRed); G2D.SetMarkerSize(2); G2D.GetXaxis()->SetTitle("oi");
    
     IDEAL.SetPoint(0,0,0);
     IDEAL.SetPoint(1,9,1.08);
@@ -95,31 +96,31 @@ int main(){
 
     for(int i=0;i<transformador1.GetLines();++i){
         TF50.SetPoint(i,tf50[i][0],tf50[i][1]/1000);
-        G2D.SetPoint(i,50.,tf50[i][0],tf50[i][1]/1000);
+        G2D.SetPoint(i,tf50[i][0],tf50[i][1]/1000,50.);
     }
     ofset+=transformador1.GetLines();
     
     for(int i=0;i<transformador2.GetLines();++i){
         TF100.SetPoint(i,tf100[i][0],tf100[i][1]/1000);
-        G2D.SetPoint(i+ofset,500.,tf500[i][0],tf500[i][1]/1000);
+        G2D.SetPoint(i+ofset,tf100[i][0],tf100[i][1]/1000,100.);
     }
     ofset+=transformador2.GetLines();
 
     for(int i=0;i<transformador3.GetLines();++i){
         TF500.SetPoint(i,tf500[i][0],tf500[i][1]/1000);
-        G2D.SetPoint(i+ofset,500.,tf500[i][0],tf500[i][1]/1000);
+        G2D.SetPoint(i+ofset,tf500[i][0],tf500[i][1]/1000,500);
     }
     ofset+=transformador3.GetLines();
     
     for(int i=0;i<transformador4.GetLines();++i){
         TF1000.SetPoint(i,tf1000[i][0],tf1000[i][1]/1000);
-        G2D.SetPoint(i+ofset,1000.,tf1000[i][0],tf1000[i][1]/1000);
+        G2D.SetPoint(i+ofset,tf1000[i][0],tf1000[i][1]/1000,1000.);
     }
     ofset+=transformador4.GetLines();
     
     for(int i=0;i<transformador5.GetLines();++i){
         TF2500.SetPoint(i,tf2500[i][0],tf2500[i][1]/1000);
-        G2D.SetPoint(i+ofset,2500.,tf2500[i][0],tf2500[i][1]/1000);
+        G2D.SetPoint(i+ofset,tf2500[i][0],tf2500[i][1]/1000,2500.);
     }
 
 
@@ -133,11 +134,11 @@ int main(){
 
 
  //COMO APAGAR LINHAS VERMELHAS DO FIT?????
-    TF50.Fit(Ffit);
-    TF100.Fit(Ffit);
-    TF500.Fit(Ffit);
-    TF1000.Fit(Ffit);
-    TF2500.Fit(Ffit); //ESTE NAO ESTA A FUNCIONARR NAO APERECE NO GRAFICO 
+    //TF50.Fit(Ffit);
+    //TF100.Fit(Ffit);
+    //TF500.Fit(Ffit);
+    //TF1000.Fit(Ffit);
+    //TF2500.Fit(Ffit); //ESTE NAO ESTA A FUNCIONARR NAO APERECE NO GRAFICO 
 
     TCanvas* c1 = new TCanvas("","",1200,800);
     TMultiGraph* mult1= new TMultiGraph(); mult1->SetTitle("Transformador");
@@ -188,36 +189,63 @@ int main(){
         double a=p[1];
         double ex=p[2];
 
-        return (x[0]*x[0]*p[0]*n1*-x[1]*x[1]*(p[0]*n2+R))/(V*a*pow(n1*n1*p[0]*x[0]-n2*(n2*p[0]+R)*x[1],p[2]))*l/A/mu;
+        return (x[0]*x[0]/p[0]/n1-x[1]*x[1]/(p[0]*n2+R))/pow(V*a*pow(1/p[0]*x[0]-n2/(n2*p[0]+R)*x[1],ex),p[3])*l/A/mu;
     };
 
-    TF2 *f2Dfit= new TF2("F", l2Dfit, 0,2500,0,2500,3);
+    TF2 *f2Dfit= new TF2("F", l2Dfit, 0.01,10,0.01,2,4);
 
     f2Dfit->SetParameter(0,.001);
-    f2Dfit->SetParameter(1,10.);
-    f2Dfit->SetParameter(2,1.);
+    f2Dfit->SetParameter(1,0.5);
+    f2Dfit->SetParameter(2,1.6);
+    f2Dfit->SetParameter(3,0.5);
 
-    TGraph2D G3Db; G3Db.SetTitle(""); G3Db.SetLineColor(kGreen); G3Db.SetMarkerStyle(8); G3Db.SetMarkerColor(kGreen); G3Db.SetMarkerSize(.5);
+    TRandom3 Rand(0);
+    double chi2=1e100;
+    double pr0;
+    double pr1;
+    double pr2;
+    double pr3;
+    for(int i = 0; i<1e7; ++i){
+        double chit=0;
+        f2Dfit->SetParameter(0,Rand.Rndm()*0.1);
+        f2Dfit->SetParameter(1,Rand.Rndm()*5);
+        f2Dfit->SetParameter(2,Rand.Rndm()*5);
+        f2Dfit->SetParameter(3,Rand.Rndm()*5);
+        for(int k = 0; k<G2D.GetN(); ++k){
+            chit+=pow(G2D.GetZ()[k]-f2Dfit->Eval(G2D.GetX()[k],G2D.GetY()[k]),8);
+        }
+        if(chit<chi2){
+            chi2=chit;
+            pr0=f2Dfit->GetParameter(0);
+            pr1=f2Dfit->GetParameter(1);
+            pr2=f2Dfit->GetParameter(2);
+            pr3=f2Dfit->GetParameter(3);
+        }
+    }
+
+    cout<<"CHI2="<<chi2<<endl<<"p[0]="<<pr0<<endl<<"p[1]="<<pr1<<endl<<"p[2]="<<pr2<<endl<<"p[3]="<<pr3<<endl;
+
+    f2Dfit->SetParameter(0,pr0);
+    f2Dfit->SetParameter(1,pr1);
+    f2Dfit->SetParameter(2,pr2);
+    f2Dfit->SetParameter(3,pr3);
+    
+    //G2D.Fit(f2Dfit);
+
+    TGraph2D Gfunc; Gfunc.SetTitle(""); Gfunc.SetLineColor(kGreen); Gfunc.SetMarkerStyle(8); Gfunc.SetMarkerColor(kGreen); Gfunc.SetMarkerSize(1);
     int numpnts = 25;
     for(int j = 0; j<numpnts; ++j){
-    for(int l=0; l<numpnts; ++l){
-        G3Db.SetPoint(l+numpnts*j,0.12/numpnts*j,-0.04+0.08/numpnts*l,ftotb->Eval(0.12/numpnts*j,-0.04+0.08/numpnts*l));
+        for(int l=0; l<numpnts; ++l){
+            Gfunc.SetPoint(l+numpnts*j,1+10./numpnts*j,0.01+1./numpnts*l,f2Dfit->Eval(1+10./numpnts*j,0.01+1./numpnts*l));
+        }
     }
-}
-I=1;
-Gtotb.Draw("P");
-G3Db.Draw("P TRIW SAME");
-c1->SetPhi(330.);
-c1->SaveAs("3Db.png");
-c1->Clear();
-
-//    G2D.Fit(f2Dfit);
-
+    
+    G2D.Draw("P");
+    Gfunc.Draw("TRIW SAME");
+    c1->SetPhi(330.);
+    c1->SaveAs("2Dgraph.png");
     c1->Clear();
-f2Dfit->Draw("");
-//    G2D.Draw("ALP");
 
-    c1->SaveAs("2dfit.pdf");
 
     return 0;
 }

@@ -57,11 +57,11 @@ int main(){
     TAxis *ax2 = G2.GetXaxis();
     TAxis *ay2 = G2.GetYaxis();
     ax2->SetTitle("#omega (rad/s)");
-    ay2->SetTitle("V2_{max} (V)");
+    ay2->SetTitle("#frac{V2_{max}}{I_{max}}");
     TAxis *ax3 = G3.GetXaxis();
     TAxis *ay3 = G3.GetYaxis();
     ax3->SetTitle("#omega (rad/s)");
-    ay3->SetTitle("V2_{max} (V)");
+    ay3->SetTitle("#frac{V2_{max}}{I_{max}}");
 
     double R=30.;
 
@@ -101,7 +101,6 @@ int main(){
     TF1 *V2m= new TF1("F", v2, 0,100000,1);    
 
     TCanvas* c1 = new TCanvas("","",1200,800);
-    c1->SetLogx();
     gStyle->SetOptFit(111);
     gStyle -> SetStatBorderSize(5);
     gStyle -> SetStatFontSize(1);
@@ -117,6 +116,8 @@ int main(){
     G1.Draw("AP");
     c1->SaveAs("F1.png");
     c1->Clear();
+    c1->SetLogx();
+    c1->SetLogy();
     G2.Fit(V2m);
     G2.Draw("AP");
     c1->SaveAs("F2.png");
@@ -127,6 +128,28 @@ int main(){
     c1->Clear();
 
     cout<<L<<endl;
+
+    auto lInt = [&](double *x,double *p=nullptr){
+        return m0*N1*R1*I1/(4*M_PI)*(R1-p[0]*sin(x[0]))/pow(R1*R1+p[0]*p[0]+p[1]*p[1]-2*R1*p[0]*sin(x[0]),3./2.);
+    };
+    TF1 *fInt= new TF1("F", lInt, -1e6,1e6,2);
+
+    auto lCrt = [&](double *x,double *p=nullptr){
+        fInt->SetParameter(0, x[0]);
+        fInt->SetParameter(1, dbH/2);
+        double Bvalue=x[0]*fInt->Integral(0,2*M_PI);
+        return Bvalue;
+    };
+    TF1 *fCrt= new TF1("F", lCrt, -1e6,1e6,0);
+
+    //auto lBob = [&](double *x,double *p=nullptr){
+        double Bvl3=2*2*M_PI*fCrt->Integral(0,R2);
+        //return Bvalue;
+    //};
+    //TF2 *fBob= new TF1("F", lBob, -1e6,1e6,-1e6,1e6,0);
+
+    double Lrt=N2*Bvl3/I1;
+    cout<<Lrt<<endl;
 
     return 0;
 }
