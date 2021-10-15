@@ -20,14 +20,9 @@ int main(){
     
     int Nlines_stats = stats_data.GetLines();
 
-    TH1D* Hstats = new TH1D();
-    Hstats->SetMarkerStyle(kFullSquare);
-    Hstats->SetMarkerSize(4);
-    Hstats->SetMarkerColor(kGreen+2);
-    Hstats->SetLineWidth(4);
+    TH1D* Hstats = new TH1D("","Distribuição de contagens",25,8000,9000);
+    Hstats->SetLineWidth(2);
     Hstats->SetLineColor(kBlue-1);
-    Hstats->SetFillColor(2);
-    Hstats->SetFillStyle(3001);
     Hstats->GetXaxis()->SetTitle("Energia [keV]");
     Hstats->GetYaxis()->SetTitle("Channel N");
  
@@ -46,7 +41,7 @@ int main(){
     gStyle->SetOptStat(0);
     gStyle->SetLegendBorderSize(0);
 
-    Hstats->Draw("E1");
+    Hstats->Draw("");
     c1->SaveAs("Stats.png");
     c1->Clear();
    
