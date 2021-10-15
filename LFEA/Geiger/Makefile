@@ -40,8 +40,9 @@ $(BINDIR)/%.o: %.C | $(INC)
 
 tilde := $(wildcard */*~) $(wildcard *~)
 exe := $(wildcard */*.exe) $(wildcard *.exe)
+png := $(wildcard */*.png) $(wildcard *.png)
 obj := $(wildcard */*.o) $(wildcard *.o) $(wildcard */*.so) $(wildcard */*.pcm) $(wildcard */*.d)
 
 clean:
 	@echo cleaning dir...
-	rm -f $(exe) $(obj) $(tilde)
+	rm -f $(exe) $(obj) $(tilde) $(png)
