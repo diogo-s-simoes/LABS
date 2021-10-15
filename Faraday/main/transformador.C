@@ -194,10 +194,10 @@ int main(){
 
     TF2 *f2Dfit= new TF2("F", l2Dfit, 0.01,10,0.01,2,4);
 
-    f2Dfit->SetParameter(0,.001);
-    f2Dfit->SetParameter(1,0.5);
-    f2Dfit->SetParameter(2,1.6);
-    f2Dfit->SetParameter(3,0.5);
+    f2Dfit->SetParameter(0,0.000671576);
+    f2Dfit->SetParameter(1,2.11586);
+    f2Dfit->SetParameter(2,1.17312);
+    f2Dfit->SetParameter(3,1.69224);
 
     TRandom3 Rand(0);
     double chi2=1e100;
@@ -208,11 +208,11 @@ int main(){
     for(int i = 0; i<1e6; ++i){
         double chit=0;
         f2Dfit->SetParameter(0,Rand.Rndm()*0.1);
-        f2Dfit->SetParameter(1,Rand.Rndm()*5);
+        f2Dfit->SetParameter(1,Rand.Rndm()*5e-2);
         f2Dfit->SetParameter(2,Rand.Rndm()*5);
         f2Dfit->SetParameter(3,Rand.Rndm()*5);
         for(int k = 0; k<G2D.GetN(); ++k){
-            chit+=pow(G2D.GetZ()[k]-f2Dfit->Eval(G2D.GetX()[k],G2D.GetY()[k]),8);
+            chit+=pow(G2D.GetZ()[k]-f2Dfit->Eval(G2D.GetX()[k],G2D.GetY()[k]),2);
         }
         if(chit<chi2){
             chi2=chit;
@@ -233,7 +233,7 @@ int main(){
     /*G2D.Fit(f2Dfit);
     double chifit=0;
     for(int k = 0; k<G2D.GetN(); ++k){
-            chifit+=pow(G2D.GetZ()[k]-f2Dfit->Eval(G2D.GetX()[k],G2D.GetY()[k]),8);
+            chifit+=pow(G2D.GetZ()[k]-f2Dfit->Eval(G2D.GetX()[k],G2D.GetY()[k]),2);
     }
     cout<<"fit: "<<chifit<<endl;*/
 
