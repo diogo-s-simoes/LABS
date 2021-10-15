@@ -16,45 +16,38 @@
 
 int main(){
 
-    DataReader calib_data("data/Calib.txt");
+    DataReader stats_data("data/stats.txt");
     
-    TGraphErrors* Gcalib = new TGraphErrors();
-    Gcalib->SetMarkerStyle(kFullSquare);
-    Gcalib->SetMarkerSize(4);
-    Gcalib->SetMarkerColor(kGreen+2);
-    Gcalib->SetLineWidth(4);
-    Gcalib->SetLineColor(kBlue-1);
-    Gcalib->SetFillColor(2);
-    Gcalib->SetFillStyle(3001);
-    Gcalib->GetXaxis()->SetTitle("Energia [keV]");
-    Gcalib->GetYaxis()->SetTitle("Channel N");
+    int Nlines_stats = stats_data.GetLines();
 
-   
-    
-    for (int i = 0; i<Nlines_res; ++i){
-        Gres->SetPoint(i,atof(&(res_data.GetData()[i][1][0])),100*atof(&(res_data.GetData()[i][2][0])));
-        Gres->SetPointError(i,atof(&(res_data.GetData()[i][0][0])),100*atof(&(res_data.GetData()[i][3][0])));
+    TH1D* Hstats = new TH1D("","Distribuicao de contagens",15,8100,8800);
+    Hstats->SetLineWidth(2);
+    Hstats->SetLineColor(kBlue-1);
+    Hstats->GetXaxis()->SetTitle("Contagens");
+    Hstats->GetYaxis()->SetTitle("Frequencia");
+ 
+    double background=96./300.;
+
+    for (int i = 0; i<Nlines_stats; ++i){
+        Hstats->Fill(atof(&(stats_data.GetData()[i][0][0]))-background*30);
     }
-
-    TF1* f_calib= new TF1("CAL", l_calib, -1e9,1e9,2);
-
-    auto l_res = [](double *x,double *p=nullptr){
-      return p[0]/sqrt(x[0]);
-      //p[0]=a
-    };
-    TF1* f_res= new TF1("CAL", l_res, -1e9,1e9,1);
-
-    
 
     TCanvas* c1 = new TCanvas("","",1920,1080);
 
-    Gres->Draw("AP");
-    c1->SaveAs("Res.png");
-    c1->Clear();
+    Hstats->Fit("gaus");
 
     gStyle->SetOptStat(0);
     gStyle->SetLegendBorderSize(0);
 
+    Hstats->Draw("");
+    c1->SaveAs("Stats.png");
+    c1->Clear();
+
+    TF1 *gaus_h = (TF1*)Hstats->GetListOfFunctions()->FindObject("gaus");
+    double erro_absoluto = gaus_h->GetParameter(2);
+    double media = gaus_h->GetParameter(1);
+    double erro_relativo = erro_absoluto/media;
+    cout<<"Erro relativo: "<<erro_relativo<<endl;
    
     return 0;
 }
