@@ -38,9 +38,10 @@ int main(){
 
     gStyle->SetOptStat(0);
     gStyle->SetLegendBorderSize(0);
+    gStyle->SetOptFit(111);
 
     Hstats->Draw("");
-    c1->SaveAs("Stats.png");
+    c1->SaveAs("2-Stats.png");
     c1->Clear();
 
     TF1 *gaus_h = (TF1*)Hstats->GetListOfFunctions()->FindObject("gaus");
@@ -48,6 +49,20 @@ int main(){
     double media = gaus_h->GetParameter(1);
     double erro_relativo = erro_absoluto/media;
     cout<<"Erro relativo: "<<erro_relativo<<endl;
+
+    double variance = 0;
+    double average = 0;
+    for (int i = 0; i<Nlines_stats; ++i){
+        average+=atof(&(stats_data.GetData()[i][0][0]))-background*30;
+        variance+=pow(atof(&(stats_data.GetData()[i][0][0]))-background*30-media,2);
+    }
+    average/=50;
+    variance/=50;
+    double sigma=sqrt(variance);
+
+    cout<<"average= "<<average<<endl;
+    cout<<"sigma= "<<sigma<<endl;
+    cout<<"Erro relativo: "<<sigma/media<<endl;
    
     return 0;
 }
