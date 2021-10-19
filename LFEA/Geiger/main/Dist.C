@@ -162,16 +162,16 @@ int main(){
     double cos_theta=0;
     double* sangles = new double[7];
     for (int i=0; i<7; ++i){
-        dists[i]=atof(&(distancia_data.GetData()[i][0][0]))+2.8+5;
+        dists[i]=atof(&(distancia_data.GetData()[i][0][0]))+2.8;
     }
     for (int i=0; i<7; ++i){
         cos_theta=dists[i]/sqrt(dists[i]*dists[i]+radius*radius);
         sangles[i]=2*M_PI*(1-cos_theta);
     }
 
-    double Cs1_EM=1;
-    double Cs2_EM=1;
-    double Tl_EM=1;
+    double Cs1_EM=0.69265*3.7*1e4*120*0.94*0.5;
+    double Cs2_EM=0.69265*3.7*1e4*120*(0.94*0.5+0.06);
+    double Tl_EM=0.053186*3.7*1e4*120*0.971;
 
     TGraphErrors* Geff_Tl = new TGraphErrors();
     Geff_Tl->SetMarkerSize(1);
@@ -209,19 +209,19 @@ int main(){
     for (int i=0; i<7; ++i){
         Geff_Tl->SetPoint(i,dists[i],atof(&(distancia_data.GetData()[i][1][0]))- 0.32*120);
         Geff_Cs1->SetPoint(i,dists[i],atof(&(distancia_data.GetData()[i][2][0]))- 0.32*120);
-        Geff_Cs2->SetPoint(i,dists[i],atof(&(distancia_data.GetData()[i][3][0]))- 0.32*120);
+        Geff_Cs2->SetPoint(i,dists[i],atof(&(distancia_data.GetData()[i][3][0]))-0.32*120-(dists[i],atof(&(distancia_data.GetData()[i][2][0]))- 0.32*120));
     }
 
     auto l_eff_Tl = [&](double *x,double *p=nullptr){
-      return p[0]*Tl_EM*(2*M_PI*(1-(x[0]/sqrt(x[0]*x[0]+radius*radius))))/(4*M_PI)*exp(-p[1]*x[0]);
+      return p[0]*Tl_EM*(2*M_PI*(1-(x[0]/sqrt(x[0]*x[0]+radius*radius))))/(4*M_PI)/*exp(-0.025*x[0])*/;
     };
     TF1* f_eff_Tl= new TF1("constant", l_eff_Tl, -1e9,1e9,2);
     auto l_eff_Cs1 = [&](double *x,double *p=nullptr){
-      return p[0]*Cs1_EM*(2*M_PI*(1-(x[0]/sqrt(x[0]*x[0]+radius*radius))))/(4*M_PI)*exp(-p[1]*x[0]);
+      return p[0]*Cs1_EM*(2*M_PI*(1-(x[0]/sqrt(x[0]*x[0]+radius*radius))))/(4*M_PI)/*exp(-0.025*x[0])*/;
     };
     TF1* f_eff_Cs1= new TF1("constant", l_eff_Cs1, -1e9,1e9,2);
     auto l_eff_Cs2 = [&](double *x,double *p=nullptr){
-      return p[0]*Cs2_EM*(2*M_PI*(1-(x[0]/sqrt(x[0]*x[0]+radius*radius))))/(4*M_PI)*exp(-p[1]*x[0]);
+      return p[0]*Cs2_EM*(2*M_PI*(1-(x[0]/sqrt(x[0]*x[0]+radius*radius))))/(4*M_PI)/*exp(-0.025*x[0])*/;
     };
     TF1* f_eff_Cs2= new TF1("constant", l_eff_Cs2, -1e9,1e9,2);
 
