@@ -22,59 +22,157 @@ int main(){
 
     cout << Nlines_distancia << endl;
     
-    TGraphErrors* Gdist = new TGraphErrors();
-    Gdist->SetMarkerStyle(kFullSquare);
-    Gdist->SetMarkerSize(1);
-    Gdist->SetMarkerColor(kGreen+2);
-    Gdist->SetLineWidth(4);
-    Gdist->SetLineColor(kBlue-1);
-    Gdist->SetFillColor(2);
-    Gdist->SetFillStyle(3001);
-    Gdist->GetXaxis()->SetTitle("Distance(cm)");
-    Gdist->GetYaxis()->SetTitle("Counts (Corrected)");
+
+
+//////////////TALIO///////////////////////////////////
+    TGraphErrors* TlGDist = new TGraphErrors();
+    TlGDist->SetMarkerStyle(kFullSquare);
+    TlGDist->SetMarkerSize(1);
+    TlGDist->SetMarkerColor(kRed);
+    TlGDist->SetLineWidth(3);
+    TlGDist->SetLineColor(kBlue-1);
+    TlGDist->SetFillColor(2);
+    TlGDist->SetFillStyle(3001);
+    TlGDist->GetXaxis()->SetTitle("Distance(cm)");
+    TlGDist->GetYaxis()->SetTitle("Counts (Corrected)");
+
+    TGraphErrors* TlBlindagem = new TGraphErrors();
+    TlBlindagem->SetMarkerSize(1);
+    TlBlindagem->SetMarkerColor(kRed);
+    TlBlindagem->SetMarkerStyle(kFullSquare);
+    TlBlindagem->SetLineWidth(3);
+    TlBlindagem->SetLineColor(kBlue-1);
+    TlBlindagem->SetFillColor(2);
+    TlBlindagem->SetFillStyle(3001);
+    TlBlindagem->GetXaxis()->SetTitle("Distance(cm)");
+    TlBlindagem->GetYaxis()->SetTitle("Counts (Corrected)");
+
+    TGraphErrors* TlMais = new TGraphErrors();
+    TlMais->SetMarkerSize(1);
+    TlMais->SetMarkerColor(kRed);
+    TlMais->SetMarkerStyle(kFullSquare);
+    TlMais->SetLineWidth(3);
+    TlMais->SetLineColor(kBlue-1);
+    TlMais->SetFillColor(2);
+    TlMais->SetFillStyle(3001);
+    TlMais->GetXaxis()->SetTitle("Distance(cm)");
+    TlMais->GetYaxis()->SetTitle("Counts (Corrected)");
+
+//////////////cesio com tampa//////////////////////////////////////
+    TGraphErrors* CsTDist = new TGraphErrors();
+    CsTDist->SetMarkerStyle(kFullSquare);
+    CsTDist->SetMarkerSize(1);
+    CsTDist->SetMarkerColor(kMagenta+2);
+    CsTDist->SetLineWidth(3);
+    CsTDist->SetLineColor(kBlue-1);
+    CsTDist->SetFillColor(2);
+    CsTDist->SetFillStyle(3001);
+    CsTDist->GetXaxis()->SetTitle("Distance(cm)");
+    CsTDist->GetYaxis()->SetTitle("Counts (Corrected)");
+
+    TGraphErrors* CsTBlindagem = new TGraphErrors();
+    CsTBlindagem->SetMarkerSize(1);
+    CsTBlindagem->SetMarkerColor(kMagenta+2);
+    CsTBlindagem->SetMarkerStyle(kFullSquare);
+    CsTBlindagem->SetLineWidth(3);
+    CsTBlindagem->SetLineColor(kMagenta-1);
+    CsTBlindagem->SetFillColor(2);
+    CsTBlindagem->SetFillStyle(3001);
+    CsTBlindagem->GetXaxis()->SetTitle("Distance(cm)");
+    CsTBlindagem->GetYaxis()->SetTitle("Counts (Corrected)");
+
+    TGraphErrors* CsTMais = new TGraphErrors();
+    CsTMais->SetMarkerSize(1);
+    CsTMais->SetMarkerColor(kMagenta+2);
+    CsTMais->SetMarkerStyle(kFullSquare);
+    CsTMais->SetLineWidth(3);
+    CsTMais->SetLineColor(kBlue-1);
+    CsTMais->SetFillColor(2);
+    CsTMais->SetFillStyle(3001);
+    CsTMais->GetXaxis()->SetTitle("Distance(cm)");
+    CsTMais->GetYaxis()->SetTitle("Counts (Corrected)");
+
+
+//////////////CESIO SEM TAMPA///////////////////////////////////
+    TGraphErrors* CssDist = new TGraphErrors();
+    CssDist->SetMarkerStyle(kFullSquare);
+    CssDist->SetMarkerSize(1);
+    CssDist->SetMarkerColor(kGreen+2);
+    CssDist->SetLineWidth(3);
+    CssDist->SetLineColor(kBlue-1);
+    CssDist->SetFillColor(1);
+    CssDist->SetFillStyle(3004);
+    CssDist->GetXaxis()->SetTitle("Distance(cm)");
+    CssDist->GetYaxis()->SetTitle("Counts (Corrected)");
+
+    TGraphErrors* CssBlindagem = new TGraphErrors();
+    CssBlindagem->SetMarkerSize(1);
+    CssBlindagem->SetMarkerColor(kGreen+2);
+    CssBlindagem->SetMarkerStyle(kFullSquare);
+    CssBlindagem->SetLineWidth(3);
+    CssBlindagem->SetLineColor(kBlue-1);
+    CssBlindagem->SetFillColor(1);
+    CssBlindagem->SetFillStyle(3004);
+    CssBlindagem->GetXaxis()->SetTitle("Distance(cm)");
+    CssBlindagem->GetYaxis()->SetTitle("Counts (Corrected)");
+
+    TGraphErrors* CssMais = new TGraphErrors();
+    CssMais->SetMarkerSize(1);
+    CssMais->SetMarkerColor(kGreen+2);
+    CssMais->SetMarkerStyle(kFullSquare);
+    CssMais->SetLineWidth(3);
+    CssMais->SetLineColor(kBlue-1);
+    CssMais->SetFillColor(1);
+    CssMais->SetFillStyle(3004);
+    CssMais->GetXaxis()->SetTitle("Distance(cm)");
+    CssMais->GetYaxis()->SetTitle("Counts (Corrected)");
 
 
 
 
-    TGraphErrors* GBlindagem = new TGraphErrors();
-    GBlindagem->SetMarkerSize(1);
-    GBlindagem->SetMarkerColor(kGreen+2);
-    GBlindagem->SetMarkerStyle(kFullSquare);
-    GBlindagem->SetLineWidth(4);
-    GBlindagem->SetLineColor(kBlue-1);
-    GBlindagem->SetFillColor(2);
-    GBlindagem->SetFillStyle(3001);
-    GBlindagem->GetXaxis()->SetTitle("Distance(cm)");
-    GBlindagem->GetYaxis()->SetTitle("Counts (Corrected)");
 
 
-    TGraphErrors* GMais = new TGraphErrors();
-    GMais->SetMarkerSize(1);
-    GMais->SetMarkerColor(kGreen+2);
-    GMais->SetMarkerStyle(kFullSquare);
-    GMais->SetLineWidth(4);
-    GMais->SetLineColor(kBlue-1);
-    GMais->SetFillColor(2);
-    GMais->SetFillStyle(3001);
-    GMais->GetXaxis()->SetTitle("Distance(cm)");
-    GMais->GetYaxis()->SetTitle("Counts (Corrected)");
 
 
+
+
+
+
+
+
+/////////////PONTOS//////////////////////////
     for (int i = 0; i<Nlines_distancia; ++i){
+   TlGDist->SetPoint(i,atof(&(distancia_data.GetData()[i][0][0]))+2.8 , atof(&(distancia_data.GetData()[i][1][0]))- 0.32*120 - );         //Distancia real = distancia + 3.7 - 2.1 + 1.2
+   TlBlindagem->SetPoint(i,atof(&(distancia_data.GetData()[i][0][0]))+2.8 , atof(&(distancia_data.GetData()[i][1][0]))- 0.32*120);     //Radiacao real = radiacao - 0.32*120
+   TlMais->SetPoint(i,atof(&(distancia_data.GetData()[i][0][0]))+2.8 , atof(&(distancia_data.GetData()[i][1][0]))- 0.32*120);         //Erro horizontal (x) = 0.05cm
+   TlGDist->SetPointError(i, 0.2 , 0.0109061* (atof(&(distancia_data.GetData()[i][1][0]))- 0.32*120));                                 //Erro vertical (Radiaçao) = do histograma estatistico
+   TlBlindagem->SetPointError(i, 0.2 , 0.0109061* (atof(&(distancia_data.GetData()[i][1][0]))- 0.32*120));
+   TlMais->SetPointError(i, 0.2 , 0.0109061* (atof(&(distancia_data.GetData()[i][1][0]))- 0.32*120));
 
-        Gdist->SetPoint(i,atof(&(distancia_data.GetData()[i][0][0]))+2.8 , atof(&(distancia_data.GetData()[i][1][0]))- 0.32*120);
-   GBlindagem->SetPoint(i,atof(&(distancia_data.GetData()[i][0][0]))+2.8 , atof(&(distancia_data.GetData()[i][1][0]))- 0.32*120);
-        GMais->SetPoint(i,atof(&(distancia_data.GetData()[i][0][0]))+2.8 , atof(&(distancia_data.GetData()[i][1][0]))- 0.32*120);
-        //Distancia real = distancia + 3.7 - 2.1 + 1.2
-        //Radiacao real = radiacao - 0.32*120
 
-        Gdist->SetPointError(i, 0.2 , 0.0109061* (atof(&(distancia_data.GetData()[i][1][0]))- 0.32*120));
-   GBlindagem->SetPointError(i, 0.2 , 0.0109061* (atof(&(distancia_data.GetData()[i][1][0]))- 0.32*120));
-      GMais->SetPointError(i, 0.2 , 0.0109061* (atof(&(distancia_data.GetData()[i][1][0]))- 0.32*120));
-        //Erro horizontal (x) = 0.05cm
-        //Erro vertical (Radiaçao) = doutro histograma 1 PLACEHOLDER
+
+   CsTDist->SetPoint(i,atof(&(distancia_data.GetData()[i][0][0]))+2.8 , atof(&(distancia_data.GetData()[i][2][0]))- 0.32*120);
+   CsTBlindagem->SetPoint(i,atof(&(distancia_data.GetData()[i][0][0]))+2.8 , atof(&(distancia_data.GetData()[i][2][0]))- 0.32*120);
+   CsTMais->SetPoint(i,atof(&(distancia_data.GetData()[i][0][0]))+2.8 , atof(&(distancia_data.GetData()[i][2][0]))- 0.32*120);
+   CsTDist->SetPointError(i, 0.2 , 0.0109061* (atof(&(distancia_data.GetData()[i][2][0]))- 0.32*120));
+   CsTBlindagem->SetPointError(i, 0.2 , 0.0109061* (atof(&(distancia_data.GetData()[i][2][0]))- 0.32*120));
+   CsTMais->SetPointError(i, 0.2 , 0.0109061* (atof(&(distancia_data.GetData()[i][2][0]))- 0.32*120));
+
+
+
+   CssDist->SetPoint(i,atof(&(distancia_data.GetData()[i][0][0]))+2.8 , atof(&(distancia_data.GetData()[i][3][0]))- 0.32*120);
+   CssBlindagem->SetPoint(i,atof(&(distancia_data.GetData()[i][0][0]))+2.8 , atof(&(distancia_data.GetData()[i][3][0]))- 0.32*120);
+   CssMais->SetPoint(i,atof(&(distancia_data.GetData()[i][0][0]))+2.8 , atof(&(distancia_data.GetData()[i][3][0]))- 0.32*120);
+   CssDist->SetPointError(i, 0.2 , 0.0109061* (atof(&(distancia_data.GetData()[i][3][0]))- 0.32*120));
+   CssBlindagem->SetPointError(i, 0.2 , 0.0109061* (atof(&(distancia_data.GetData()[i][3][0]))- 0.32*120));
+   CssMais->SetPointError(i, 0.2 , 0.0109061* (atof(&(distancia_data.GetData()[i][3][0]))- 0.32*120));
     }
 
+
+
+
+
+//////////////////////////FUNCOES A FITAR////////////////////////////////////
 
     auto l_inversesquarelaw = [](double *x,double *p=nullptr){
       return p[0]/ (x[0]*x[0]);
@@ -107,13 +205,16 @@ int main(){
     f_mais->SetParameter(1,0.01);
     f_mais->SetParameter(2,0.01);
 
-    Gdist->Fit(f_inversesquarelaw);
-    GBlindagem->Fit(f_comblindagem);
-    GMais->Fit(f_mais);
 
-    double A1 = f_inversesquarelaw->GetParameter(0);
-    double B1 = f_comblindagem->GetParameter(0);
-    double B2 = f_comblindagem->GetParameter(1);
+
+
+    f_inversesquarelaw->SetLineColor(kBlue+1);
+    f_comblindagem->SetLineColor(kBlue+1);
+    f_mais->SetLineColor(kBlue+1);
+
+    TlGDist->Fit(f_inversesquarelaw);
+    TlBlindagem->Fit(f_comblindagem);
+    TlMais->Fit(f_mais);
 
     TCanvas* c1 = new TCanvas("","",1920,1080);
 
@@ -122,41 +223,104 @@ int main(){
 
 
     gStyle->SetOptStat(0);
-  
     gPad->SetGrid(1, 1);
     gStyle->SetLegendBorderSize(0);
-
-       
   gStyle->SetOptFit(111);
   gStyle -> SetStatBorderSize(5);
-  gStyle -> SetStatFontSize(1);
+  gStyle -> SetStatFontSize(0.2);
   gStyle -> SetStatFont(62);
   gStyle -> SetStatTextColor(1);
-  gStyle -> SetStatColor(3);
-  gStyle -> SetStatStyle(0);
+  gStyle -> SetStatColor(6);
+  gStyle -> SetStatStyle(1);
   gStyle -> SetStatX(0.85);
   gStyle -> SetStatY(0.85);
   gStyle -> SetStatW(0.2165);
 
-    Gdist->SetTitle("Variacao com a distancia: Tl-204");
-    Gdist->Draw("AP");
-    c1->SaveAs("Distancia.png");
+    TlGDist->SetTitle("Tl-204");
+    TlGDist->Draw("AP");
+    c1->SaveAs("TlDist.png");
     c1->Clear();
     c1->Update();
 
-    GBlindagem->SetTitle("Variacao com a distancia: Tl-204");
-    GBlindagem->Draw("AP");
+    TlBlindagem->SetTitle("Tl-204");
+    TlBlindagem->Draw("AP");
     f_comblindagem->Draw("same");
-    c1->SaveAs("DistBlindagem.png");
+    c1->SaveAs("TlBlindagem.png");
+    c1->Clear();
+    c1->Update();
+
+    TlMais->SetTitle("Tl-204");
+    TlMais->Draw("AP");
+    c1->SaveAs("TlMais.png");
+    c1->Clear();
+
+
+
+
+
+
+    f_inversesquarelaw->SetLineColor(kGreen+2);
+    f_comblindagem->SetLineColor(kGreen+2);
+    f_mais->SetLineColor(kGreen+2);
+
+
+    CsTDist->Fit(f_inversesquarelaw);
+    CsTBlindagem->Fit(f_comblindagem);
+    CsTMais->Fit(f_mais);
+
+    CsTDist->SetTitle("Cs-137 com tampa");
+    CsTDist->Draw("AP");
+    c1->SaveAs("CsTDist.png");
+    c1->Clear();
+    c1->Update();
+
+    CsTBlindagem->SetTitle("Cs-137 com tampa");
+    CsTBlindagem->Draw("AP");
+    f_comblindagem->Draw("same");
+    c1->SaveAs("CsTBlindagem.png");
     c1->Clear();
     c1->Update();
     
+    CsTMais->SetTitle("Cs-137 com tampa");
+    CsTMais->Draw("AP");
+    c1->SaveAs("CsTMais.png");
+    c1->Clear();
 
-    GMais->SetTitle("Variacao com a distancia: Tl-204");
-    GMais->Draw("AP");
-    c1->SaveAs("DistMais.png");
+
+
+    f_inversesquarelaw->SetLineColor(kMagenta);
+    f_comblindagem->SetLineColor(kMagenta);
+    f_mais->SetLineColor(kMagenta);
+
+    CssDist->Fit(f_inversesquarelaw);
+    CssBlindagem->Fit(f_comblindagem);
+    CssMais->Fit(f_mais);
+
+
+    CssDist->SetTitle("Cs-137 sem tampa");
+    CssDist->Draw("AP");
+    c1->SaveAs("CssDist.png");
+    c1->Clear();
+    c1->Update();
+
+    CssBlindagem->SetTitle("Cs-137 sem tampa");
+    CssBlindagem->Draw("AP");
+    f_comblindagem->Draw("same");
+    c1->SaveAs("CssBlindagem.png");
+    c1->Clear();
+    c1->Update();
+    
+    CssMais->SetTitle("Cs-137 sem tampa");
+    CssMais->Draw("AP");
+    c1->SaveAs("CssMais.png");
     c1->Clear();
         
+
+
+
+    ///////Eficiencia/////////////////
+
+
     double radius = 3.355/2;
     double* dists = new double[7];
     double cos_theta=0;
