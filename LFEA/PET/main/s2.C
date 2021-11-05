@@ -120,5 +120,13 @@ int main(){
     c1->SaveAs("janela.png");
     c1->Clear();
 
+    double E0=15e4*3.7;
+    double Em=E0*exp(-log(2)/2.6*15.);
+
+    double cts=3796;
+    double temp=30;
+    double eff = cts/(temp*Em*0.213/(4*M_PI));
+    cout<<"efficiency= "<<eff<<endl;
+
     return 0;
 }
