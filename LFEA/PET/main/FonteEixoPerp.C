@@ -16,6 +16,8 @@
 
 int main(){
 
+    double d_quad=7.5/6.;
+
     DataReader data("data/FonteP1.txt");
     DataReader data2("data/FonteP2.txt");
     DataReader data3("data/FonteP3.txt");
@@ -36,7 +38,7 @@ int main(){
     Graph1->SetFillStyle(3004);
     Graph1->GetXaxis()->SetTitle("Angle (rad)");
     Graph1->GetYaxis()->SetTitle("Coincidences [s^{-1}]");
-    Graph1->SetTitle("Variacao posicao fonte no eixo perpendicular aos detetores quando estao na posicao central para x= 1 quad");
+    Graph1->SetTitle("Variacao posicao fonte no plano equidistante aos detetores para x=1 quad");
 
 
 
@@ -50,7 +52,7 @@ int main(){
     Graph2->SetFillStyle(3004);
     Graph2->GetXaxis()->SetTitle("Angle (rad)");
     Graph2->GetYaxis()->SetTitle("Coincidences [s^{-1}]");
-    Graph2->SetTitle("Variacao posicao fonte no eixo dos detetores para x= 2 quad");
+    Graph2->SetTitle("Variacao posicao fonte no plano equidistante aos detetores para x=2 quad");
 
      TGraphErrors* Graph3 = new TGraphErrors();
     Graph3->SetMarkerSize(2);
@@ -62,7 +64,7 @@ int main(){
     Graph3->SetFillStyle(3004);
     Graph3->GetXaxis()->SetTitle("Angle (rad)");
     Graph3->GetYaxis()->SetTitle("Coincidences [s^{-1}]");
-    Graph3->SetTitle("Variacao posicao fonte no eixo dos detetores para x= 3 quad");
+    Graph3->SetTitle("Variacao posicao fonte no plano equidistante aos detetores para x=3 quad");
 
          TGraphErrors* Graph4 = new TGraphErrors();
     Graph4->SetMarkerSize(2);
@@ -74,7 +76,7 @@ int main(){
     Graph4->SetFillStyle(3004);
     Graph4->GetXaxis()->SetTitle("Angle (rad)");
     Graph4->GetYaxis()->SetTitle("Coincidences [s^{-1}]");
-    Graph4->SetTitle("Variacao posicao fonte no eixo dos detetores para x= 4 quad");
+    Graph4->SetTitle("Variacao posicao fonte no plano equidistante aos detetores para x=0 quad");
  
     for (int i = 0; i<Nlines; ++i){
         Graph1->SetPoint(i,M_PI/180.*atof(&(data.GetData()[i][0][0])),atof(&(data.GetData()[i][3][0]))/atof(&(data.GetData()[i][4][0]))-52./200.);
@@ -96,31 +98,31 @@ int main(){
         Graph4->SetPointError(i,0.1*M_PI/180,sqrt(atof(&(data4.GetData()[i][3][0])))/atof(&(data4.GetData()[i][4][0])));
     }
 
-    /*double r0 = 15.3;
-    double R = 5.67/2;
-
-    auto l_integrand = [&](double *x,double *p=nullptr){
-      return r0/pow(r0*r0+x[0]*x[0],3./2.)*2*sqrt(R*R-x[0]*x[0]);
+    auto l_gaussian = [&](double *x,double *p=nullptr){
+      return p[0]*exp(-0.5*((x[0]-p[1])/p[2])*((x[0]-p[1])/p[2]));
     };
-    TF1* f_integrand= new TF1("integrand", l_integrand, -1e9,1e9,0);
+    TF1* f_gaussian= new TF1("gaussian", l_gaussian, -1e9,1e9,3);
 
+    f_gaussian->SetParameter(0,1);
+    f_gaussian->SetParameter(1,0);
+    f_gaussian->SetParameter(2,-1);
 
-    auto l_Sangle = [&](double *x,double *p=nullptr){
-        if(fabs(x[0])<=acos(r0/sqrt(r0*r0+R*R))) 
-            return p[0]*f_integrand->Integral(-R,r0*sqrt(1/(pow(cos(acos(r0/sqrt(r0*r0+R*R))-fabs(x[0])),2))-1));
-        if(fabs(x[0])<=2*acos(r0/sqrt(r0*r0+R*R)))
-            return p[0]*(f_integrand->Integral(-R,R)-f_integrand->Integral(-R,r0*sqrt(1/(pow(cos(acos(r0/sqrt(r0*r0+R*R))-fabs(x[0])),2))-1)));
-        else return 0.;
-    };
-    TF1* f_Sangle= new TF1("Solid_Angle", l_Sangle, -2*acos(r0/sqrt(r0*r0+R*R)),2*acos(r0/sqrt(r0*r0+R*R)),1);
-    f_Sangle->SetParameter(0,1);
+    Graph1->Fit(f_gaussian);
+    double miu1 = f_gaussian->GetParameter(1);
+    double sigma1=f_gaussian->GetParameter(2);
+    Graph2->Fit(f_gaussian);
+    double miu2 = f_gaussian->GetParameter(1);
+    double sigma2=f_gaussian->GetParameter(2);
+    Graph3->Fit(f_gaussian);
+    double miu3 = f_gaussian->GetParameter(1);
+    double sigma3=f_gaussian->GetParameter(2);
+    f_gaussian->SetParameter(1,0);
+    Graph4->Fit(f_gaussian);
+    double miu4 = f_gaussian->GetParameter(1);
+    double sigma4=f_gaussian->GetParameter(2);
 
-    cout<<2*acos(r0/sqrt(r0*r0+R*R))*180/M_PI<<endl;
-
-    Graph1->Fit(f_Sangle);*/
-
+    
     TCanvas* c1 = new TCanvas("","",1920,1080);
-    gStyle->SetOptStat(0);
     gPad->SetGrid(1, 1);
     gStyle->SetLegendBorderSize(0);
     gStyle->SetOptFit(111);
@@ -130,8 +132,8 @@ int main(){
     gStyle -> SetStatTextColor(1);
     gStyle -> SetStatColor(6);
     gStyle -> SetStatStyle(1);
-    gStyle -> SetStatX(0.85);
-    gStyle -> SetStatY(0.85);
+    gStyle -> SetStatX(2000);
+    gStyle -> SetStatY(2000);
     gStyle -> SetStatW(0.1365);
 
     Graph1->Draw("AP");
@@ -150,7 +152,7 @@ int main(){
     c1->SaveAs("FonteP4.png");
     c1->Clear();
 
-    TMultiGraph* Mlt_G = new TMultiGraph("mg","mg");
+    TMultiGraph* Mlt_G = new TMultiGraph("Correlacao angular para x=0,1,2,3 quad","Correlacao angular para x=0,1,2,3 quad");
     Mlt_G->Add(Graph1);
     Mlt_G->Add(Graph2);
     Mlt_G->Add(Graph3);
@@ -161,8 +163,43 @@ int main(){
     c1->Clear();
 
 
-   // f_Sangle->SetParameter(0,1);
-    //cout<<f_Sangle->Eval(0.)<<endl;
+    TGraphErrors* GraphMiu = new TGraphErrors();
+    GraphMiu->SetMarkerSize(2);
+    GraphMiu->SetMarkerColor(kBlue+2);
+    GraphMiu->SetMarkerStyle(kFullSquare);
+    GraphMiu->SetLineWidth(3);
+    GraphMiu->SetLineColor(kBlue-1);
+    GraphMiu->SetFillColor(1);
+    GraphMiu->SetFillStyle(3004);
+    GraphMiu->GetXaxis()->SetTitle("d (cm)");
+    GraphMiu->GetYaxis()->SetTitle("#mu (rad)");
+    GraphMiu->SetTitle("Pico de coincidencias em funcao da posicao");
+
+    GraphMiu->SetPoint(0,0*d_quad,miu4);
+    GraphMiu->SetPoint(1,1*d_quad,miu1);
+    GraphMiu->SetPoint(2,2*d_quad,miu2);
+    GraphMiu->SetPoint(3,3*d_quad,miu3);
+
+    GraphMiu->Fit("pol1");
+
+    GraphMiu->Draw("AP");
+    c1->SaveAs("Miu.png");
+    c1->Clear();
+
+    cout<<"Miu1 = "<<miu1<<endl;
+    cout<<"Miu2 = "<<miu2<<endl;
+    cout<<"Miu3 = "<<miu3<<endl;
+    cout<<"Miu4 = "<<miu4<<endl;
+
+    cout<<"Sigma1 = "<<sigma1<<endl;
+    cout<<"Sigma2 = "<<sigma2<<endl;
+    cout<<"Sigma3 = "<<sigma3<<endl;
+    cout<<"Sigma4 = "<<sigma4<<endl;
+
+    cout<<"FWHM1 = "<<2*sqrt(2*log(2))*sigma1<<endl;
+    cout<<"FWHM2 = "<<2*sqrt(2*log(2))*sigma2<<endl;
+    cout<<"FWHM3 = "<<2*sqrt(2*log(2))*sigma3<<endl;
+    cout<<"FWHM4 = "<<2*sqrt(2*log(2))*sigma4<<endl;
 
     return 0;
 }

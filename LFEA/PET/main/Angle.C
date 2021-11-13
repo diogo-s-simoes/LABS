@@ -37,7 +37,7 @@ int main(){
     }
 
     double r0 = 15.3;
-    double R = 5.67/2;
+    double R = 2;
 
     auto l_integrand = [&](double *x,double *p=nullptr){
       return r0/pow(r0*r0+x[0]*x[0],3./2.)*2*sqrt(R*R-x[0]*x[0]);
@@ -46,16 +46,16 @@ int main(){
 
 
     auto l_Sangle = [&](double *x,double *p=nullptr){
+        R=p[1];
         if(fabs(x[0])<=acos(r0/sqrt(r0*r0+R*R))) 
             return p[0]*f_integrand->Integral(-R,r0*sqrt(1/(pow(cos(acos(r0/sqrt(r0*r0+R*R))-fabs(x[0])),2))-1));
         if(fabs(x[0])<=2*acos(r0/sqrt(r0*r0+R*R)))
             return p[0]*(f_integrand->Integral(-R,R)-f_integrand->Integral(-R,r0*sqrt(1/(pow(cos(acos(r0/sqrt(r0*r0+R*R))-fabs(x[0])),2))-1)));
         else return 0.;
     };
-    TF1* f_Sangle= new TF1("Solid_Angle", l_Sangle, -2*acos(r0/sqrt(r0*r0+R*R)),2*acos(r0/sqrt(r0*r0+R*R)),1);
+    TF1* f_Sangle= new TF1("Solid_Angle", l_Sangle, -10,10,2);
     f_Sangle->SetParameter(0,1);
-
-    cout<<2*acos(r0/sqrt(r0*r0+R*R))*180/M_PI<<endl;
+    f_Sangle->SetParameter(1,1.95);
 
     Graphy->Fit(f_Sangle);
 
@@ -79,7 +79,8 @@ int main(){
     c1->SaveAs("angle.png");
 
     f_Sangle->SetParameter(0,1);
-    cout<<f_Sangle->Eval(0.)<<endl;
+
+    cout<<2*f_Sangle->Eval(0.)<<endl;
 
     return 0;
 }
