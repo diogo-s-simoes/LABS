@@ -83,16 +83,14 @@ int main(){
     Graph1->Fit(f_Sangle);*/
 
     auto l_gaussian = [&](double *x,double *p=nullptr){
-      return p[0]*exp(-0.5*((x[0]-p[1])/p[2])*((x[0]-p[1])/p[2]))+p[0]*exp(-0.5*((x[0]-p[4])/p[2])*((x[0]-p[4])/p[2]));
+      return p[0]*exp(-0.5*((x[0]-p[1])/p[2])*((x[0]-p[1])/p[2]))+p[0]*exp(-0.5*((x[0]-p[3])/p[2])*((x[0]-p[3])/p[2]));
     };
-    TF1* f_gaussian= new TF1("gaussian", l_gaussian, -1e9,1e9,6);
+    TF1* f_gaussian= new TF1("gaussian", l_gaussian, -1e9,1e9,4);
 
     f_gaussian->SetParameter(0,100);
     f_gaussian->SetParameter(1,0.3);
     f_gaussian->SetParameter(2,1);
-    f_gaussian->SetParameter(3,100);
-    f_gaussian->SetParameter(4,2.7);
-    f_gaussian->SetParameter(5,1);
+    f_gaussian->SetParameter(3,2.7);
 
     TCanvas* c1 = new TCanvas("","",1920,1080);
     gStyle->SetOptStat(0);

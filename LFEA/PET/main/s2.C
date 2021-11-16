@@ -43,7 +43,7 @@ int main(){
     G2->SetFillColor(1);
     G2->SetFillStyle(3004);
     G2->GetXaxis()->SetTitle("Janela de Aquisicao [s]");
-    G2->GetYaxis()->SetTitle("Coincidências [s^{-1}]");
+    G2->GetYaxis()->SetTitle("Coincidencias [s^{-1}]");
     G2->SetTitle("Coincidencias Fortuitas");
 
 
@@ -101,7 +101,7 @@ int main(){
     gStyle -> SetStatColor(6);
     gStyle -> SetStatStyle(1);
     gStyle -> SetStatX(0.85);
-    gStyle -> SetStatY(0.85);
+    gStyle -> SetStatY(0.40);
     gStyle -> SetStatW(0.1365);
 
     f_step->SetParameter(0,1);

@@ -56,7 +56,7 @@ int main(){
 
      TGraphErrors* Graph3 = new TGraphErrors();
     Graph3->SetMarkerSize(2);
-    Graph3->SetMarkerColor(kGreen-2);
+    Graph3->SetMarkerColor(kGreen);
     Graph3->SetMarkerStyle(kFullSquare);
     Graph3->SetLineWidth(3);
     Graph3->SetLineColor(kBlue-1);
@@ -68,7 +68,7 @@ int main(){
 
          TGraphErrors* Graph4 = new TGraphErrors();
     Graph4->SetMarkerSize(2);
-    Graph4->SetMarkerColor(kBlue+6);
+    Graph4->SetMarkerColor(kOrange);
     Graph4->SetMarkerStyle(kFullSquare);
     Graph4->SetLineWidth(3);
     Graph4->SetLineColor(kBlue-1);
@@ -152,13 +152,25 @@ int main(){
     c1->SaveAs("FonteP4.png");
     c1->Clear();
 
-    TMultiGraph* Mlt_G = new TMultiGraph("Correlacao angular para x=0,1,2,3 quad","Correlacao angular para x=0,1,2,3 quad");
-    Mlt_G->Add(Graph1);
-    Mlt_G->Add(Graph2);
+    TMultiGraph* Mlt_G = new TMultiGraph("Correlacao angular para x=0, 1.25, 2.5 ,3.75 cm","Correlacao angular para x=0, 1.25, 2.5 ,3.75 cm");
     Mlt_G->Add(Graph3);
+    Mlt_G->Add(Graph2);
+    Mlt_G->Add(Graph1);
     Mlt_G->Add(Graph4);
+    Mlt_G->GetXaxis()->SetTitle("Angle (rad)");
+    Mlt_G->GetYaxis()->SetTitle("Coincidences [s^{-1}]");
 
+    auto legend1 = new TLegend(0.75,0.7,1,0.8);
+    legend1->SetFillStyle(0);
+    legend1->SetTextFont(62);
+    legend1->SetTextSize(0.03);
+    legend1->AddEntry(Graph4,"x = 0 cm","P");
+    legend1->AddEntry(Graph1,"x = 1.25 cm","P");
+    legend1->AddEntry(Graph2,"x = 2.5 cm","P");
+    legend1->AddEntry(Graph3,"x = 3.75 cm","P");
+    
     Mlt_G->Draw("AP");
+    legend1->Draw("SAME");
     c1->SaveAs("FontePAll.png");
     c1->Clear();
 
