@@ -15,6 +15,7 @@
 #include "DataReader.h"
 
 int main(){
+    double d_quad=7.5/6.;
 
     DataReader data("data/FonteEixoD1.txt");
     DataReader data2("data/FonteEixoD2.txt");
@@ -74,49 +75,92 @@ int main(){
     Graph4->GetXaxis()->SetTitle("Angle (rad)");
     Graph4->GetYaxis()->SetTitle("Coincidences [s^{-1}]");
     Graph4->SetTitle("Variacao posicao fonte no eixo dos detetores para x= 4 quad");
+
+    TGraphErrors* GraphR1 = new TGraphErrors();
+    GraphR1->SetMarkerSize(2);
+    GraphR1->SetMarkerColor(kBlue+2);
+    GraphR1->SetMarkerStyle(kFullSquare);
+    GraphR1->SetLineWidth(3);
+    GraphR1->SetLineColor(kBlue-1);
+    GraphR1->SetFillColor(1);
+    GraphR1->SetFillStyle(3004);
+    GraphR1->GetXaxis()->SetTitle("d (cm)");
+    GraphR1->GetYaxis()->SetTitle("#mu (rad)");
+    GraphR1->SetTitle("Pico de coincidencias em funcao da posicao");
+
+    TGraphErrors* GraphR2 = new TGraphErrors();
+    GraphR2->SetMarkerSize(2);
+    GraphR2->SetMarkerColor(kRed+2);
+    GraphR2->SetMarkerStyle(kFullSquare);
+    GraphR2->SetLineWidth(3);
+    GraphR2->SetLineColor(kBlue-1);
+    GraphR2->SetFillColor(1);
+    GraphR2->SetFillStyle(3004);
+    GraphR2->GetXaxis()->SetTitle("d (cm)");
+    GraphR2->GetYaxis()->SetTitle("Coincidências");
+    GraphR2->SetTitle("Pico de coincidencias em funcao da posicao");
+
+    {
+        GraphR1->SetPoint(0,-1,atof(&(data.GetData()[0][1][0])));
+        GraphR1->SetPoint(1,-2,atof(&(data2.GetData()[0][1][0])));
+        GraphR1->SetPoint(2,1,atof(&(data3.GetData()[0][1][0])));
+        GraphR1->SetPoint(3,2,atof(&(data4.GetData()[0][1][0])));
+    }
  
     for (int i = 0; i<Nlines; ++i){
+        double d = 1;
         Graph1->SetPoint(i,M_PI/180.*atof(&(data.GetData()[i][0][0])),atof(&(data.GetData()[i][3][0]))/atof(&(data.GetData()[i][4][0]))-52./200.);
         Graph1->SetPointError(i,0.1*M_PI/180,sqrt(atof(&(data.GetData()[i][3][0])))/atof(&(data.GetData()[i][4][0])));
+        GraphR2->SetPoint(i,sqrt(d*d+15.5*15.5-2*d*15.5*cos(M_PI/180.*atof(&(data.GetData()[i][0][0])))),atof(&(data.GetData()[i][2][0]))/atof(&(data.GetData()[i][4][0])));
     }
 
     for (int i = 0; i<Nlines2; ++i){
+        double d = 2;
         Graph2->SetPoint(i,M_PI/180.*atof(&(data2.GetData()[i][0][0])),atof(&(data2.GetData()[i][3][0]))/atof(&(data2.GetData()[i][4][0]))-52./200.);
         Graph2->SetPointError(i,0.1*M_PI/180,sqrt(atof(&(data2.GetData()[i][3][0])))/atof(&(data2.GetData()[i][4][0])));
+        GraphR2->SetPoint(i+Nlines,sqrt(d*d+15.5*15.5-2*d*15.5*cos(M_PI/180.*atof(&(data2.GetData()[i][0][0])))),atof(&(data2.GetData()[i][2][0]))/atof(&(data2.GetData()[i][4][0])));
     }
     
     for (int i = 0; i<Nlines3; ++i){
+        double d = -1;
         Graph3->SetPoint(i,M_PI/180.*atof(&(data3.GetData()[i][0][0])),atof(&(data3.GetData()[i][3][0]))/atof(&(data3.GetData()[i][4][0]))-52./200.);
         Graph3->SetPointError(i,0.1*M_PI/180,sqrt(atof(&(data3.GetData()[i][3][0])))/atof(&(data3.GetData()[i][4][0])));
+        GraphR2->SetPoint(i+Nlines+Nlines2,sqrt(d*d+15.5*15.5-2*d*15.5*cos(M_PI/180.*atof(&(data3.GetData()[i][0][0])))),atof(&(data3.GetData()[i][2][0]))/atof(&(data3.GetData()[i][4][0])));
     }
 
     for (int i = 0; i<Nlines4; ++i){
+        double d = -2;
         Graph4->SetPoint(i,M_PI/180.*atof(&(data4.GetData()[i][0][0])),atof(&(data4.GetData()[i][3][0]))/atof(&(data4.GetData()[i][4][0]))-52./200.);
         Graph4->SetPointError(i,0.1*M_PI/180,sqrt(atof(&(data4.GetData()[i][3][0])))/atof(&(data4.GetData()[i][4][0])));
+        GraphR2->SetPoint(i+Nlines+Nlines2+Nlines3,sqrt(d*d+15.5*15.5-2*d*15.5*cos(M_PI/180.*atof(&(data4.GetData()[i][0][0])))),atof(&(data4.GetData()[i][2][0]))/atof(&(data4.GetData()[i][4][0])));
     }
 
-    /*double r0 = 15.3;
-    double R = 5.67/2;
-
-    auto l_integrand = [&](double *x,double *p=nullptr){
-      return r0/pow(r0*r0+x[0]*x[0],3./2.)*2*sqrt(R*R-x[0]*x[0]);
+    auto l_gaussian = [&](double *x,double *p=nullptr){
+      return p[0]*exp(-0.5*((x[0]-p[1])/p[2])*((x[0]-p[1])/p[2]));
     };
-    TF1* f_integrand= new TF1("integrand", l_integrand, -1e9,1e9,0);
+    TF1* f_gaussian= new TF1("gaussian", l_gaussian, -1e9,1e9,3);
 
+    f_gaussian->SetParameter(0,1);
+    f_gaussian->SetParameter(1,0);
+    f_gaussian->SetParameter(2,-1);
 
-    auto l_Sangle = [&](double *x,double *p=nullptr){
-        if(fabs(x[0])<=acos(r0/sqrt(r0*r0+R*R))) 
-            return p[0]*f_integrand->Integral(-R,r0*sqrt(1/(pow(cos(acos(r0/sqrt(r0*r0+R*R))-fabs(x[0])),2))-1));
-        if(fabs(x[0])<=2*acos(r0/sqrt(r0*r0+R*R)))
-            return p[0]*(f_integrand->Integral(-R,R)-f_integrand->Integral(-R,r0*sqrt(1/(pow(cos(acos(r0/sqrt(r0*r0+R*R))-fabs(x[0])),2))-1)));
-        else return 0.;
-    };
-    TF1* f_Sangle= new TF1("Solid_Angle", l_Sangle, -2*acos(r0/sqrt(r0*r0+R*R)),2*acos(r0/sqrt(r0*r0+R*R)),1);
-    f_Sangle->SetParameter(0,1);
-
-    cout<<2*acos(r0/sqrt(r0*r0+R*R))*180/M_PI<<endl;
-
-    Graph1->Fit(f_Sangle);*/
+    Graph1->Fit(f_gaussian);
+    double peak1 = f_gaussian->GetParameter(0);
+    double miu1 = f_gaussian->GetParameter(1);
+    double sigma1=f_gaussian->GetParameter(2);
+    Graph2->Fit(f_gaussian);
+    double peak2 = f_gaussian->GetParameter(0);
+    double miu2 = f_gaussian->GetParameter(1);
+    double sigma2=f_gaussian->GetParameter(2);
+    Graph3->Fit(f_gaussian);
+    double peak3 = f_gaussian->GetParameter(0);
+    double miu3 = f_gaussian->GetParameter(1);
+    double sigma3=f_gaussian->GetParameter(2);
+    f_gaussian->SetParameter(1,0);
+    Graph4->Fit(f_gaussian);
+    double peak4 = f_gaussian->GetParameter(0);
+    double miu4 = f_gaussian->GetParameter(1);
+    double sigma4=f_gaussian->GetParameter(2);
 
     TCanvas* c1 = new TCanvas("","",1920,1080);
     gStyle->SetOptStat(0);
@@ -160,8 +204,40 @@ int main(){
     c1->SaveAs("FonteEixoAll.png");
     c1->Clear();
 
-   // f_Sangle->SetParameter(0,1);
-    //cout<<f_Sangle->Eval(0.)<<endl;
+    TGraphErrors* GraphMiu = new TGraphErrors();
+    GraphMiu->SetMarkerSize(2);
+    GraphMiu->SetMarkerColor(kBlue+2);
+    GraphMiu->SetMarkerStyle(kFullSquare);
+    GraphMiu->SetLineWidth(3);
+    GraphMiu->SetLineColor(kBlue-1);
+    GraphMiu->SetFillColor(1);
+    GraphMiu->SetFillStyle(3004);
+    GraphMiu->GetXaxis()->SetTitle("d (cm)");
+    GraphMiu->GetYaxis()->SetTitle("#mu (rad)");
+    GraphMiu->SetTitle("Pico de coincidencias em funcao da posicao");
 
+    GraphMiu->SetPoint(0,-2*d_quad,peak2);
+    GraphMiu->SetPoint(2,-1*d_quad,peak1);
+    GraphMiu->SetPoint(3,1*d_quad,peak3);
+    GraphMiu->SetPoint(1,2*d_quad,peak4);
+
+    auto l_solidA = [&](double *x,double *p=nullptr){
+      return p[0]*0.5*(1-cos(atan(p[1]/(x[0]))));
+    };
+    TF1* f_solidA= new TF1("solidA", l_solidA, -1e9,1e9,2);
+
+    f_solidA->SetParameter(0,100);
+    f_solidA->SetParameter(1,2);
+    GraphMiu->Fit(f_solidA);
+
+    GraphMiu->Draw("AP");
+    c1->SaveAs("Peak_Long.png");
+    c1->Clear();
+
+    GraphR2->Fit(f_solidA);
+
+    GraphR2->Draw("AP");
+    c1->SaveAs("R2_Long.png");
+    c1->Clear();
     return 0;
 }

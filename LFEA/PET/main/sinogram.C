@@ -208,7 +208,7 @@ int main(){
     hPET->GetYaxis()->SetTitle("#theta (#phi=90#circ) [#circ]");
     hPET->SetTitle("Reconstrucao Tomografica");
 
-    TH2D* hPETxy = new TH2D("TOMOGRAPHIC_RESULT_XY","Tomografia_XY",15,-5,5,15,-5,5);
+    TH2D* hPETxy = new TH2D("TOMOGRAPHIC_RESULT_XY","Tomografia_XY",30,-5,5,15,-5,5);
     hPETxy->SetMarkerSize(2);
     hPETxy->SetMarkerColor(kBlue+2);
     hPETxy->SetMarkerStyle(kFullSquare);
@@ -247,7 +247,7 @@ int main(){
     c1->SetPhi(0);
     c1->SetTheta(90);
 
-    hPETxy->Draw("CONT4");
+    hPETxy->Draw("COL");
     G_Aux->Draw("SAMEP");
     c1->SaveAs("Tomography_xy.png");
     c1->Clear();
